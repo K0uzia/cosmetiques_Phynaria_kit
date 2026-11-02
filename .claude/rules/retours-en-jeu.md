@@ -1,44 +1,56 @@
 # Règles — leçons des retours en jeu
 
-Erreurs déjà commises sur de vrais cosmétiques. Les appliquer **dès la première version**. Ajouter ici chaque nouvelle leçon confirmée par une capture, avec ce qui a marché, et supprimer ce qui se révèle faux.
+Erreurs et réussites constatées sur de vrais cosmétiques. Les appliquer **dès la première version**. Ajouter chaque leçon confirmée par une capture ou un avis de l'utilisateur, et supprimer ce qui se révèle faux.
 
 ## Le rendu ne suffit pas
 
-- Le renderer ne montre ni le shader, ni l'éclairage de nuit, ni l'émissif, ni les particules, ni le suivi de tête. Un rendu propre et un vérificateur vert ne prouvent pas le résultat en jeu : ne jamais l'affirmer.
-- Contrôler aussi : de face à hauteur des yeux, par la tranche, de dessous, et de nuit dès qu'il y a du calque `_e`.
-- Ne pas reprendre un constat comme « vérifié » s'il vient d'un seul test de notre côté : `scale` et `position` ont été déclarés ignorés à tort.
-- Lire les captures et le guide avant de coder ; relire le message de l'utilisateur en cas de doute. « Fais-les plates » a été compris comme « elles sont plates » : reformuler chaque demande ambiguë avant de lancer une refonte.
+- Le renderer ne montre ni le shader, ni l'éclairage de nuit, ni l'émissif, ni les particules, ni le suivi de tête, ni le balancement des membres. Un rendu propre et un vérificateur vert ne prouvent pas le résultat en jeu : ne jamais l'affirmer.
+- Contrôler aussi : de face à hauteur des yeux, par la tranche, de dessous, de profil, et de nuit dès qu'il y a du calque `_e`.
+- Ne pas présenter un constat comme « vérifié » s'il vient d'un seul test de notre côté : `scale` et `position` ont été déclarés ignorés à tort.
+- Lire les captures et le guide avant de coder. « Je les veux plates » a d'abord été compris à l'envers : reformuler chaque demande ambiguë avant de lancer une refonte.
 
-## Recettes validées ou à éviter
+## Ce que l'utilisateur a validé
+
+« Validé » veut dire vu en jeu ou explicitement approuvé. Le reste figure plus bas.
+
+| Pièce | Avis | À retenir |
+|---|---|---|
+| `ailes_abyssales` | « juste incroyable », 3D et textures | Référence de style pour tout cosmétique à os et membrane |
+| `bandeau_abyssal` | « incroyable », position des cornes ensuite « niquel » | Référence pour le thème chasseur de démons : bandeau, regard vert, cornes, oreilles |
+| Aurelion : forme et rondeur | « la rondeur est bien » | Plume peau + âme |
+| Plume-particule d'Aurelion | « ok » | Recette de particule |
+| Fusée en `glide` | confirmée en jeu | V0 = 26, DV = 5, exclusion des piqués |
+| `masque_abyssal` | « sympa », « base réutilisable » | Hors de l'esprit chasseur de démons : ne pas le présenter comme répondant à ce thème |
+| `queue_abyssale` | « trop dragon, créature » | Vertèbres, épines et membrane font bête ; pour un ensemble d'allure élégante, préférer `queue_abyssale_v2` |
+
+Livrés sans retour en jeu à ce jour : `queue_abyssale_v2`, `lames_abyssales`, `epaulieres_abyssales`, `aura_abyssale`, `familier_crane`, `diademe_celeste`, `aura_celeste`, `ailes_givre`, `ailes_mecaniques`, `chapeau_abyssal`.
+
+## Recettes
 
 | Élément | À éviter (constaté en jeu) | À faire |
 |---|---|---|
-| Plume d'aile | Plaque seule : « tas de feuilles » par la tranche. Cubes pleins seuls : « trop carré », marches | Peau ronde découpée par alpha autour d'une âme pleine plus étroite (validé pour la rondeur) |
-| Os de l'aile | Barres droites apparentes, blocs à la base | Volume effilé, couvert d'écailles rondes dessus et dessous |
-| Anneau, halo | Segments décalés : pointillés. Segments chevauchés : créneaux sombres sous `_e` | Une seule plaque, anneau découpé par alpha, même forme plus étroite dans `_e` (à confirmer en jeu) |
-| Particule | Barreaux : bâtons. Base étranglée dans la texture et raccords à ~10° : « bonbon » (cause supposée). Plaque de 0,3 px : deux couches | Une seule plaque, courbure peinte dans l'image, face `up` seule, loin du sol (validé en jeu). Éviter les sections (l'image coupée se retourne) et les 0,06 px (fragments à distance) |
-| Lueur | Lueur vive sur un dégradé : orange violent, instable | Fines lignes lumineuses et fond additif très sombre ; rien de vif hors du point focal |
-| Couleur de nuit | Aile sans `_e` : saumon et mate sous éclairage chaud | Base plus blanche et fond `_e` léger, ou option « Lumineux » du staff |
+| Plume d'aile | Plaque seule : « tas de feuilles » par la tranche. Cubes pleins seuls : « trop carré », marches | Peau ronde découpée par alpha autour d'une âme pleine plus étroite |
+| Os d'aile à plumes | Barres droites apparentes, blocs à la base | Volume effilé, couvert d'écailles rondes dessus et dessous |
+| Os et membrane | | Os octogonaux effilés et courbes ; membrane peinte d'un seul tenant, découpée en plaques par alpha, veines contrastées |
+| Anneau, halo | Segments décalés : pointillés. Segments chevauchés : créneaux sombres sous `_e` | Une seule plaque de 0,15 px, anneau découpé par alpha, même forme plus étroite dans `_e` |
+| Particule | Barreaux : bâtons. Sections : « bonbon » et double couche. 0,06 px : fragments à distance. Trop près du sol : scintillement | Un seul cube de 0,3 px, y ≥ 0,3 au-dessus du pivot, face `up` seule, courbure peinte dans l'image |
+| Corne | Ancrée sur l'arête du front : base en porte-à-faux devant le visage | Ancrée sur le dessus de la tête, au-dessus des tempes (z ≈ −3 à +2) ; contrôler le profil |
+| Lueur | Lueur vive sur un dégradé : orange violent | Fines lignes lumineuses et fond additif très sombre ; rien de vif hors du point focal |
+| Couleur de nuit | Sans `_e` : saumon et mate sous éclairage chaud | Base plus blanche et fond `_e` léger, ou option « Lumineux » du staff |
 
-## Validé en jeu
+## Bug en cours côté mod
 
-- Style à reprendre : `ailes_abyssales` (« incroyable », 3D et textures). Os octogonaux effilés et courbes, membrane découpée par alpha, peinte d'un seul tenant, veines contrastées. Partir de `gen_ailes_abyssales.py` pour un cosmétique à os et membrane.
-- `masque_abyssal` : « sympa » et à conserver comme base réutilisable pour des masques (plaques d'os, orbites ouvertes, cornes segmentées, sangles), mais jugé hors de l'esprit recherché pour le thème chasseur de démons. Ne pas le présenter comme répondant à ce thème.
-- `bandeau_abyssal` : « incroyable », bon esprit pour le thème chasseur de démons. Cornes à ancrer sur le dessus de la tête, au-dessus des tempes (z ≈ −3 à +2), pas sur l'arête du front : contrôler le profil.
-- Plume peau + âme : rondeur et forme des ailes.
-- Battement à la fusée en `glide` par seuil de vitesse (V0 = 26, DV = 5), avec exclusion des piqués.
-- Plume-particule : une seule plaque, courbure peinte dans l'image, face `up` seule, au-dessus du sol.
-- Halo en une plaque : plus de créneaux.
-- Calque `_e` : il clignote aussi sans shader, et peut assombrir la texture. Bug à traiter côté mod (`docs/bug_emissif_pour_dev.md`) : ne pas retoucher le modèle pour ce symptôme avant son correctif.
+Calque `_e` : il clignote aussi sans shader et peut assombrir la texture (`docs/dev/bug_emissif_pour_dev.md`). En attendant le correctif : `AVEC_E = False` dans les générateurs, calque peint et écrit à côté du modèle, non embarqué, et pas de retouche du modèle pour ce symptôme.
 
 ## Orientation selon l'état
 
-- En vol créatif, le joueur reste debout : pas de plan d'aile à 90°, il se voit par la tranche. Bascule d'environ 40°.
+- En vol créatif, le joueur reste debout : pas de plan d'aile à 90°, il se voit par la tranche. Bascule d'environ 40°, sans plainte depuis, mais pas de validation explicite.
 - En élytres et en nage, le corps est couché et le cosmétique le suit : ailes presque dans le plan du dos. Déduit du fonctionnement du mod.
+- `fall` : bascule d'environ 26°, joueur debout.
 
 ## Méthode de travail
 
 - Le fichier livrable reste unique, et les aperçus aussi : une planche PNG et un GIF regroupant toutes les animations.
-- Un retour porte souvent sur une seule pièce : garder explicitement ce que l'utilisateur a validé.
-- Pour un nouveau cosmétique d'ailes, partir de `gen_aurelion_wings.py`, pas de `tools/example_wings_generator.py`, qui contient les défauts corrigés depuis.
+- Un retour porte souvent sur une seule pièce : citer ce qui est validé et ne doit pas bouger.
+- Point de départ des générateurs : `gen_ailes_abyssales.py` pour os et membrane, `gen_aurelion_wings.py` pour des plumes, `gen_bandeau_abyssal.py` pour la tête. Jamais `tools/example_wings_generator.py`, qui contient les défauts corrigés depuis.
 - Tout ce qui n'est pas prouvé en jeu se présente comme à vérifier, avec une cause « mesurée » ou « supposée ».

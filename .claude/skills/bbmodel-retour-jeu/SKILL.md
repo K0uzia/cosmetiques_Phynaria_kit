@@ -25,11 +25,11 @@ Pour chaque point, noter : pièce, état, angle, heure de jeu, et s'il est à co
 ## 3. Corriger
 - Modifier le générateur du cosmétique, jamais le `.bbmodel`.
 - Citer dans la demande ce qui est validé et ne doit pas bouger.
-- Limite du mod (ex. pas d'accélération en Molang) : le dire, faire l'approximation la plus proche, et l'ajouter à `docs/demandes_mod.md`.
+- Limite du mod (ex. pas d'accélération en Molang) : le dire, faire l'approximation la plus proche, et l'ajouter à `docs/dev/demandes_mod.md`.
 
 ## 4. Valider
-Dans l'ordre : `.build/`, optimiseur, vérificateur, rendus incluant une vue de chaque défaut signalé. Regarder ces vues en pleine taille. Puis mettre à jour le fichier unique et `apercu/planche.png` + `apercu/animations.gif`.
+Dans l'ordre : `.build/`, optimiseur, vérificateur, rendus incluant une vue de chaque défaut signalé. Regarder ces vues en pleine taille. Puis `python tools/livrer.py $D`.
 
 ## 5. Livrer et apprendre
 - Message : point par point, ce qui est corrigé, cause mesurée ou supposée, 2–3 vérifications en jeu.
-- Quand une capture suivante confirme ou infirme une recette, mettre à jour `.claude/rules/retours-en-jeu.md`.
+- Quand l'utilisateur valide, refuse ou nuance une pièce ou une recette, mettre à jour `.claude/rules/retours-en-jeu.md`.

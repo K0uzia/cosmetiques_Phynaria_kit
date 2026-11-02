@@ -1,6 +1,6 @@
 # Mod cosmétiques — fonctionnalités manquantes constatées
 
-> **Statut (retour du développeur, nov. 2026)** : l'ensemble des demandes est traité. Le point 1 fonctionnait déjà : le problème venait de notre modèle. Convention de rotation, émissif, particules et rapport d'import sont décrits dans `guide-cosmetiques.md`, qui fait référence.
+> **Statut (retour du développeur, nov. 2026)** : l'ensemble des demandes est traité. Le point 1 fonctionnait déjà : le problème venait de notre modèle. Convention de rotation, émissif, particules et rapport d'import sont décrits dans `../guide-cosmetiques.md`, qui fait référence.
 
 Contexte : création d'ailes animées (.bbmodel, format Blockbench « free », 512×512, 12 animations). Les points ci-dessous ont été constatés en jeu ou par un modèle de calibration dédié (3 barres colorées X/Y/Z + 5 animations d'1 s).
 

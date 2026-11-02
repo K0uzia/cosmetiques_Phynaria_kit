@@ -57,4 +57,4 @@ Donne en retour la cause trouvée, le correctif et les tests réellement effectu
 
 ## Demande annexe
 
-Ajouter une variable Molang `query.is_boosting` (fusée active en élytres), pour déclencher exactement le battement d'ailes à la fusée, aujourd'hui approché par un seuil de vitesse. Corriger aussi dans le guide le chemin de l'exemple : `docs/exemples/exemple_particules.bbmodel` n'existe pas chez nous, le fichier est dans `docs/`.
+Ajouter une variable Molang `query.is_boosting` (fusée active en élytres), pour déclencher exactement le battement d'ailes à la fusée, aujourd'hui approché par un seuil de vitesse.

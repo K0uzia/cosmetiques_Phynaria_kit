@@ -1,6 +1,6 @@
 # Règles — animations
 
-## Convention d'axes du mod (mesurée par calibration, ne pas « corriger » d'après Blockbench)
+## Axes
 
 `docs/guide-cosmetiques.md` prime sur ce fichier. Le jeu lit les rotations telles quelles, comme la vue 3D de Blockbench ; seul l'export Bedrock inverse X et Y. Le renderer `tools/render_bbmodel.py` les reproduit avec `MODCONV=1`.
 
@@ -21,8 +21,8 @@ Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et
 
 ## Canaux
 
-- **`rotation`, `position` et `scale` sont supportés** (confirmé par le développeur du mod). Notre ancien constat « ignorés » venait de notre modèle de test ; la cause exacte n'est pas identifiée, donc vérifier en jeu le premier usage de ces canaux.
-- La convention de signe de `position` n'est pas mesurée : `/bbmodel-calibrate` avant de l'utiliser sur X ou Z.
+- **`rotation`, `position` et `scale` sont supportés.** Vérifier en jeu le premier usage de `position` et `scale` sur une pièce.
+- `position` : +Y monte, +X va vers la droite du joueur (guide, section 3).
 - Halo qui flotte ou pulse, élément qui apparaît ou disparaît → possible dans le modèle.
 - Éléments détachés du joueur (plumes qui se posent au sol) → groupes `particle_<nom>` et `emit_<nom>`, animations `particle_<nom>_fall` et `_rest` (guide, section 5 ter).
 - En vol créatif, le joueur reste debout : un plan à 90° se voit par la tranche de face. En élytres et en nage, le corps est couché et le cosmétique le suit : le plan du dos est déjà horizontal dans le monde.
@@ -32,7 +32,7 @@ Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et
 - Toute animation `loop` doit avoir **la même pose à t=0 et t=length**. Le vérificateur le mesure (< 0,05 px).
 - Construire les courbes avec des fonctions périodiques de période = durée (sin/cos), ou des impulsions `bump()` qui reviennent à 0 avant la fin.
 - Pour l'interpolation `catmullrom`, **ne pas mettre de keyframe à t=length** : la boucle se referme sur t=0. Pour `linear`, en mettre un identique au premier.
-- Un halo qui tourne en continu doit faire exactement 360°·k par boucle, sinon il saute.
+- Une pièce qui tourne en continu fait exactement 360°·k par boucle, sinon elle saute. Chaque état ayant sa phase, le fondu de 0,2 s entre états peut faire un petit tourbillon (supposé) ; piste : piloter la rotation par `q.life_time` en Molang.
 - Pas de `uuid` dans les keyframes : l'optimiseur les retire, Blockbench les régénère.
 
 ## États du mod et animations attendues
@@ -42,23 +42,23 @@ Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et
 | Immobile | `idle` | respiration lente (période 4 s) + **étirement** périodique (ouverture ample ~2 s) — boucle 8 s |
 | Marche | `walk` | ailes un peu ramenées vers l'arrière, balancement au rythme du pas |
 | Course | `run` | nettement vers l'arrière, repliées en S, abaissées (profil) — **pas** écartées sur les côtés |
-| Accroupi | `sneak` | repliées serrées contre le dos, pointes qui remontent vers les épaules (« rangées », style Lucifer) |
-| Vol | `fly` | plan **horizontal** (X négatif), battement ample, descente étendue / remontée poignet replié |
-| Élytres | `glide` | horizontal, grandes ouvertes, **battement lent et ample** (pas une pose figée) |
-| En l'air | `air` | demi-basculées, relevées, ouvertes (freinage) |
-| Nage | `swim` | profilées vers l'arrière, ondulation |
+| Accroupi | `sneak` | repliées serrées contre le dos, pointes qui remontent vers les épaules |
+| Vol | `fly` | plan basculé d'environ **40°** (joueur debout, jamais 90°), battement ample, descente étendue / remontée poignet replié |
+| Élytres | `glide` | presque dans le plan du dos (corps couché), grandes ouvertes, battement lent, ample à la fusée |
+| En l'air | `fall` | demi-basculées (environ 26°), relevées, ouvertes (freinage) |
+| Nage | `swim` | presque dans le plan du dos (corps couché), ondulation |
 | Monture | `mount` | repos relevé, respiration ample |
 | Sommeil | `sleep` | repliées, tombantes, respiration très lente |
-| Attaque | `attack` | impulsion : déploiement brusque puis retour (0,8 s) |
-| Blessé | `hurt` | impulsion : sursaut vers l'arrière + tremblement amorti (0,8 s) |
+| Attaque | `attack` | `once` : déploiement brusque puis retour à 0 (0,8 s), groupes concernés seuls |
+| Blessé | `hurt` | `once` : sursaut vers l'arrière + tremblement amorti, retour à 0 (0,8 s) |
 
-Si un état n'a pas d'animation, le mod joue `idle`. Toujours fournir au minimum idle, fly, glide, run, sneak.
+Mots reconnus et repli d'un état manquant : guide, section 6.2 (élytres → vol, course → marche, sinon `idle`). Ailes et queues : les 12 états. Pièces discrètes (tête, épaules, armes, auras) : seulement les états utiles.
 
 ## Biomécanique (pour que ça ait l'air d'une aile)
 
 - Squelette = bras : épaule → coude → poignet → bout. Bones imbriqués, chaque plume rattachée au segment qui la porte.
 - Au repos : plan vertical, plumes qui pendent, léger balayage arrière en Z (humérus arrière, avant-bras revient, main repart).
-- En vol : le plan **bascule à l'horizontale** ; descente = extension complète, primaires écartées ; remontée = poignet et coude fléchis, primaires serrées.
+- En vol : le plan bascule (voir le tableau) ; descente = extension complète, primaires écartées ; remontée = poignet et coude fléchis, primaires serrées.
 - Cascade : coude et poignet déphasés de 0,1–0,2 cycle après l'épaule.
 - Une seconde paire (plus petite) suit la grande à ~80 % d'amplitude avec un léger retard.
 - Pas d'angle droit : répartir le repli sur les 3 articulations (ex. course : −30 / +18 / −22, pas 40/40/46).

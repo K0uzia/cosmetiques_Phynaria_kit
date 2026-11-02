@@ -24,7 +24,7 @@ Double-cliquer sur `ouvrir_vestiaire.bat` ouvre le catalogue de tous les cosmét
 CLAUDE.md                 règles du projet et limites du mod
 .claude/rules/            règles par domaine : modélisation, animation, livraison, retours en jeu
 .claude/skills/           procédures invocables (voir plus bas)
-docs/                     guide du mod, demandes au développeur, bug du calque lumineux, exemple de particules
+docs/                     guide du mod, exemples, demandes au développeur (voir docs/README.md)
 tools/                    renderer, optimiseur, vérificateur, calibration, Vestiaire
 cosmetiques/<categorie>/  un dossier par cosmétique
 index.html                catalogue généré
@@ -40,6 +40,7 @@ ouvrir_vestiaire.bat      lance le Vestiaire
 | `tools/verify_bbmodel.py` | Contrôle les limites du mod, les boucles, les superpositions, l'extension et le poids |
 | `tools/optimize_bbmodel.py` | Simplifie les keyframes, compacte le JSON, optimise le PNG |
 | `tools/render_bbmodel.py` | Rendu logiciel de contrôle ; `MODCONV=1` applique la convention du mod |
+| `tools/livrer.py` | Vérifie un cosmétique, crée ses aperçus, met à jour le livrable et le Vestiaire |
 | `tools/gen_calib.py`, `tools/calibration_axes.bbmodel` | Modèle de calibration des axes |
 | `tools/gen_index.py`, `tools/serve_vestiaire.py`, `tools/catalogue_modele.html` | Vestiaire |
 | `tools/example_wings_generator.py` | Ancien exemple d'ailes, qui contient des défauts corrigés depuis ; partir plutôt de `gen_aurelion_wings.py` |
@@ -71,7 +72,7 @@ python tools/verify_bbmodel.py $D/.build/<nom>_opt.bbmodel
 MODCONV=1 ANIM=idle T=1.0 python tools/render_bbmodel.py $D/.build/<nom>_opt.bbmodel idle.png 1.5
 ```
 
-La vérification doit être entièrement verte. Rendre au moins `idle`, `fly`, `run` et `sneak` en 4 vues et regarder le résultat. Ensuite seulement, copier `.build/<nom>_opt.bbmodel` sur `<nom>.bbmodel` et mettre à jour `apercu/`. Le détail est dans `.claude/rules/delivery.md`.
+La vérification ne doit contenir aucun échec. Rendre au moins `idle`, `fly`, `run` et `sneak` en 4 vues et regarder le résultat, puis livrer avec `python tools/livrer.py $D`. Le détail est dans `.claude/rules/delivery.md`.
 
 Un rendu propre et une vérification verte ne prouvent pas le résultat en jeu : le renderer ne montre ni le shader, ni l'éclairage de nuit, ni l'émissif, ni les particules. Quand une capture en jeu et le rendu divergent, c'est la capture qui a raison.
 
@@ -84,9 +85,10 @@ Un rendu propre et une vérification verte ne prouvent pas le résultat en jeu :
 | `/bbmodel-verify` | Vérifier un modèle avant livraison et rendre ses poses clés |
 | `/bbmodel-calibrate` | Mesurer la convention d'axes d'un nouveau mod ou d'une nouvelle version |
 | `/bbmodel-retour-jeu` | Traiter un retour en jeu à partir de captures |
+| `/bbmodel-serie` | Créer plusieurs cosmétiques ou un ensemble, avec un sous-agent par pièce |
 
 ## Règles à connaître
 
-- Les axes suivent la convention mesurée par calibration, pas celle de Blockbench (`.claude/rules/animation.md`).
+- Les axes suivent le guide du mod, section 3 : le jeu lit le `.bbmodel` comme la vue 3D de Blockbench (`.claude/rules/animation.md`).
 - Aucune reproduction de design protégé (personnages, logos) : une référence sert à cerner l'ambiance, le design reste original.
 - Les limites du mod (cubes, groupes, textures, animations, particules) sont listées dans `CLAUDE.md`.

@@ -2,13 +2,13 @@
 
 ## Format
 
-- `meta.model_format = "free"`, `box_uv = false`, `format_version "4.10"`. Texture unique embarquée en base64, résolution déclarée = taille du PNG.
-- Outliner : `body (origin 0,24,0) > item (origin 0,0,0) > …`. Les cosmétiques du serveur utilisent cette racine ; la respecter.
+- `meta.model_format = "free"` ou `modded_entity`, `box_uv = false`, `format_version "4.10"`. Texture embarquée en base64, résolution déclarée = taille du PNG, alpha 0 ou 255 uniquement.
+- Groupe de premier niveau selon ce que suit la pièce : `head`, `body`, `right_arm`, `left_arm`… (guide, section 4). Pivot remplacé par l'articulation du joueur. `particle_<nom>` à la racine, jamais porté.
 - Dos du joueur = **+Z**. Pointe des ailes vers l'extérieur = ±X. Épaules à y ≈ 23.
 - Noms de groupes ≤ 64 caractères (le mod coupe au-delà), uniques, lisibles (`shoulder_l`, `p3_r`…). Les points de départ de particules sont des groupes vides `emit_<nom>`.
 - Rotations de base des cubes et groupes ≤ ±360°, rotations de face multiples de 90°, inflate ≤ ±8, résolution UV ≤ 4096.
 
-## Vrai volume 3D (retour en jeu, prime sur la méthode « plaque + cutout » ci-dessous)
+## Vrai volume 3D (retour en jeu, prime sur les sections suivantes)
 
 Vue par la tranche, une aile en plaques découpées se lit comme un tas de feuilles empilées : les tranches transparentes laissent des lignes flottantes séparées par du vide. Modèle de référence : `cosmetiques/ailes/aile_tentacule_demoniaque.bbmodel`.
 - Une plume = peau + âme : deux fines plaques au contour rond découpé par alpha 0/255, tranches transparentes, autour de cubes pleins plus étroits, invisibles de face, qui remplissent l'épaisseur. Des cubes pleins seuls donnent des marches et un aspect « trop carré » (retour en jeu).
@@ -17,7 +17,7 @@ Vue par la tranche, une aile en plaques découpées se lit comme un tas de feuil
 
 ## Volume, pas plans
 
-- **Jamais d'épaisseur nulle** : un cube de 0 px d'épaisseur z-fight sous shader (clignotement noir). Minimum 0,3 px ; 0,5 px pour les plumes. Exception : une plaque à une seule couche voulue (plume-particule), à 0,06 px, car à 0,3 px ses deux faces se lisent comme deux couches.
+- **Jamais d'épaisseur nulle** : un cube de 0 px d'épaisseur z-fight sous shader (clignotement noir). Minimum 0,3 px ; 0,5 px pour les plumes. Particule : une seule face texturée, pour ne voir qu'une couche (`retours-en-jeu.md`).
 - **Jamais deux faces coplanaires** : décaler chaque élément d'une rangée d'au moins 0,03 px en profondeur, et chaque rangée de ~0,8 px.
 - Les tranches d'une plaque fine (east/west/up/down) sont **transparentes** (UV sur un texel transparent) : on ne veut pas voir les côtés des plaques.
 - Les éléments structurels (os, bijoux) sont de vrais volumes texturés sur 6 faces, avec des UV distinctes par face si la forme n'est pas carrée.
@@ -25,7 +25,7 @@ Vue par la tranche, une aile en plaques découpées se lit comme un tas de feuil
 ## Silhouettes par transparence (la clé du « non-cubique »)
 
 - Une plume, une écaille, un éclat = **plaque rectangulaire + texture découpée par alpha** (cutout). La forme vient de la texture, pas du cube.
-- Peindre les textures par script en sur-échantillonnage (×3–4) puis LANCZOS + seuil alpha (≈110). Bords propres, pas de confettis.
+- Peindre les textures par script en sur-échantillonnage (×3–4) puis LANCZOS + seuil alpha (≈110) : le résultat final ne garde que 0 ou 255. Bords propres, pas de confettis.
 - Bouts **arrondis** (demi-ellipse) plutôt qu'effilés : les pointes très fines se crénelisent.
 - Variantes : 4–6 textures par type de plume, attribuées en alternance pour casser la répétition.
 
@@ -42,15 +42,15 @@ Vue par la tranche, une aile en plaques découpées se lit comme un tas de feuil
 - Humérus court qui monte en arrière, avant-bras long, main courte qui porte les primaires.
 - Primaires sur la main (éventail radial), secondaires perpendiculaires au bord de fuite sur l'avant-bras, tertiaires près du corps, 2–3 rangs de couvertures côté dorsal, scapulaires qui couvrent la racine.
 - Les ailes **sortent du dos** : pas de plaque/sac à dos. Racine basse et proche de la colonne (x ≈ ±3, y ≈ 23), couverte par des scapulaires.
-- Pas de « motes » / petits cubes volants : illisible en jeu.
+- Pas de petits cubes volants portés par le modèle : illisibles. Utiliser des particules, ou des éclats de 3 px au moins.
 
 ## Budget
 
-- Viser 150–300 cubes, 40–90 groupes pour des ailes. Un bone par rémige (primaires + secondaires) suffit pour l'éventail ; couvertures = cubes directs du segment.
+- Ordres de grandeur livrés : ailes 275–500 cubes, queue 80–130, tête 90–150, épaules 150, arme 100, aura 35–45 (le guide conseille quelques centaines au plus). Un bone par rémige (primaires + secondaires) suffit pour l'éventail ; couvertures = cubes directs du segment.
 - Extension max : rester < 60 px pour garder une marge (limite 64 par axe, point de mesure non confirmé).
-- Poids : < 1 Mo brut, < 200 Ko compressé après optimisation.
+- Poids : < 1 Mo brut, < 200 Ko compressé après optimisation (limite du mod : 1 000 Ko).
 
 ## Interdits
 
-- Reproduire un design protégé ou s'en « inspirer de près » (Tyrael, personnages, logos). Design original.
-- Livrer une « v+1 » à l'aveugle quand l'utilisateur dit que c'est inversé : d'abord vérifier la convention avec le modèle de calibration.
+- Reproduire un design protégé ou s'en « inspirer de près » (personnages, logos, armes de jeux). Design original.
+- Refaire le design quand le souci est une inversion d'axe : vérifier d'abord le signe dans `mirror()`.
