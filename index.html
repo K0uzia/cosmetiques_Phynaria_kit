@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vestiaire Phynaria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Concept : l'armoire d'un personnage. Colonne des ensembles à gauche, vitrine à droite ; chaque ensemble impose sa teinte. */
+:root{
+  color-scheme:dark;
+  --fond:#14131b;--creux:#0e0d13;--surface:#1d1b26;--surface2:#282533;--trait:#3a3648;--texte:#eeebf4;--doux:#a9a4b8;
+  --teinte:#b9a7e8;--sur-teinte:#16131f;--ok:#7fd49b;--alerte:#e8b45f;
+  --titre:"Alegreya SC",Georgia,serif;--corps:"Alegreya Sans","Segoe UI",system-ui,sans-serif;--chiffre:"JetBrains Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--fond);color:var(--texte);font:16px/1.45 var(--corps)}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--teinte);outline-offset:2px}
+.page{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+aside{background:var(--creux);border-right:1px solid var(--trait);padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:18px}
+.marque{font:700 25px/1.05 var(--titre);padding:0 8px}
+.marque small{display:block;font:400 13px/1.4 var(--corps);color:var(--doux);margin-top:6px}
+.rubrique{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);padding:0 8px;margin:0 0 6px}
+.ens{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border-radius:7px;text-align:left}
+.ens:hover{background:var(--surface)}
+.ens[aria-pressed=true]{background:var(--surface2)}
+.pastille{width:11px;height:11px;transform:rotate(45deg);background:var(--c);flex:none}
+.ens .n{margin-left:auto;font:12px var(--chiffre);color:var(--doux)}
+.etat-direct{margin-top:auto;padding:10px 8px 0;border-top:1px solid var(--trait);font-size:13px;color:var(--doux);display:flex;gap:8px;align-items:flex-start}
+.point{width:8px;height:8px;border-radius:50%;background:var(--alerte);margin-top:6px;flex:none}
+.etat-direct.actif .point{background:var(--ok)}
+main{min-width:0;padding:22px 26px 50px}
+.barre{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+#recherche{flex:1 1 240px;min-width:0;background:var(--surface);border:1px solid var(--trait);border-radius:7px;color:var(--texte);padding:9px 12px;font:inherit}
+.seg{display:inline-flex;border:1px solid var(--trait);border-radius:7px;overflow:hidden}
+.seg button{padding:8px 13px;color:var(--doux);background:var(--surface)}
+.seg button[aria-pressed=true]{background:var(--surface2);color:var(--texte);font-weight:700}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.cats button{padding:4px 12px;border:1px solid var(--trait);border-radius:6px;color:var(--doux);font-size:15px}
+.cats button:hover{color:var(--texte)}
+.cats button[aria-pressed=true]{background:var(--texte);border-color:var(--texte);color:var(--fond);font-weight:700}
+.section{display:flex;align-items:baseline;gap:12px;margin:26px 0 12px;--teinte:var(--c)}
+.section h2{font:700 24px/1.1 var(--titre);margin:0;color:var(--teinte);text-wrap:balance}
+.section span{color:var(--doux);font-size:14px}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.carte{display:flex;flex-direction:column;text-align:left;background:var(--surface);border-bottom:3px solid var(--c);min-width:0;transition:transform .12s,background .12s}
+.carte:hover{background:var(--surface2);transform:translateY(-2px)}
+.fen{position:relative;overflow:hidden;aspect-ratio:1;background:var(--creux);max-width:100%}
+.fen img{position:absolute;left:0;top:0;max-width:none;display:block}
+.vide{height:100%;display:grid;place-items:center;color:var(--doux);font-size:14px;padding:12px;text-align:center}
+.neuf{position:absolute;right:8px;top:8px;background:var(--ok);color:#0d2415;font-size:12px;font-weight:700;padding:1px 7px;border-radius:4px}
+.corps-carte{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.nom{font:700 18px/1.2 var(--titre);overflow-wrap:anywhere}
+.meta{color:var(--doux);font-size:14px}
+.rien{color:var(--doux);padding:50px 0;text-align:center}
+dialog{width:min(1120px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:var(--surface);color:var(--texte);border:1px solid var(--trait);border-top:3px solid var(--teinte);padding:0;border-radius:6px;overflow:auto}
+dialog::backdrop{background:#07060bcc}
+.fiche{display:grid;grid-template-columns:minmax(0,1fr) 310px}
+.scene{background:var(--creux);padding:14px;min-width:0}
+.vues{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.vues button{padding:4px 10px;border-radius:5px;color:var(--doux);font-size:14px;border:1px solid var(--trait)}
+.vues button[aria-pressed=true]{border-color:var(--teinte);color:var(--texte)}
+#vue img.pleine{width:100%;display:block}
+#vue img.tex{image-rendering:pixelated;display:block;width:100%;max-width:512px;margin:auto;background:repeating-conic-gradient(#2a2733 0 25%,#1c1a24 0 50%) 0 0/24px 24px}
+#vue .fen{max-width:560px;margin:auto}
+.cote{padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.cote h3{font:700 27px/1.1 var(--titre);margin:0;overflow-wrap:anywhere;text-wrap:balance}
+.sous{color:var(--doux);margin-top:4px}
+.dl{display:block;text-align:center;background:var(--teinte);color:var(--sur-teinte);font-weight:700;padding:11px;border-radius:6px;text-decoration:none}
+.dl:hover{filter:brightness(1.1)}
+.jauge{display:grid;gap:4px;font-size:14px}
+.jauge div:first-child{display:flex;justify-content:space-between;gap:8px;color:var(--doux)}
+.jauge b{font:12px var(--chiffre);color:var(--texte)}
+.rail{height:5px;background:var(--surface2)}
+.rail i{display:block;height:100%;background:var(--teinte)}
+.etats,.avec{display:flex;flex-wrap:wrap;gap:5px}
+.etats button{padding:3px 9px;border:1px solid var(--trait);border-radius:5px;font-size:14px;color:var(--doux)}
+.etats button:hover{color:var(--texte)}
+.etats button[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
+.avec button{padding:3px 9px;background:var(--surface2);border-radius:5px;font-size:14px}
+.note{font-size:14px;color:var(--doux);margin:0}
+.chemin{font:12px var(--chiffre);color:var(--doux);overflow-wrap:anywhere}
+.fermer{position:absolute;right:10px;top:10px;padding:4px 10px;background:var(--surface2);border-radius:5px}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--ok);color:#0d2415;font-weight:700;padding:10px 14px;border-radius:6px;max-width:calc(100vw - 36px)}
+@media (max-width:860px){
+  .page{grid-template-columns:minmax(0,1fr)}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--trait);padding:16px}
+  .etat-direct{margin-top:0}
+  main{padding:16px 16px 40px}
+  .fiche{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){.carte{transition:none}.carte:hover{transform:none}}
+</style></head><body>
+<div class="page">
+<aside>
+  <div class="marque">Vestiaire<small>Cosmétiques Phynaria</small></div>
+  <div><p class="rubrique">Ensembles</p><div id="ensembles"></div></div>
+  <div class="etat-direct" id="direct"><span class="point"></span><span id="direct-txt"></span></div>
+</aside>
+<main>
+  <div class="barre">
+    <input type="search" id="recherche" placeholder="Chercher un cosmétique, un ensemble…" aria-label="Chercher un cosmétique">
+    <span class="seg" id="tri" role="group" aria-label="Ranger par"></span>
+  </div>
+  <div class="cats" id="cats" role="group" aria-label="Catégories"></div>
+  <div id="liste"></div>
+</main>
+</div>
+<dialog id="dlg" aria-labelledby="titre"><button class="fermer" id="fermer">Fermer</button><div class="fiche">
+  <div class="scene"><div class="vues" id="vues"></div><div id="vue"></div></div>
+  <div class="cote" id="cote"></div>
+</div></dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+let D = {"fiches": [{"nom": "aile_tentacule_demoniaque", "categorie": "ailes", "ensemble": "Autres", "bbmodel": "cosmetiques/ailes/aile_tentacule_demoniaque.bbmodel", "fichier": "aile_tentacule_demoniaque.bbmodel", "gif": null, "planche": null, "nuit": null, "texture": null, "calque": null, "lueur": false, "cubes": 175, "groupes": 41, "etats": ["ondulation"], "apercu_etats": [], "particules": [], "ko_compresse": 31, "ko": 171, "version": 1793642270}, {"nom": "ailes_abyssales", "categorie": "ailes", "ensemble": "Abyssal", "bbmodel": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales.bbmodel", "fichier": "ailes_abyssales.bbmodel", "gif": "cosmetiques/ailes/ailes_abyssales/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_abyssales/apercu/planche.png", "nuit": null, "texture": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales.png", "calque": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales_e.png", "lueur": false, "cubes": 275, "groupes": 37, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 113, "ko": 415, "version": 1793652621}, {"nom": "ailes_givre", "categorie": "ailes", "ensemble": "Givre", "bbmodel": "cosmetiques/ailes/ailes_givre/ailes_givre.bbmodel", "fichier": "ailes_givre.bbmodel", "gif": "cosmetiques/ailes/ailes_givre/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_givre/apercu/planche.png", "nuit": null, "texture": "cosmetiques/ailes/ailes_givre/ailes_givre.png", "calque": "cosmetiques/ailes/ailes_givre/ailes_givre_e.png", "lueur": false, "cubes": 353, "groupes": 45, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["givre"], "ko_compresse": 69, "ko": 393, "version": 1793660905}, {"nom": "ailes_mecaniques", "categorie": "ailes", "ensemble": "Mécanique", "bbmodel": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques.bbmodel", "fichier": "ailes_mecaniques.bbmodel", "gif": "cosmetiques/ailes/ailes_mecaniques/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_mecaniques/apercu/planche.png", "nuit": null, "texture": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques.png", "calque": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques_e.png", "lueur": false, "cubes": 334, "groupes": 82, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["vapeur"], "ko_compresse": 132, "ko": 657, "version": 1793660930}, {"nom": "aurelion_wings", "categorie": "ailes", "ensemble": "Céleste", "bbmodel": "cosmetiques/ailes/aurelion_wings/aurelion_wings.bbmodel", "fichier": "aurelion_wings.bbmodel", "gif": "cosmetiques/ailes/aurelion_wings/apercu/animations.gif", "planche": "cosmetiques/ailes/aurelion_wings/apercu/planche.png", "nuit": "cosmetiques/ailes/aurelion_wings/apercu/nuit.png", "texture": "cosmetiques/ailes/aurelion_wings/aurelion_wings.png", "calque": "cosmetiques/ailes/aurelion_wings/aurelion_wings_e.png", "lueur": true, "cubes": 504, "groupes": 67, "etats": ["idle", "fly", "glide", "sneak", "walk", "run", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["plume"], "ko_compresse": 201, "ko": 698, "version": 1793649007}, {"nom": "lames_abyssales", "categorie": "armes", "ensemble": "Abyssal", "bbmodel": "cosmetiques/armes/lames_abyssales/lames_abyssales.bbmodel", "fichier": "lames_abyssales.bbmodel", "gif": "cosmetiques/armes/lames_abyssales/apercu/animations.gif", "planche": "cosmetiques/armes/lames_abyssales/apercu/planche.png", "nuit": null, "texture": "cosmetiques/armes/lames_abyssales/lames_abyssales.png", "calque": "cosmetiques/armes/lames_abyssales/lames_abyssales_e.png", "lueur": false, "cubes": 97, "groupes": 19, "etats": ["idle", "run", "sneak", "attack"], "apercu_etats": ["idle", "run", "sneak", "attack"], "particules": ["braise"], "ko_compresse": 35, "ko": 121, "version": 1793660894}, {"nom": "aura_abyssale", "categorie": "auras", "ensemble": "Abyssal", "bbmodel": "cosmetiques/auras/aura_abyssale/aura_abyssale.bbmodel", "fichier": "aura_abyssale.bbmodel", "gif": "cosmetiques/auras/aura_abyssale/apercu/animations.gif", "planche": "cosmetiques/auras/aura_abyssale/apercu/planche.png", "nuit": null, "texture": "cosmetiques/auras/aura_abyssale/aura_abyssale.png", "calque": "cosmetiques/auras/aura_abyssale/aura_abyssale_e.png", "lueur": false, "cubes": 35, "groupes": 39, "etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "particules": ["braise"], "ko_compresse": 49, "ko": 293, "version": 1793660896}, {"nom": "aura_celeste", "categorie": "auras", "ensemble": "Céleste", "bbmodel": "cosmetiques/auras/aura_celeste/aura_celeste.bbmodel", "fichier": "aura_celeste.bbmodel", "gif": "cosmetiques/auras/aura_celeste/apercu/animations.gif", "planche": "cosmetiques/auras/aura_celeste/apercu/planche.png", "nuit": null, "texture": "cosmetiques/auras/aura_celeste/aura_celeste.png", "calque": "cosmetiques/auras/aura_celeste/aura_celeste_e.png", "lueur": false, "cubes": 43, "groupes": 23, "etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "particules": ["plume"], "ko_compresse": 44, "ko": 231, "version": 1793660903}, {"nom": "bandeau_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "bbmodel": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal.bbmodel", "fichier": "bandeau_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/bandeau_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/bandeau_abyssal/apercu/planche.png", "nuit": null, "texture": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal.png", "calque": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal_e.png", "lueur": false, "cubes": 98, "groupes": 18, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 46, "ko": 160, "version": 1793656686}, {"nom": "chapeau_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "bbmodel": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal.bbmodel", "fichier": "chapeau_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/chapeau_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/chapeau_abyssal/apercu/planche.png", "nuit": null, "texture": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal.png", "calque": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal_e.png", "lueur": false, "cubes": 145, "groupes": 20, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 103, "ko": 260, "version": 1793654398}, {"nom": "diademe_celeste", "categorie": "chapeaux", "ensemble": "Céleste", "bbmodel": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste.bbmodel", "fichier": "diademe_celeste.bbmodel", "gif": "cosmetiques/chapeaux/diademe_celeste/apercu/animations.gif", "planche": "cosmetiques/chapeaux/diademe_celeste/apercu/planche.png", "nuit": null, "texture": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste.png", "calque": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste_e.png", "lueur": false, "cubes": 89, "groupes": 20, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["plume"], "ko_compresse": 48, "ko": 163, "version": 1793660901}, {"nom": "masque_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "bbmodel": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal.bbmodel", "fichier": "masque_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/masque_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/masque_abyssal/apercu/planche.png", "nuit": null, "texture": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal.png", "calque": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal_e.png", "lueur": false, "cubes": 131, "groupes": 17, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 42, "ko": 140, "version": 1793654708}, {"nom": "epaulieres_abyssales", "categorie": "epaules", "ensemble": "Abyssal", "bbmodel": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales.bbmodel", "fichier": "epaulieres_abyssales.bbmodel", "gif": "cosmetiques/epaules/epaulieres_abyssales/apercu/animations.gif", "planche": "cosmetiques/epaules/epaulieres_abyssales/apercu/planche.png", "nuit": null, "texture": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales.png", "calque": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales_e.png", "lueur": false, "cubes": 149, "groupes": 30, "etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 58, "ko": 278, "version": 1793660897}, {"nom": "familier_crane", "categorie": "familiers", "ensemble": "Abyssal", "bbmodel": "cosmetiques/familiers/familier_crane/familier_crane.bbmodel", "fichier": "familier_crane.bbmodel", "gif": "cosmetiques/familiers/familier_crane/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_crane/apercu/planche.png", "nuit": null, "texture": "cosmetiques/familiers/familier_crane/familier_crane.png", "calque": "cosmetiques/familiers/familier_crane/familier_crane_e.png", "lueur": false, "cubes": 103, "groupes": 15, "etats": ["idle", "walk", "run", "fly", "glide", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "fly", "glide", "sneak", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 112, "ko": 259, "version": 1793660965}, {"nom": "queue_abyssale", "categorie": "queues", "ensemble": "Abyssal", "bbmodel": "cosmetiques/queues/queue_abyssale/queue_abyssale.bbmodel", "fichier": "queue_abyssale.bbmodel", "gif": "cosmetiques/queues/queue_abyssale/apercu/animations.gif", "planche": "cosmetiques/queues/queue_abyssale/apercu/planche.png", "nuit": null, "texture": "cosmetiques/queues/queue_abyssale/queue_abyssale.png", "calque": "cosmetiques/queues/queue_abyssale/queue_abyssale_e.png", "lueur": false, "cubes": 129, "groupes": 18, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 41, "ko": 217, "version": 1793654388}, {"nom": "queue_abyssale_v2", "categorie": "queues", "ensemble": "Abyssal", "bbmodel": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2.bbmodel", "fichier": "queue_abyssale_v2.bbmodel", "gif": "cosmetiques/queues/queue_abyssale_v2/apercu/animations.gif", "planche": "cosmetiques/queues/queue_abyssale_v2/apercu/planche.png", "nuit": null, "texture": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2.png", "calque": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2_e.png", "lueur": false, "cubes": 78, "groupes": 17, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 40, "ko": 202, "version": 1793660885}], "labels": {"ailes": "Ailes", "chapeaux": "Tête", "queues": "Queues", "epaules": "Épaules", "armes": "Armes", "auras": "Auras", "familiers": "Familiers", "sacs": "Sacs", "outils": "Outils", "blocs": "Blocs"}, "teintes": {"Abyssal": "#9fe04e", "Céleste": "#e6c675", "Givre": "#7fd3ef", "Mécanique": "#d69a62", "Autres": "#b9a7e8"}, "signature": "aile_tentacule_demoniaque:1793642270|ailes_abyssales:1793652621|ailes_givre:1793660905|ailes_mecaniques:1793660930|aurelion_wings:1793649007|lames_abyssales:1793660894|aura_abyssale:1793660896|aura_celeste:1793660903|bandeau_abyssal:1793656686|chapeau_abyssal:1793654398|diademe_celeste:1793660901|masque_abyssal:1793654708|epaulieres_abyssales:1793660897|familier_crane:1793660965|queue_abyssale:1793654388|queue_abyssale_v2:1793660885"};
+const NOMS_ETATS = {idle:"Repos",walk:"Marche",run:"Course",sneak:"Accroupi",fly:"Vol",glide:"Élytres",fall:"En l'air",swim:"Nage",mount:"Monture",sleep:"Sommeil",attack:"Attaque",hurt:"Blessé"};
+const el = (t, p = {}, ...c) => { const e = document.createElement(t); Object.assign(e, p); e.append(...c); return e; };
+const joli = n => n.replace(/_/g, " ").replace(/^./, c => c.toUpperCase());
+const lib = c => D.labels[c] || joli(c);
+const teinte = e => D.teintes[e] || "#a9a4b8";
+const suffixe = (u, f) => u ? u + "?v=" + f.version : null;
+let cat = null, ens = null, tri = "ensemble", ouvert = null, neufs = new Set();
+try { const t = localStorage.getItem("vestiaire-tri"); if (t === "ensemble" || t === "categorie") tri = t; } catch (e) {}
+const ordreEns = () => { const n = e => D.fiches.filter(f => f.ensemble === e).length; return [...new Set(D.fiches.map(f => f.ensemble))].sort((a, b) => (a === "Autres") - (b === "Autres") || n(b) - n(a) || a.localeCompare(b)); };
+const ordreCat = () => { const o = Object.keys(D.labels); return [...new Set(D.fiches.map(f => f.categorie))].sort((a, b) => (o.indexOf(a) + 1 || 99) - (o.indexOf(b) + 1 || 99)); };
+
+/* Recadre une planche ou un GIF : la première vue de la planche, ou la case d'un état dans le GIF. */
+function cadre(url, colonnes, col, rangee, alt) {
+  const f = el("div", { className: "fen" });
+  const img = el("img", { src: url, alt: alt || "", loading: "lazy" });
+  img.style.width = colonnes * 100 + "%"; img.style.left = -col * 100 + "%"; img.style.top = -rangee * 100 + "%";
+  f.append(img); return f;
+}
+function carte(f) {
+  const b = el("button", { className: "carte", onclick: () => ouvrir(f.nom) }); b.style.setProperty("--c", teinte(f.ensemble));
+  let fen;
+  const planche = suffixe(f.planche, f), gif = suffixe(f.gif, f);
+  if (planche) {
+    fen = cadre(planche, 8, 0, 0);
+    const img = fen.firstChild, c = f.apercu_etats.length ? 4 : 8;
+    if (gif) {
+      b.addEventListener("pointerenter", () => { img.src = gif; img.style.width = c * 100 + "%"; });
+      b.addEventListener("pointerleave", () => { img.src = planche; img.style.width = "800%"; });
+    }
+  } else if (gif) fen = cadre(gif, 4, 0, 0);
+  else fen = el("div", { className: "fen" }, el("div", { className: "vide", textContent: "Pas encore d'aperçu" }));
+  if (neufs.has(f.nom)) fen.append(el("span", { className: "neuf", textContent: "Nouveau" }));
+  b.append(fen, el("div", { className: "corps-carte" },
+    el("div", { className: "nom", textContent: joli(f.nom) }),
+    el("div", { className: "meta", textContent: `${tri === "ensemble" ? lib(f.categorie) : f.ensemble} · ${f.cubes} cubes` })));
+  return b;
+}
+function barreEnsembles() {
+  const box = document.getElementById("ensembles"); box.replaceChildren();
+  [[null, "Tous"], ...ordreEns().map(e => [e, e])].forEach(([v, l]) => {
+    const n = D.fiches.filter(f => (!v || f.ensemble === v) && (!cat || f.categorie === cat)).length;
+    const b = el("button", { className: "ens", onclick: () => { ens = v; tout(); } }, el("span", { className: "pastille" }), el("span", { textContent: l }), el("span", { className: "n", textContent: n }));
+    b.style.setProperty("--c", v ? teinte(v) : "#eeebf4"); b.setAttribute("aria-pressed", String(v === ens)); box.append(b);
+  });
+}
+function barreCats() {
+  const box = document.getElementById("cats"); box.replaceChildren();
+  [[null, "Toutes"], ...ordreCat().map(c => [c, lib(c)])].forEach(([v, l]) => {
+    const n = D.fiches.filter(f => (!v || f.categorie === v) && (!ens || f.ensemble === ens)).length;
+    const b = el("button", { textContent: `${l} ${n}`, onclick: () => { cat = v; tout(); } }); b.setAttribute("aria-pressed", String(v === cat)); box.append(b);
+  });
+  const t = document.getElementById("tri"); t.replaceChildren();
+  [["ensemble", "Par ensemble"], ["categorie", "Par catégorie"]].forEach(([v, l]) => {
+    const b = el("button", { textContent: l, onclick: () => { tri = v; try { localStorage.setItem("vestiaire-tri", v); } catch (e) {} tout(); } }); b.setAttribute("aria-pressed", String(v === tri)); t.append(b);
+  });
+}
+function liste() {
+  const q = document.getElementById("recherche").value.trim().toLowerCase();
+  const vis = D.fiches.filter(f => (!cat || f.categorie === cat) && (!ens || f.ensemble === ens) && (!q || [joli(f.nom), f.nom, lib(f.categorie), f.ensemble].some(s => s.toLowerCase().includes(q))));
+  const m = document.getElementById("liste"); m.replaceChildren();
+  if (!vis.length) { m.append(el("p", { className: "rien", textContent: D.fiches.length ? "Aucun cosmétique ne correspond. Effacez la recherche ou changez de filtre." : "L'armoire est vide : les cosmétiques livrés apparaîtront ici." })); return; }
+  const parEns = tri === "ensemble", groupes = parEns ? ordreEns() : ordreCat(), oc = ordreCat();
+  groupes.forEach(g => {
+    const items = vis.filter(f => (parEns ? f.ensemble : f.categorie) === g); if (!items.length) return;
+    const tete = el("div", { className: "section" }, el("h2", { textContent: parEns ? g : lib(g) }), el("span", { textContent: items.length + (items.length > 1 ? " pièces" : " pièce") }));
+    tete.style.setProperty("--c", parEns ? teinte(g) : "#eeebf4"); m.append(tete);
+    const gr = el("div", { className: "grille" });
+    items.sort((a, b) => oc.indexOf(a.categorie) - oc.indexOf(b.categorie) || a.nom.localeCompare(b.nom)).forEach(f => gr.append(carte(f)));
+    m.append(gr);
+  });
+}
+function jauge(nom, val, max, unite) {
+  const j = el("div", { className: "jauge" }, el("div", {}, el("span", { textContent: nom }), el("b", { textContent: `${val} / ${max} ${unite}` })), el("div", { className: "rail" }));
+  const i = el("i"); i.style.width = Math.min(100, Math.max(1.5, 100 * val / max)) + "%"; j.lastChild.append(i); return j;
+}
+function ouvrir(nom) {
+  const f = D.fiches.find(x => x.nom === nom); if (!f) return;
+  ouvert = nom;
+  const dlg = document.getElementById("dlg"); dlg.style.setProperty("--teinte", teinte(f.ensemble));
+  const vues = document.getElementById("vues"), vue = document.getElementById("vue"), cote = document.getElementById("cote");
+  const gif = suffixe(f.gif, f), lignes = Math.ceil(f.apercu_etats.length / 4) || 1;
+  let boutonsEtats = [];
+  const marquer = n => boutonsEtats.forEach(([e, b]) => b.setAttribute("aria-pressed", String(e === n)));
+  const montrerImg = (url, tex, alt) => { vue.replaceChildren(el("img", { src: url, alt, className: tex ? "tex" : "pleine" })); marquer(null); };
+  const montrerEtat = e => {
+    const i = f.apercu_etats.indexOf(e); if (i < 0 || !gif) return;
+    vue.replaceChildren(cadre(gif, 4, i % 4, Math.floor(i / 4), `${NOMS_ETATS[e] || e} de ${joli(f.nom)}`));
+    vues.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", "false")); marquer(e);
+  };
+  const liste_vues = [["Toutes les animations", gif], ["Planche", suffixe(f.planche, f)], ["De nuit", suffixe(f.nuit, f)], ["Texture", suffixe(f.texture, f), true], ["Calque lumineux", suffixe(f.calque, f), true]].filter(v => v[1]);
+  vues.replaceChildren();
+  liste_vues.forEach((v, i) => {
+    const b = el("button", { textContent: v[0], onclick: () => { vues.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); montrerImg(v[1], v[2], `${v[0]} de ${joli(f.nom)}`); } });
+    vues.append(b); if (!i) b.setAttribute("aria-pressed", "true");
+  });
+  if (liste_vues.length) montrerImg(liste_vues[0][1], liste_vues[0][2], `${liste_vues[0][0]} de ${joli(f.nom)}`);
+  else vue.replaceChildren(el("p", { className: "rien", textContent: "Pas encore d'aperçu pour ce cosmétique." }));
+
+  const etats = el("div", { className: "etats" });
+  f.etats.forEach(e => {
+    const dispo = f.apercu_etats.includes(e) && gif;
+    const b = el("button", { textContent: NOMS_ETATS[e] || e, disabled: !dispo, onclick: () => montrerEtat(e) });
+    if (!dispo) b.style.opacity = .5;
+    etats.append(b); boutonsEtats.push([e, b]);
+  });
+  const avec = el("div", { className: "avec" });
+  D.fiches.filter(x => x.ensemble === f.ensemble && x.nom !== f.nom && f.ensemble !== "Autres").forEach(x => avec.append(el("button", { textContent: joli(x.nom), onclick: () => ouvrir(x.nom) })));
+  const dl = el("a", { className: "dl", href: f.bbmodel, download: f.fichier, textContent: "Télécharger le .bbmodel" });
+  const lueur = f.lueur ? "Lueur intégrée au fichier." : f.calque ? "Calque de lueur prêt, désactivé jusqu'au correctif du mod." : "Pas de lueur.";
+  cote.replaceChildren(
+    el("div", {}, el("h3", { id: "titre", textContent: joli(f.nom) }), el("div", { className: "sous", textContent: `${f.ensemble} · ${lib(f.categorie)}` })),
+    dl,
+    el("div", {}, el("p", { className: "rubrique", textContent: "Limites du mod" }),
+      el("div", { style: "display:grid;gap:9px" }, jauge("Cubes", f.cubes, 8192, ""), jauge("Groupes", f.groupes, 2048, ""), jauge("Envoi compressé", f.ko_compresse, 1000, "Ko"))),
+    f.etats.length ? el("div", {}, el("p", { className: "rubrique", textContent: "Animations" }), etats) : "",
+    el("p", { className: "note", textContent: lueur + (f.particules.length ? ` Particules : ${f.particules.join(", ")}.` : "") }),
+    avec.children.length ? el("div", {}, el("p", { className: "rubrique", textContent: "Du même ensemble" }), avec, el("p", { className: "note", style: "margin-top:6px", textContent: "Le mod permet d'en porter 3 à la fois." })) : "",
+    el("div", { className: "chemin", textContent: decodeURIComponent(f.bbmodel) }));
+  if (!dlg.open) dlg.showModal();
+}
+function tout() { barreEnsembles(); barreCats(); liste(); }
+document.getElementById("recherche").addEventListener("input", liste);
+document.getElementById("fermer").onclick = () => document.getElementById("dlg").close();
+document.getElementById("dlg").addEventListener("click", e => { if (e.target.id === "dlg") e.target.close(); });
+document.getElementById("dlg").addEventListener("close", () => { ouvert = null; });
+
+/* Mise à jour automatique : uniquement avec le petit serveur local (ouvrir_vestiaire.bat). */
+const direct = document.getElementById("direct"), txt = document.getElementById("direct-txt");
+function statut(actif, message) { direct.classList.toggle("actif", actif); txt.textContent = message; }
+let toastT;
+function annoncer(m) { const t = document.getElementById("toast"); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 6000); }
+async function suivre() {
+  try {
+    const r = await fetch("api/cosmetiques?s=" + encodeURIComponent(D.signature), { cache: "no-store" });
+    if (r.status === 304) { statut(true, "Mise à jour automatique active"); return; }
+    if (!r.ok) throw new Error(r.status);
+    const n = await r.json(), avant = new Set(D.fiches.map(f => f.nom)), maj = new Map(D.fiches.map(f => [f.nom, f.version]));
+    const ajouts = n.fiches.filter(f => !avant.has(f.nom)), modifs = n.fiches.filter(f => avant.has(f.nom) && maj.get(f.nom) !== f.version);
+    D = n; ajouts.forEach(f => neufs.add(f.nom)); tout();
+    statut(true, "Mise à jour automatique active");
+    if (ajouts.length) annoncer(`Nouveau : ${ajouts.map(f => joli(f.nom)).join(", ")}`);
+    else if (modifs.length) annoncer(`Mis à jour : ${modifs.map(f => joli(f.nom)).join(", ")}`);
+    if (ouvert && modifs.some(f => f.nom === ouvert)) ouvrir(ouvert);
+  } catch (e) { statut(false, "Serveur arrêté : relancez ouvrir_vestiaire.bat pour retrouver la mise à jour automatique."); }
+}
+tout();
+if (location.protocol === "file:") statut(false, "Liste figée à la dernière génération. Ouvrez ouvrir_vestiaire.bat pour la mise à jour automatique.");
+else { statut(true, "Mise à jour automatique active"); setInterval(suivre, 2500); }
+document.addEventListener("keydown", e => { if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); document.getElementById("recherche").focus(); } });
+</script></body></html>

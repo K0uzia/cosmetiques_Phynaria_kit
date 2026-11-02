@@ -1,0 +1,736 @@
+{
+  "meta": {
+    "format_version": "4.10",
+    "model_format": "modded_entity",
+    "box_uv": false
+  },
+  "resolution": {
+    "width": 32,
+    "height": 32
+  },
+  "elements": [
+    {
+      "name": "brim",
+      "type": "cube",
+      "uuid": "brim",
+      "from": [
+        -5.0,
+        32.0,
+        -5.0
+      ],
+      "to": [
+        5.0,
+        33.0,
+        5.0
+      ],
+      "origin": [
+        0.0,
+        32.0,
+        0.0
+      ],
+      "box_uv": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            10,
+            1
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            10,
+            1
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            10,
+            1
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            10,
+            1
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            10,
+            10
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            10,
+            10
+          ],
+          "texture": 0
+        }
+      }
+    },
+    {
+      "name": "crown",
+      "type": "cube",
+      "uuid": "crown",
+      "from": [
+        -3.0,
+        33.0,
+        -3.0
+      ],
+      "to": [
+        3.0,
+        39.0,
+        3.0
+      ],
+      "origin": [
+        0.0,
+        33.0,
+        0.0
+      ],
+      "box_uv": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            12,
+            6,
+            18
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            12,
+            6,
+            18
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            12,
+            6,
+            18
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            12,
+            6,
+            18
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            12,
+            6,
+            18
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            12,
+            6,
+            18
+          ],
+          "texture": 0
+        }
+      }
+    },
+    {
+      "name": "wing_r",
+      "type": "cube",
+      "uuid": "wing_r",
+      "from": [
+        1.0,
+        14.0,
+        2.0
+      ],
+      "to": [
+        9.0,
+        23.0,
+        3.0
+      ],
+      "origin": [
+        1.0,
+        22.0,
+        2.0
+      ],
+      "rotation": [
+        0.0,
+        -20.0,
+        -10.0
+      ],
+      "box_uv": true,
+      "uv_offset": [
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        }
+      }
+    },
+    {
+      "name": "wing_l",
+      "type": "cube",
+      "uuid": "wing_l",
+      "from": [
+        -9.0,
+        14.0,
+        2.0
+      ],
+      "to": [
+        -1.0,
+        23.0,
+        3.0
+      ],
+      "origin": [
+        -1.0,
+        22.0,
+        2.0
+      ],
+      "rotation": [
+        0.0,
+        20.0,
+        10.0
+      ],
+      "box_uv": true,
+      "uv_offset": [
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": 0
+        }
+      }
+    },
+    {
+      "name": "plume",
+      "type": "cube",
+      "uuid": "plume",
+      "from": [
+        -1.5,
+        0.0,
+        -0.5
+      ],
+      "to": [
+        1.5,
+        0.4,
+        0.5
+      ],
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "box_uv": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            3,
+            1
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            3,
+            1
+          ],
+          "texture": 0
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            3,
+            1
+          ],
+          "texture": 0
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            3,
+            1
+          ],
+          "texture": 0
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            3,
+            1
+          ],
+          "texture": 0
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            3,
+            1
+          ],
+          "texture": 0
+        }
+      }
+    }
+  ],
+  "outliner": [
+    {
+      "name": "head",
+      "origin": [
+        0.0,
+        24.0,
+        0.0
+      ],
+      "children": [
+        "brim",
+        "crown"
+      ]
+    },
+    {
+      "name": "body",
+      "uuid": "body-bone",
+      "origin": [
+        0.0,
+        24.0,
+        0.0
+      ],
+      "children": [
+        {
+          "name": "wing_r_bone",
+          "origin": [
+            1.0,
+            22.0,
+            2.0
+          ],
+          "children": [
+            "wing_r",
+            {
+              "name": "emit_plume",
+              "origin": [
+                9.0,
+                15.0,
+                2.5
+              ],
+              "children": [],
+              "uuid": "emit-0"
+            }
+          ],
+          "uuid": "wing-r-bone"
+        },
+        {
+          "name": "wing_l_bone",
+          "origin": [
+            -1.0,
+            22.0,
+            2.0
+          ],
+          "children": [
+            "wing_l",
+            {
+              "name": "emit_plume2",
+              "origin": [
+                -9.0,
+                15.0,
+                2.5
+              ],
+              "children": [],
+              "uuid": "emit-1"
+            }
+          ],
+          "uuid": "wing-l-bone"
+        }
+      ]
+    },
+    {
+      "name": "particle_plume",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "children": [
+        "plume"
+      ],
+      "uuid": "plume-shape"
+    }
+  ],
+  "textures": [
+    {
+      "name": "texture.png",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAArElEQVR4Xu2QsQ3DMBDEPInr7OBhvUbqjOQFFMDp2BACA7gRgSuuOL6gbd9fYybbv+EBC/cZHrBwn+EBC/cZHrBwn+EBC/cZHrBwn+EBC/cZHrBwn+EBC/cZHrBwn+EBC/eZz3GMmZzvcee6fqn9+Qfwiy0U1L4esB6wHvD8A2ahoHb6FQpqp1+hoHb6FQpqp1+hoHb6FQpqp1+hoHb6FQpqp1+hoHb6FQpq/wKLxSVai32/iAAAAABJRU5ErkJggg\u003d\u003d"
+    }
+  ],
+  "animations": [
+    {
+      "name": "animation.wings.idle",
+      "loop": "loop",
+      "length": 1.0,
+      "animators": {
+        "wing-r-bone": {
+          "name": "wing_r_bone",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "time": 0.0,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0.0",
+                  "z": "0"
+                }
+              ]
+            },
+            {
+              "channel": "rotation",
+              "time": 0.5,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "-35.0",
+                  "z": "0"
+                }
+              ]
+            },
+            {
+              "channel": "rotation",
+              "time": 1.0,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0.0",
+                  "z": "0"
+                }
+              ]
+            }
+          ]
+        },
+        "wing-l-bone": {
+          "name": "wing_l_bone",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "time": 0,
+              "interpolation": "linear",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "math.sin(query.anim_time * 360) * 35",
+                  "z": "0"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "animation.wings.fly",
+      "loop": "loop",
+      "length": 0.4,
+      "animators": {
+        "wing-r-bone": {
+          "name": "wing_r_bone",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "time": 0.0,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0.0",
+                  "z": "0"
+                }
+              ]
+            },
+            {
+              "channel": "rotation",
+              "time": 0.2,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "-70.0",
+                  "z": "0"
+                }
+              ]
+            },
+            {
+              "channel": "rotation",
+              "time": 0.4,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0.0",
+                  "z": "0"
+                }
+              ]
+            }
+          ]
+        },
+        "wing-l-bone": {
+          "name": "wing_l_bone",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "time": 0,
+              "interpolation": "linear",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "math.sin(query.anim_time * 900) * 70",
+                  "z": "0"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "animation.wings.attack",
+      "loop": "once",
+      "length": 0.3,
+      "animators": {
+        "wing-r-bone": {
+          "name": "wing_r_bone",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "time": 0.0,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0.0",
+                  "z": "0"
+                }
+              ]
+            },
+            {
+              "channel": "rotation",
+              "time": 0.15,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "-50.0",
+                  "z": "0"
+                }
+              ]
+            },
+            {
+              "channel": "rotation",
+              "time": 0.3,
+              "interpolation": "catmullrom",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0.0",
+                  "z": "0"
+                }
+              ]
+            }
+          ]
+        },
+        "wing-l-bone": {
+          "name": "wing_l_bone",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "time": 0,
+              "interpolation": "linear",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "math.sin(query.anim_time * 600) * 50",
+                  "z": "0"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "animation.wings.particle_plume_fall",
+      "loop": "loop",
+      "length": 1.0,
+      "animators": {
+        "plume-shape": {
+          "name": "particle_plume",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "time": 0,
+              "interpolation": "linear",
+              "data_points": [
+                {
+                  "x": "math.sin(query.anim_time * 360) * 30",
+                  "y": "query.anim_time * 360",
+                  "z": "0"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
