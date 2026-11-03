@@ -11,10 +11,22 @@ MODELE = os.path.join(ROOT, "tools", "catalogue_modele.html")
 LABELS = {"ailes": "Ailes", "chapeaux": "Tête", "queues": "Queues", "epaules": "Épaules", "armes": "Armes", "auras": "Auras",
           "familiers": "Familiers", "sacs": "Sacs", "outils": "Outils", "blocs": "Blocs"}
 ETATS = ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"]
-# Ensemble déduit du nom ; les exceptions se déclarent ici. Une nouvelle pièce « ..._abyssal... » se range donc toute seule.
-EXCEPTIONS = {"familier_crane": "Abyssal", "aurelion_wings": "Céleste"}
-MOTS = [("abyssal", "Abyssal"), ("celeste", "Céleste"), ("givre", "Givre"), ("mecanique", "Mécanique")]
-TEINTES = {"Abyssal": "#9fe04e", "Céleste": "#e6c675", "Givre": "#7fd3ef", "Mécanique": "#d69a62", "Autres": "#b9a7e8"}
+# Thème (large) > ensemble (set précis). L'ensemble se déduit du nom : une nouvelle pièce « ..._abyssal... » se range toute seule.
+# Nouvel ensemble : une ligne dans ENSEMBLES (thème, teinte), et son mot dans MOTS ; les exceptions se déclarent dans EXCEPTIONS.
+THEMES = ["Démoniaque", "Divin", "Éléments", "Mignon", "Mécanique"]
+ENSEMBLES = {
+    "Abyssal": ("Démoniaque", "#9fe04e"), "Tentacule": ("Démoniaque", "#c4506e"),
+    "Céleste": ("Divin", "#e6c675"),
+    "Givre": ("Éléments", "#7fd3ef"),
+    "Kawaii": ("Mignon", "#f7d27a"), "Pâtisserie": ("Mignon", "#e88a9a"),
+    "Steampunk": ("Mécanique", "#d69a62"),
+}
+EXCEPTIONS = {"familier_crane": "Abyssal", "aurelion_wings": "Céleste",
+              "sac_cupcake": "Pâtisserie", "chapeau_macaron": "Pâtisserie", "baguette_sucre_orge": "Pâtisserie", "epaulettes_guimauve": "Pâtisserie",
+              "halo_donut": "Pâtisserie", "familier_chat_lanterne": "Kawaii", "ailes_papillon_bonbon": "Kawaii", "aura_bulle_chewing_gum": "Kawaii"}
+MOTS = [("abyssal", "Abyssal"), ("celeste", "Céleste"), ("givre", "Givre"), ("mecanique", "Steampunk"), ("nuage", "Kawaii"),
+        ("demoniaque", "Tentacule"), ("tentacule", "Tentacule")]
+TEINTES = {e: t for e, (_, t) in ENSEMBLES.items()} | {"Autres": "#b9a7e8"}
 _cache = {}
 
 
@@ -22,6 +34,10 @@ def ensemble_de(nom):
     if nom in EXCEPTIONS:
         return EXCEPTIONS[nom]
     return next((e for mot, e in MOTS if mot in nom), "Autres")
+
+
+def theme_de(ensemble):
+    return ENSEMBLES.get(ensemble, ("Autres",))[0]
 
 
 def url(path):
@@ -76,9 +92,10 @@ def fiche(categorie, nom, modele, dossier):
         except (OSError, ValueError):
             apercu_etats = [e for e in ETATS if e in etats]
     d = {
-        "nom": nom, "categorie": categorie, "ensemble": ensemble_de(nom),
+        "nom": nom, "categorie": categorie, "ensemble": ensemble_de(nom), "theme": theme_de(ensemble_de(nom)),
         "bbmodel": url(modele), "fichier": os.path.basename(modele),
-        "gif": gif, "planche": fichier("apercu", "planche.png"), "nuit": fichier("apercu", "nuit.png"),
+        "gif": gif, "planche": fichier("apercu", "planche.png"), "vignette": fichier("apercu", "vignette.png"),
+        "anims_etat": {e: u for e in etats if (u := fichier("apercu", "etats", e + ".webp"))}, "nuit": fichier("apercu", "nuit.png"),
         "texture": fichier(nom + ".png"), "calque": fichier(nom + "_e.png"),
         "lueur": i["lueur"], "cubes": i["cubes"], "groupes": i["groupes"], "etats": etats, "apercu_etats": apercu_etats,
         "particules": sorted({a.split("_")[1] for a in i["anims"] if a.startswith("particle_") and a.count("_") >= 2}),
@@ -111,7 +128,8 @@ def collecter():
 def donnees():
     fiches = collecter()
     signature = "|".join(f"{f['nom']}:{f['version']}" for f in fiches)
-    return {"fiches": fiches, "labels": LABELS, "teintes": TEINTES, "signature": signature}
+    return {"fiches": fiches, "labels": LABELS, "teintes": TEINTES, "themes": THEMES + ["Autres"],
+            "ordre_ensembles": list(ENSEMBLES) + ["Autres"], "signature": signature}
 
 
 def ecrire_index(d=None):
@@ -119,6 +137,8 @@ def ecrire_index(d=None):
     with open(MODELE, encoding="utf-8") as f:
         page = f.read()
     page = page.replace("/*DONNEES*/", json.dumps(d, ensure_ascii=False).replace("</", "<\\/"))
+    with open(os.path.join(ROOT, "tools", "visionneuse.js"), encoding="utf-8") as f:
+        page = page.replace("/*VISIONNEUSE*/", f.read().replace("</", "<\\/"))
     with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as f:
         f.write(page)
     return d
@@ -128,4 +148,4 @@ if __name__ == "__main__":
     d = ecrire_index()
     print(f"index.html : {len(d['fiches'])} cosmétiques")
     for x in d["fiches"]:
-        print(f"  {x['ensemble']} / {x['categorie']} / {x['nom']} : {x['cubes']} cubes, aperçus={'oui' if x['gif'] else 'non'}")
+        print(f"  {x['theme']} / {x['ensemble']} / {x['categorie']} / {x['nom']} : {x['cubes']} cubes, aperçus={'oui' if x['gif'] else 'non'}")

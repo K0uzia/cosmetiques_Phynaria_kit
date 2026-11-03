@@ -16,12 +16,12 @@ pour pouvoir itérer, vérifier et optimiser de façon reproductible.
 
 ## Organisation
 
-- `tools/` : renderer, optimiseur, vérificateur, `livrer.py` (vérifie, crée les aperçus, met à jour le livrable), Vestiaire, calibration.
+- `tools/` : renderer, optimiseur, vérificateur, `livrer.py` (vérifie, crée les aperçus, met à jour le livrable), Vestiaire, calibration. La vue 3D du Vestiaire (`tools/visionneuse.js`) reprend les calculs du renderer : après toute retouche de `render_bbmodel.py` (pose, Molang, transformations), reporter le changement et lancer `python tools/test_visionneuse.py`.
 - `.claude/rules/` : règles par domaine (chargées automatiquement).
 - `.claude/skills/` : procédures invocables (`/bbmodel-cosmetic`, `/bbmodel-animate`, `/bbmodel-verify`, `/bbmodel-calibrate`, `/bbmodel-retour-jeu`, `/bbmodel-serie`).
 - `docs/` : guide officiel du mod (`guide-cosmetiques.md`, prime sur nos règles, ne pas le modifier), demandes au développeur (`dev/`), exemples (`exemples/`).
 - `.claude/rules/retours-en-jeu.md` : ce que l'utilisateur a validé ou refusé et les recettes qui marchent, à lire en premier.
-- `ouvrir_vestiaire.bat` : catalogue local, mis à jour automatiquement. L'ensemble d'une pièce se déduit de son nom (`tools/gen_index.py`).
+- `ouvrir_vestiaire.bat` : catalogue local, mis à jour automatiquement. L'ensemble d'une pièce se déduit de son nom, et chaque ensemble appartient à un thème (`ENSEMBLES` dans `tools/gen_index.py`).
 - `cosmetiques/<categorie>/<nom>/` : **un dossier par cosmétique**, avec tous ses `.bbmodel`. Catégories : `ailes`, `chapeaux` (tout ce qui se porte sur la tête ou le visage : chapeau, cornes, masque…), `queues`, `epaules`, `familiers`, `sacs`, `auras`, `armes`, `outils`, `blocs`.
 - Contenu du dossier d'un cosmétique (`<nom>` en minuscules, sans espace ni accent) :
   - `gen_<nom>.py` : le générateur, qui écrit `<nom>.png` à côté de lui et sa sortie brute dans `.build/` (`os.chdir(os.path.dirname(os.path.abspath(__file__)))` en début de script) ;
@@ -49,7 +49,7 @@ pour pouvoir itérer, vérifier et optimiser de façon reproductible.
 | Durée / nom d'une animation | 600 s (10 min) / 64 caractères |
 | Molang | 256 caractères, complexité limitée |
 | Canaux d'animation | rotation, position, scale |
-| Émissif | calque `<texture>_e.png` embarqué, jamais assigné aux faces, ou option « Lumineux » du staff. **Calque désactivé pour l'instant : il clignote, bug en cours de correction côté mod** |
+| Émissif | calque `<texture>_e.png` embarqué, jamais assigné aux faces, ou option « Lumineux » du staff. **Calque réactivé le 2026-11-03 (correctif du clignotement annoncé côté mod), non encore vérifié en jeu** |
 | Particules | 4 sortes, 32 points `emit_`, 64 par joueur (`docs/guide-cosmetiques.md`, section 5 ter) |
 
 ## Workflow standard

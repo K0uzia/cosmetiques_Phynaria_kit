@@ -24,7 +24,7 @@ Pars du générateur de référence indiqué dans `retours-en-jeu.md`, en gardan
 1. **Textures peintes par script** (sur-échantillonnage ×3–4, LANCZOS, seuil alpha) : silhouettes découpées, contraste de valeur entre rangées, ombres de recouvrement, détails ≥ 3–4 texels.
 2. **Géométrie** : squelette en bones imbriqués, peau découpée par alpha autour d'une âme pleine, os effilés en volume, profondeur unique par élément, rangées qui se recouvrent. Particules : recette de `retours-en-jeu.md`.
 3. **Animations** : fonctions périodiques → échantillonnées → `mirror()` centralise le signe droite/gauche. Canaux rotation, position, scale (guide).
-4. Lueur : `AVEC_E = False` tant que le bug du calque court (`retours-en-jeu.md`).
+4. Lueur : `AVEC_E = True` depuis le correctif annoncé le 2026-11-03, à confirmer en jeu (`retours-en-jeu.md`).
 5. Impression finale : cubes, groupes, profondeur, anims, keyframes, poids.
 
 ## 3. Produire et vérifier

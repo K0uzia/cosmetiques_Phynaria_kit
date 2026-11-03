@@ -6,7 +6,7 @@ description: Créer plusieurs cosmétiques d'un coup ou compléter un ensemble (
 # Créer une série de cosmétiques
 
 ## 1. Préparer
-- Lister les pièces, leur catégorie et leur ensemble. Le nom d'une pièce contient le mot de son ensemble (`abyssal`, `celeste`…), sinon la déclarer dans `EXCEPTIONS` de `tools/gen_index.py`.
+- Lister les pièces, leur catégorie, leur ensemble et le thème de l'ensemble (thème large > ensemble précis, ex. Mignon > Kawaii, Pâtisserie). Le nom d'une pièce contient le mot de son ensemble (`abyssal`, `celeste`…), sinon la déclarer dans `EXCEPTIONS` de `tools/gen_index.py`. Un nouvel ensemble s'ajoute dans `ENSEMBLES` (thème, teinte) et `MOTS`.
 - Créer d'abord les catégories manquantes, dans `CLAUDE.md`, `README.md` et le skill `bbmodel-cosmetic`.
 
 ## 2. Lancer un sous-agent Opus par pièce, en parallèle

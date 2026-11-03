@@ -66,7 +66,72 @@ def sample(keyframes, channel, t, default):
             return val(a) * (1 - f) + val(b) * f
     return val(kfs[-1])
 
-def load_model(path, anim_time=None, anim_name=None):
+# ---------------------------------------------------------------- pose du joueur selon l'état
+# Groupes de premier niveau qui suivent une partie du corps (guide, section 4) ; tout le reste suit le torse.
+PARTIES = {"head": "head", "hat": "head", "helmet": "head", "body": "body", "torso": "body", "chest": "body",
+           "rightarm": "right_arm", "armright": "right_arm", "leftarm": "left_arm", "armleft": "left_arm",
+           "rightleg": "right_leg", "legright": "right_leg", "leftleg": "left_leg", "legleft": "left_leg"}
+# Articulations du joueur (guide, section 4).
+PIVOTS = {"head": (0, 24, 0), "body": (0, 24, 0), "right_arm": (5, 22, 0), "left_arm": (-5, 22, 0),
+          "right_leg": (2, 12, 0), "left_leg": (-2, 12, 0)}
+CENTRE = np.array([0.0, 16.0, 0.0])   # pivot du corps entier quand il est couché
+
+
+def partie_de(nom):
+    n = "".join(c for c in nom.lower() if c.isalnum())
+    return PARTIES.get(n, "body")
+
+
+def etat_de(anim_name):
+    """Dernière partie du nom d'animation, ramenée à un état du guide (section 6.2)."""
+    if not anim_name:
+        return "idle"
+    mot = anim_name.split(".")[-1].lower()
+    for etat, mots in (("glide", ("glide", "elytra", "plane")), ("swim", ("swim", "nage")), ("sleep", ("sleep", "dort", "dodo")),
+                       ("mount", ("ride", "mount", "monture")), ("sneak", ("sneak", "crouch", "accroupi")),
+                       ("run", ("sprint", "run", "cours", "course")), ("walk", ("walk", "marche"))):
+        if any(m in mot for m in mots):
+            return etat
+    return "idle"
+
+
+def pose_joueur(etat, t=0.0, duree=1.0):
+    """Transformations du mannequin, à la manière du jeu vanilla (approchées) : partie -> fonction point -> point.
+    Couché en élytres et en nage (face vers le sol), sur le dos en sommeil, assis en monture, penché accroupi,
+    bras et jambes qui balancent en marche et en course. Les autres états : debout."""
+    rot = {k: np.zeros(3) for k in PIVOTS}
+    dep = {k: np.zeros(3) for k in PIVOTS}
+    G = np.eye(3)
+    if etat in ("walk", "run"):
+        a = (28 if etat == "walk" else 55) * math.sin(2 * math.pi * t / max(duree, 1e-6))
+        rot["right_leg"][0], rot["left_leg"][0] = a, -a          # +X : la jambe part vers l'avant
+        rot["right_arm"][0], rot["left_arm"][0] = -a * 0.8, a * 0.8
+    elif etat == "sneak":
+        rot["body"][0] = -28.6                                    # le haut du torse vers l'avant
+        dep["body"][1] = -3.2
+        dep["head"][1] = -4.2
+        for c in ("right_arm", "left_arm"):
+            rot[c][0], dep[c][1] = 23, -3.2
+        for c in ("right_leg", "left_leg"):
+            dep[c][2], dep[c][1] = 4.0, -0.2
+    elif etat == "mount":
+        for c, y in (("right_leg", -18), ("left_leg", 18)):
+            rot[c][0], rot[c][1] = 81, y
+        for c in ("right_arm", "left_arm"):
+            rot[c][0] = 36
+    elif etat in ("swim", "glide"):
+        G = rot_matrix(-90, 0, 0)                                 # couché, face vers le sol, dos vers le ciel
+    elif etat == "sleep":
+        G = rot_matrix(90, 0, 0)                                  # sur le dos
+    fonctions = {}
+    for k, piv in PIVOTS.items():
+        R, piv, d = rot_matrix(*rot[k]), np.array(piv, float), dep[k]
+        fonctions[k] = (lambda p, R=R, piv=piv, d=d: G @ (R @ (p - piv) + piv + d - CENTRE) + CENTRE)
+    return fonctions
+
+
+def load_model(path, anim_time=None, anim_name=None, pose=None):
+    """pose : None (cosmétique seul, dans le repère du joueur debout) ou résultat de pose_joueur()."""
     m = json.load(open(path))
     animators = {}
     if anim_time is not None and m.get("animations"):
@@ -90,7 +155,7 @@ def load_model(path, anim_time=None, anim_name=None):
             return p
         return f
 
-    def walk2(node, parents):
+    def walk2(node, parents, partie="body"):
         if isinstance(node, str):
             e = by_id[node]
             R = rot_matrix(*e.get("rotation", [0, 0, 0]))
@@ -105,6 +170,8 @@ def load_model(path, anim_time=None, anim_name=None):
                 if u1 == u2 or v1 == v2:
                     continue
                 pts = [T(p) for p in FACE_CORNERS[fname](a, b)]
+                if pose is not None:
+                    pts = [pose[partie](p) for p in pts]
                 uvs = [(u1 / tw, v1 / th), (u2 / tw, v1 / th), (u2 / tw, v2 / th), (u1 / tw, v2 / th)]
                 quads.append((pts, uvs, None))
         else:
@@ -122,30 +189,49 @@ def load_model(path, anim_time=None, anim_name=None):
                 pos = sample(kfs, "position", t, [0, 0, 0])
             R = rot_matrix(*rot)
             for c in node.get("children", []):
-                walk2(c, parents + [(np.array(node.get("origin", [0, 0, 0]), float), R, S, pos)])
+                walk2(c, parents + [(np.array(node.get("origin", [0, 0, 0]), float), R, S, pos)], partie)
 
     for n in m["outliner"]:
         if isinstance(n, dict) and n.get("name", "").startswith("particle_"):
             continue   # modèle de particule : pas porté par le joueur
-        walk2(n, [])
+        walk2(n, [], partie_de(n.get("name", "")) if isinstance(n, dict) else "body")
     return quads, tex
 
-def mannequin():
-    """Joueur gris (Steve). Face avant = -z (nord), dos = +z."""
+def mannequin(pose=None):
+    """Joueur gris (Steve). Face avant = -z (nord), dos = +z. pose : résultat de pose_joueur(), debout si None."""
     quads = []
-    def box(a, b, col, front_col=None):
+    def box(a, b, col, partie, front_col=None):
+        f = pose[partie] if pose else (lambda p: p)
         for fname, fn in FACE_CORNERS.items():
             c = front_col if (fname == "north" and front_col) else col
-            quads.append(([np.array(p, float) for p in fn(a, b)], None, c))
+            quads.append(([f(np.array(p, float)) for p in fn(a, b)], None, c))
     g1, g2, g3 = (120, 120, 128), (100, 100, 108), (88, 88, 96)
-    box((-4, 24, -4), (4, 32, 4), g1, (135, 135, 143))   # tête
-    box((-4, 12, -2), (4, 24, 2), g2)                    # torse
-    box((-8, 12, -2), (-4, 24, 2), g3); box((4, 12, -2), (8, 24, 2), g3)   # bras
-    box((-4, 0, -2), (0, 12, 2), g2); box((0, 0, -2), (4, 12, 2), g3)      # jambes
+    box((-4, 24, -4), (4, 32, 4), g1, "head", (135, 135, 143))   # tête
+    box((-4, 12, -2), (4, 24, 2), g2, "body")                    # torse
+    box((4, 12, -2), (8, 24, 2), g3, "right_arm"); box((-8, 12, -2), (-4, 24, 2), g3, "left_arm")   # bras (droite du joueur = +x)
+    box((0, 0, -2), (4, 12, 2), g2, "right_leg"); box((-4, 0, -2), (0, 12, 2), g3, "left_leg")      # jambes
     # yeux
+    f = pose["head"] if pose else (lambda p: p)
     for x in (-2.5, 1.0):
-        quads.append(([np.array(p, float) for p in [(x, 29, -4.01), (x + 1.5, 29, -4.01), (x + 1.5, 27.5, -4.01), (x, 27.5, -4.01)]], None, (30, 30, 40)))
+        quads.append(([f(np.array(p, float)) for p in [(x, 29, -4.01), (x + 1.5, 29, -4.01), (x + 1.5, 27.5, -4.01), (x, 27.5, -4.01)]], None, (30, 30, 40)))
     return quads
+
+def cadrer(points, direction, fov=28, marge=1.0, rayon_min=7.0):
+    """Caméra qui centre des points (le cosmétique) vus depuis une direction : (position, cible).
+    Sphère englobante prise sur la boîte des points ; rayon minimal pour garder un peu du corps en repère."""
+    d = np.array(direction, float); d /= np.linalg.norm(d)
+    if len(points):
+        P = np.asarray(points, float); lo, hi = P.min(0), P.max(0)
+        c, r = (lo + hi) / 2, max(np.linalg.norm(hi - lo) / 2, rayon_min)
+    else:
+        c, r = np.array([0.0, 16.0, 0.0]), 16.0
+    dist = r / math.sin(math.radians(fov / 2)) * marge
+    return tuple(c + d * dist), tuple(c)
+
+
+def points_de(quads):
+    return [p for q in quads for p in q[0]]
+
 
 def render(quads, tex, cam_pos, target, size=900, fov=28, bg=(18, 14, 20)):
     S = 2  # supersampling
@@ -219,26 +305,64 @@ def render(quads, tex, cam_pos, target, size=900, fov=28, bg=(18, 14, 20)):
     return img.resize((size, size), Image.LANCZOS)
 
 if __name__ == "__main__":
+    import os
     path, out = sys.argv[1], sys.argv[2]
     if out.endswith(".gif"):
         frames = []
         anim_name = sys.argv[3] if len(sys.argv) > 3 else None
         m = json.load(open(path)); an = next((a for a in m["animations"] if a["name"] == anim_name), m["animations"][0])
         dur = float(an["length"]); fps = 24; n = max(12, int(round(dur * fps)))
-        cam = tuple(float(v) for v in sys.argv[4].split(",")) if len(sys.argv) > 4 else (-44, 34, -56)
-        tgt = tuple(float(v) for v in sys.argv[5].split(",")) if len(sys.argv) > 5 else (0, 14, 0)
+        poser = os.environ.get("MODCONV") == "1" and os.environ.get("POSE", "1") != "0"
+        arg_cam = sys.argv[4] if len(sys.argv) > 4 else "-44,34,-56"
+        if arg_cam.startswith("auto:"):
+            # Cadrage automatique : la pièce sur 8 instants de l'animation, vue depuis la direction donnée.
+            pts = []
+            for k in range(8):
+                tk = k * dur / 8
+                pk = pose_joueur(etat_de(an["name"]), tk, dur) if poser else None
+                pts += points_de(load_model(path, anim_time=tk, anim_name=anim_name, pose=pk)[0])
+            cam, tgt = cadrer(pts, [float(v) for v in arg_cam[5:].split(",")], marge=1.18, rayon_min=9.0)
+        else:
+            cam = tuple(float(v) for v in arg_cam.split(","))
+            tgt = tuple(float(v) for v in sys.argv[5].split(",")) if len(sys.argv) > 5 else (0, 14, 0)
         for i in range(n):
-            q, tex = load_model(path, anim_time=i * dur / n, anim_name=anim_name)
-            frames.append(render(q + mannequin(), tex, cam, tgt, size=480).quantize(colors=128, dither=0))
+            pz = pose_joueur(etat_de(an["name"]), i * dur / n, dur) if poser else None
+            q, tex = load_model(path, anim_time=i * dur / n, anim_name=anim_name, pose=pz)
+            frames.append(render(q + mannequin(pz), tex, cam, tgt, size=480).quantize(colors=128, dither=0))
             print("frame", i + 1, "/", n, flush=True)
         frames[0].save(out, save_all=True, append_images=frames[1:], duration=int(1000 / fps), loop=0, optimize=False)
+        if os.environ.get("WEBP"):
+            # Animation de l'état seule, pour la fiche du Vestiaire : WebP animé, léger, 12 images/s.
+            im = [f.convert("RGB").resize((400, 400), Image.LANCZOS) for f in frames[::2]]
+            im[0].save(os.environ["WEBP"], save_all=True, append_images=im[1:], duration=int(2000 / fps), loop=0, quality=78, method=4)
         print("ok", out); sys.exit()
-    import os
+    pz = None
     if os.environ.get("ANIM"):
-        quads, tex = load_model(path, anim_time=float(os.environ.get("T", "0")), anim_name=os.environ["ANIM"])
+        if os.environ.get("MODCONV") == "1" and os.environ.get("POSE", "1") != "0":
+            m = json.load(open(path)); an = next((a for a in m["animations"] if a["name"] == os.environ["ANIM"]), None)
+            pz = pose_joueur(etat_de(os.environ["ANIM"]), float(os.environ.get("T", "0")), float(an["length"]) if an else 1.0)
+        quads, tex = load_model(path, anim_time=float(os.environ.get("T", "0")), anim_name=os.environ["ANIM"], pose=pz)
     else:
         quads, tex = load_model(path)
-    scene = quads + mannequin()
+    scene = quads + mannequin(pz)
+    if "--seule" in sys.argv:
+        # Vignette : une seule vue (caméra, cible), recadrée serrée sur ce qui n'est pas le fond, en carré.
+        i = sys.argv.index("--seule")
+        cam = tuple(float(v) for v in sys.argv[i + 1].split(",")); tgt = tuple(float(v) for v in sys.argv[i + 2].split(","))
+        fond = (18, 14, 20)
+        img = render(scene, tex, cam, tgt, size=1000, bg=fond)
+        # Cadre calculé sur le cosmétique seul (sans mannequin), au moins 42 % de la vue pour garder le corps en repère.
+        a = np.asarray(render(quads, tex, cam, tgt, size=1000, bg=fond)).astype(int)
+        ys, xs = np.nonzero(np.abs(a - np.array(fond)).max(axis=2) > 10)
+        if len(xs):
+            cx, cy = (xs.min() + xs.max()) / 2, (ys.min() + ys.max()) / 2
+            cote = max(max(xs.max() - xs.min(), ys.max() - ys.min()) * 1.22 + 24, 420)
+            boite = [int(round(v)) for v in (cx - cote / 2, cy - cote / 2, cx + cote / 2, cy + cote / 2)]
+            carre = Image.new("RGB", (boite[2] - boite[0], boite[3] - boite[1]), fond)
+            carre.paste(img.crop((max(0, boite[0]), max(0, boite[1]), min(1000, boite[2]), min(1000, boite[3]))), (max(0, -boite[0]), max(0, -boite[1])))
+            img = carre
+        img.resize((480, 480), Image.LANCZOS).save(out, optimize=True)
+        print("ok", out); sys.exit()
     zoom = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0
     target = (0, 14, 0)
     views = [
@@ -247,7 +371,11 @@ if __name__ == "__main__":
         ("Face", (0, 22, -74)),
         ("Dessus", (0.5, 85, -16)),
     ]
-    tiles = [render(scene, tex, tuple(v * zoom for v in c), target, size=700) for _, c in views]
+    if os.environ.get("CADRAGE") == "auto":
+        pts = points_de(quads)
+        tiles = [render(scene, tex, *cadrer(pts, c, marge=1.1, rayon_min=13.0), size=700) for _, c in views]   # rayon minimal : le corps reste en repère
+    else:
+        tiles = [render(scene, tex, tuple(v * zoom for v in c), target, size=700) for _, c in views]
     canvas = Image.new("RGB", (700 * 2 + 30, 700 * 2 + 70), (18, 14, 20))
     d = ImageDraw.Draw(canvas)
     try:

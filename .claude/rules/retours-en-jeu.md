@@ -23,7 +23,7 @@ Erreurs et réussites constatées sur de vrais cosmétiques. Les appliquer **dè
 | `masque_abyssal` | « sympa », « base réutilisable » | Hors de l'esprit chasseur de démons : ne pas le présenter comme répondant à ce thème |
 | `queue_abyssale` | « trop dragon, créature » | Vertèbres, épines et membrane font bête ; pour un ensemble d'allure élégante, préférer `queue_abyssale_v2` |
 
-Livrés sans retour en jeu à ce jour : `queue_abyssale_v2`, `lames_abyssales`, `epaulieres_abyssales`, `aura_abyssale`, `familier_crane`, `diademe_celeste`, `aura_celeste`, `ailes_givre`, `ailes_mecaniques`, `chapeau_abyssal`.
+Livrés sans retour en jeu à ce jour : `queue_abyssale_v2`, `lames_abyssales`, `epaulieres_abyssales`, `aura_abyssale`, `familier_crane`, `diademe_celeste`, `aura_celeste`, `ailes_givre`, `ailes_mecaniques`, `chapeau_abyssal` ; série kawaii du 2026-11-03 (ensembles Kawaii et Pâtisserie, calque `_e` embarqué) : `oreilles_lapin_nuage`, `ailes_nuage_guimauve`, `queue_pompon_nuage`, `familier_nuage_mochi`, `aura_coeurs_nuage`, `familier_chat_lanterne`, `ailes_papillon_bonbon`, `aura_bulle_chewing_gum`, `halo_donut`, `sac_cupcake`, `chapeau_macaron`, `baguette_sucre_orge`, `epaulettes_guimauve`.
 
 ## Recettes
 
@@ -38,9 +38,9 @@ Livrés sans retour en jeu à ce jour : `queue_abyssale_v2`, `lames_abyssales`, 
 | Lueur | Lueur vive sur un dégradé : orange violent | Fines lignes lumineuses et fond additif très sombre ; rien de vif hors du point focal |
 | Couleur de nuit | Sans `_e` : saumon et mate sous éclairage chaud | Base plus blanche et fond `_e` léger, ou option « Lumineux » du staff |
 
-## Bug en cours côté mod
+## Calque `_e` : correctif à vérifier
 
-Calque `_e` : il clignote aussi sans shader et peut assombrir la texture (`docs/dev/bug_emissif_pour_dev.md`). En attendant le correctif : `AVEC_E = False` dans les générateurs, calque peint et écrit à côté du modèle, non embarqué, et pas de retouche du modèle pour ce symptôme.
+Le calque clignotait aussi sans shader et pouvait assombrir la texture (`docs/dev/bug_emissif_pour_dev.md`). Le correctif côté mod est annoncé pour le 2026-11-03 : `AVEC_E = True` dans tous les générateurs et calques embarqués depuis ce jour, **sans retour en jeu à ce stade**. Si le clignotement persiste en jeu : repasser `AVEC_E = False`, relivrer, et ne pas retoucher le modèle pour ce symptôme.
 
 ## Orientation selon l'état
 

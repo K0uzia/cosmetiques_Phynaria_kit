@@ -47,4 +47,4 @@ Si un point échoue → retour au générateur. Ne jamais retoucher le JSON à l
 | clignotement noir | épaisseur nulle / coplanaire | épaisseur ≥ 0,3 + décalage profondeur |
 | éléments qui suivent le joueur | effet porté par le modèle | → groupes `particle_` et `emit_` (guide, section 5 ter) |
 | anim figée | mod lit une autre case / anim statique | vérifier le mapping des états et l'amplitude |
-| ça clignote, ailes noires | bug du calque `_e` côté mod | `AVEC_E = False`, voir `docs/dev/bug_emissif_pour_dev.md` |
+| ça clignote, ailes noires | bug du calque `_e` côté mod (correctif annoncé le 2026-11-03) | si ça persiste : `AVEC_E = False`, voir `docs/dev/bug_emissif_pour_dev.md` |

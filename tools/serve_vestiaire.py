@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Serveur local du Vestiaire : la page se met à jour seule dès qu'un cosmétique est ajouté ou modifié.
 Usage : python tools/serve_vestiaire.py [port]   (ou double-clic sur ouvrir_vestiaire.bat). Accessible depuis cette machine uniquement."""
-import json, os, sys, threading, webbrowser
+import importlib, json, os, sys, threading, webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse, parse_qs
 
@@ -10,6 +10,15 @@ import gen_index
 
 verrou = threading.Lock()
 derniere = [None]
+_mtime = [os.path.getmtime(gen_index.__file__)]
+
+
+def a_jour():
+    """Recharge gen_index.py s'il a changé depuis le lancement (nouvel ensemble, nouvelle catégorie…)."""
+    m = os.path.getmtime(gen_index.__file__)
+    if m != _mtime[0]:
+        importlib.reload(gen_index)
+        _mtime[0] = m
 
 
 class Vestiaire(SimpleHTTPRequestHandler):
@@ -32,6 +41,7 @@ class Vestiaire(SimpleHTTPRequestHandler):
             return self.api(parse_qs(p.query).get("s", [""])[0])
         if chemin in ("/", "/index.html"):
             with verrou:
+                a_jour()
                 gen_index.ecrire_index()
             self.path = "/index.html"
             return super().do_GET()
@@ -43,6 +53,7 @@ class Vestiaire(SimpleHTTPRequestHandler):
 
     def api(self, signature):
         with verrou:
+            a_jour()
             d = gen_index.donnees()
             if d["signature"] != derniere[0]:
                 gen_index.ecrire_index(d)   # index.html reste juste aussi hors serveur
@@ -60,7 +71,8 @@ class Vestiaire(SimpleHTTPRequestHandler):
 
 
 def main():
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
+    nombres = [a for a in sys.argv[1:] if a.isdigit()]
+    port = int(nombres[0]) if nombres else 8765
     try:
         serveur = ThreadingHTTPServer(("127.0.0.1", port), Vestiaire)
     except OSError:

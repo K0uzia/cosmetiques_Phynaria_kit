@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap">
 <style>
-/* Concept : l'armoire d'un personnage. Colonne des ensembles à gauche, vitrine à droite ; chaque ensemble impose sa teinte. */
+/* Concept : l'armoire d'un personnage. Colonne des thèmes et de leurs ensembles à gauche, vitrine à droite ; chaque ensemble impose sa teinte. */
 :root{
   color-scheme:dark;
   --fond:#14131b;--creux:#0e0d13;--surface:#1d1b26;--surface2:#282533;--trait:#3a3648;--texte:#eeebf4;--doux:#a9a4b8;
@@ -21,11 +21,23 @@ aside{background:var(--creux);border-right:1px solid var(--trait);padding:22px 1
 .marque{font:700 25px/1.05 var(--titre);padding:0 8px}
 .marque small{display:block;font:400 13px/1.4 var(--corps);color:var(--doux);margin-top:6px}
 .rubrique{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);padding:0 8px;margin:0 0 6px}
-.ens{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border-radius:7px;text-align:left}
-.ens:hover{background:var(--surface)}
-.ens[aria-pressed=true]{background:var(--surface2)}
-.pastille{width:11px;height:11px;transform:rotate(45deg);background:var(--c);flex:none}
-.ens .n{margin-left:auto;font:12px var(--chiffre);color:var(--doux)}
+/* Navigation : modèle de la coquille d'administration (boîte à outils Kouzia, gabarits/admin-coquille) :
+   groupes titrés, entrées pleine largeur à compteur, entrée courante marquée par le fond et la graisse, jamais par une bordure latérale. */
+.nav{display:grid;gap:16px}
+.nav ul{display:grid;gap:1px;margin:0;padding:0;list-style:none}
+.nav__titre{display:flex;align-items:center;gap:8px;width:100%;min-height:34px;padding:0 10px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);text-align:left}
+.nav__lien{--c:var(--texte);display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 10px;border-radius:7px;font-size:15px;font-weight:500;color:var(--doux);text-align:left;transition:background-color .15s,color .15s}
+.nav__titre:hover,.nav__lien:hover{color:var(--texte);background:var(--surface)}
+.nav__titre[aria-pressed=true],.nav__lien[aria-pressed=true]{color:var(--texte);background:var(--surface2)}
+.nav__lien[aria-pressed=true]{font-weight:700}
+.nav__texte{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pastille{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.compteur{min-width:1.7em;padding:0 .45em;border-radius:999px;font:700 12px/1.65 var(--chiffre);text-align:center;color:var(--doux);background:var(--surface)}
+.nav__titre .compteur{background:none;font-weight:400}
+.nav__lien[aria-pressed=true] .compteur{color:var(--sur-teinte);background:var(--c)}
+.masque{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+@media (prefers-reduced-motion:reduce){.nav__lien{transition:none}}
+@media (forced-colors:active){.nav__titre[aria-pressed=true],.nav__lien[aria-pressed=true]{outline:2px solid CanvasText}}
 .etat-direct{margin-top:auto;padding:10px 8px 0;border-top:1px solid var(--trait);font-size:13px;color:var(--doux);display:flex;gap:8px;align-items:flex-start}
 .point{width:8px;height:8px;border-radius:50%;background:var(--alerte);margin-top:6px;flex:none}
 .etat-direct.actif .point{background:var(--ok)}
@@ -42,45 +54,113 @@ main{min-width:0;padding:22px 26px 50px}
 .section{display:flex;align-items:baseline;gap:12px;margin:26px 0 12px;--teinte:var(--c)}
 .section h2{font:700 24px/1.1 var(--titre);margin:0;color:var(--teinte);text-wrap:balance}
 .section span{color:var(--doux);font-size:14px}
-.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
-.carte{display:flex;flex-direction:column;text-align:left;background:var(--surface);border-bottom:3px solid var(--c);min-width:0;transition:transform .12s,background .12s}
-.carte:hover{background:var(--surface2);transform:translateY(-2px)}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+/* Carte : modèle composants/cartes de la boîte à outils (un seul déclencheur étiré sur le titre, méta après le titre dans le code). */
+.carte{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--trait);border-radius:10px;overflow:hidden;min-width:0;transition:transform .15s,border-color .15s,box-shadow .15s}
+.carte:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 55%,var(--trait));box-shadow:0 10px 26px #0007}
+.carte:focus-within{outline:2px solid var(--c);outline-offset:2px}
+.carte .fen{order:-1;border-bottom:1px solid var(--trait)}
+.carte .fen::after{content:"";position:absolute;inset:auto 0 0;height:3px;background:var(--c)}
+.carte__titre{margin:0;font:700 18px/1.2 var(--titre);overflow-wrap:anywhere}
+.carte__lien{all:unset;cursor:pointer}
+.carte__lien::after{content:"";position:absolute;inset:0;z-index:1}
+.carte__lien:focus-visible{outline:none}
+.corps-carte{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.meta{color:var(--doux);font-size:14px;margin:0}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 0;padding:0;list-style:none}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:1px 8px;border-radius:999px;font-size:12.5px;color:var(--doux);background:var(--surface2)}
+.badge svg{width:13px;height:13px;flex:none}
 .fen{position:relative;overflow:hidden;aspect-ratio:1;background:var(--creux);max-width:100%}
 .fen img{position:absolute;left:0;top:0;max-width:none;display:block}
+.fen img.vignette{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.carte:hover .fen img.vignette{transform:scale(1.04)}
 .vide{height:100%;display:grid;place-items:center;color:var(--doux);font-size:14px;padding:12px;text-align:center}
-.neuf{position:absolute;right:8px;top:8px;background:var(--ok);color:#0d2415;font-size:12px;font-weight:700;padding:1px 7px;border-radius:4px}
-.corps-carte{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
-.nom{font:700 18px/1.2 var(--titre);overflow-wrap:anywhere}
-.meta{color:var(--doux);font-size:14px}
+.neuf{position:absolute;right:8px;top:8px;z-index:2;background:var(--ok);color:#0d2415;font-size:12px;font-weight:700;padding:1px 7px;border-radius:4px}
 .rien{color:var(--doux);padding:50px 0;text-align:center}
-dialog{width:min(1120px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:var(--surface);color:var(--texte);border:1px solid var(--trait);border-top:3px solid var(--teinte);padding:0;border-radius:6px;overflow:auto}
-dialog::backdrop{background:#07060bcc}
-.fiche{display:grid;grid-template-columns:minmax(0,1fr) 310px}
-.scene{background:var(--creux);padding:14px;min-width:0}
-.vues{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.vues button{padding:4px 10px;border-radius:5px;color:var(--doux);font-size:14px;border:1px solid var(--trait)}
-.vues button[aria-pressed=true]{border-color:var(--teinte);color:var(--texte)}
+/* Fiche : modèle composants/dialogue (dialog natif, en-tête, corps qui défile seul, focus rendu au déclencheur). */
+dialog{width:fit-content;max-width:calc(100vw - 24px);max-height:calc(100vh - 24px);background:var(--surface);color:var(--texte);border:1px solid var(--trait);padding:0;border-radius:12px;overflow:hidden;flex-direction:column}
+dialog[open]{display:flex}
+dialog::backdrop{background:#07060bd9}
+.fiche-tete{display:flex;align-items:center;gap:14px;padding:14px 16px 14px 20px;border-bottom:1px solid var(--trait);background:linear-gradient(90deg,color-mix(in srgb,var(--teinte) 14%,transparent),transparent 60%)}
+.fiche-tete h3{font:700 28px/1.1 var(--titre);margin:0;overflow-wrap:anywhere;text-wrap:balance}
+.sous{color:var(--doux);margin-top:3px;font-size:15px}
+.sous b{color:var(--teinte);font-weight:600}
+.fiche-tete .outils{margin-left:auto;display:flex;gap:6px;flex:none}
+.icone-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;color:var(--doux);background:var(--surface2)}
+.icone-btn:hover{color:var(--texte);background:var(--trait)}
+.icone-btn:disabled{opacity:.35;cursor:default}
+.icone-btn svg{width:20px;height:20px}
+.masque{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.fiche{--w:max(300px,min(600px,calc(100dvh - 300px),calc(100vw - 400px)));display:grid;grid-template-columns:calc(var(--w) + 32px) 310px;overflow-x:hidden;min-height:0;overflow:auto;scrollbar-color:var(--trait) transparent}
+.scene{background:var(--creux);padding:14px 16px 18px;min-width:0;display:flex;flex-direction:column;gap:12px;box-sizing:content-box}
+/* Onglets soulignés : modèle composants/onglets (flèches, Début, Fin, tabindex itinérant). */
+.vues{display:flex;flex-wrap:wrap;gap:4px 18px;border-bottom:1px solid var(--trait)}
+.vues button{padding:8px 2px;margin-bottom:-1px;border-bottom:2px solid transparent;color:var(--doux);font-size:15px;font-weight:600}
+.vues button:hover{color:var(--texte)}
+.vues button[aria-selected=true]{color:var(--texte);border-bottom-color:var(--teinte)}
+.etats{display:flex;flex-wrap:wrap;gap:6px}
+.etats button{padding:4px 11px;border:1px solid var(--trait);border-radius:999px;font-size:14px;color:var(--doux)}
+.etats button:hover:not(:disabled){color:var(--texte);border-color:var(--doux)}
+.etats button:disabled{opacity:.4;cursor:default}
+.etats button[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
+#vue{display:grid;place-items:center;min-height:0}
 #vue img.pleine{width:100%;display:block}
 #vue img.tex{image-rendering:pixelated;display:block;width:100%;max-width:512px;margin:auto;background:repeating-conic-gradient(#2a2733 0 25%,#1c1a24 0 50%) 0 0/24px 24px}
-#vue .fen{max-width:560px;margin:auto}
-.cote{padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
-.cote h3{font:700 27px/1.1 var(--titre);margin:0;overflow-wrap:anywhere;text-wrap:balance}
-.sous{color:var(--doux);margin-top:4px}
-.dl{display:block;text-align:center;background:var(--teinte);color:var(--sur-teinte);font-weight:700;padding:11px;border-radius:6px;text-decoration:none}
+#vue .fen{width:100%;border-radius:8px}
+/* Zoom des planches et textures : clic pour zoomer à l'endroit visé, le zoom suit le pointeur, nouveau clic pour revenir. */
+.zoom{position:relative;width:100%;overflow:hidden;border-radius:8px;cursor:zoom-in}
+.zoom > *{transition:transform .2s;transform-origin:50% 50%}
+.zoom.actif{cursor:zoom-out}
+.zoom.actif > *{transform:scale(var(--z,2.5))}
+.decoupe{position:relative;overflow:hidden;width:100%;aspect-ratio:1}
+.decoupe img{position:absolute;left:0;top:0;max-width:none;display:block}
+/* Vue 3D : glisser pour tourner, molette ou pincement pour zoomer, double-clic pour recadrer. */
+.v3d{width:100%;position:relative}
+.v3d canvas{display:block;width:100%;aspect-ratio:1;border-radius:8px;background:var(--creux);touch-action:none;cursor:grab}
+.v3d canvas:active{cursor:grabbing}
+.v3d canvas:focus-visible{outline:2px solid var(--teinte);outline-offset:2px}
+.v3d__barre{display:flex;align-items:center;gap:8px;margin-top:8px}
+.v3d__barre input[type=range]{flex:1;min-width:0;accent-color:var(--teinte)}
+.v3d__temps{font:12px var(--chiffre);color:var(--doux);min-width:7ch;text-align:right}
+.v3d__bascule{padding:6px 11px;border:1px solid var(--trait);border-radius:999px;font-size:13px;color:var(--doux)}
+.v3d__bascule[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
+.v3d__options{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.v3d__options .v3d__bascule,.v3d__options select{background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(4px)}
+.v3d__options .v3d__bascule[aria-pressed=true]{background:var(--teinte)}
+.v3d__options select{padding:5px 8px;border:1px solid var(--trait);border-radius:999px;background:var(--surface);color:var(--texte);font:inherit;font-size:13px}
+.v3d__aide{color:var(--doux);font-size:13px;margin:6px 0 0}
+.anim-etat{display:block;width:100%;aspect-ratio:1;object-fit:contain;border-radius:8px;background:var(--creux)}
+.zoom:focus-visible{outline:2px solid var(--teinte);outline-offset:2px}
+.aide-zoom{display:flex;justify-content:space-between;gap:10px;color:var(--doux);font-size:13px;margin:6px 0 0}
+.aide-zoom a{color:var(--doux)}
+.aide-zoom a:hover{color:var(--texte)}
+.legende{color:var(--doux);font-size:14px;margin:0;text-align:center}
+.cote{padding:18px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.rubrique{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);margin:0 0 8px}
+.actions{display:grid;gap:8px}
+.dl{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--teinte);color:var(--sur-teinte);font-weight:700;padding:11px;border-radius:8px;text-decoration:none}
 .dl:hover{filter:brightness(1.1)}
+.dl svg{width:18px;height:18px}
+.secondaire{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border:1px solid var(--trait);border-radius:8px;color:var(--doux);font-size:14px}
+.secondaire svg{width:18px;height:18px;flex:none}
+.secondaire:hover{color:var(--texte);border-color:var(--doux)}
+.chiffres{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0}
+.chiffres div{background:var(--surface2);border-radius:8px;padding:8px 10px}
+.chiffres dt{font-size:12px;color:var(--doux)}
+.chiffres dd{margin:2px 0 0;font:700 17px/1.2 var(--chiffre)}
 .jauge{display:grid;gap:4px;font-size:14px}
 .jauge div:first-child{display:flex;justify-content:space-between;gap:8px;color:var(--doux)}
 .jauge b{font:12px var(--chiffre);color:var(--texte)}
-.rail{height:5px;background:var(--surface2)}
+.rail{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
 .rail i{display:block;height:100%;background:var(--teinte)}
-.etats,.avec{display:flex;flex-wrap:wrap;gap:5px}
-.etats button{padding:3px 9px;border:1px solid var(--trait);border-radius:5px;font-size:14px;color:var(--doux)}
-.etats button:hover{color:var(--texte)}
-.etats button[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
-.avec button{padding:3px 9px;background:var(--surface2);border-radius:5px;font-size:14px}
+.avec{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+.avec button{display:flex;align-items:center;gap:10px;width:100%;padding:4px 6px;border-radius:6px;text-align:left;font-size:14px;color:var(--doux)}
+.avec button:hover{color:var(--texte);background:var(--surface2)}
+.avec img,.avec .sans{width:34px;height:34px;flex:none;border-radius:5px;background:var(--creux);border:1px solid var(--trait);object-fit:cover}
+.avec .nom-avec{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avec .cat-avec{font-size:12px;color:var(--doux);flex:none}
 .note{font-size:14px;color:var(--doux);margin:0}
 .chemin{font:12px var(--chiffre);color:var(--doux);overflow-wrap:anywhere}
-.fermer{position:absolute;right:10px;top:10px;padding:4px 10px;background:var(--surface2);border-radius:5px}
 .toast{position:fixed;right:18px;bottom:18px;background:var(--ok);color:#0d2415;font-weight:700;padding:10px 14px;border-radius:6px;max-width:calc(100vw - 36px)}
 @media (max-width:860px){
   .page{grid-template-columns:minmax(0,1fr)}
@@ -88,29 +168,44 @@ dialog::backdrop{background:#07060bcc}
   .etat-direct{margin-top:0}
   main{padding:16px 16px 40px}
   .fiche{grid-template-columns:minmax(0,1fr)}
+  .scene{box-sizing:border-box}
+  dialog{width:100vw;max-width:100vw;max-height:100dvh;height:100dvh;border-radius:0}
+  .fiche-tete h3{font-size:22px}
 }
-@media (prefers-reduced-motion:reduce){.carte{transition:none}.carte:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){.zoom > *{transition:none}.carte,.fen img.vignette{transition:none}.carte:hover{transform:none}.carte:hover .fen img.vignette{transform:none}}
+@media (forced-colors:active){.vues button[aria-selected=true],.etats button[aria-pressed=true]{outline:2px solid CanvasText}}
 </style></head><body>
 <div class="page">
 <aside>
   <div class="marque">Vestiaire<small>Cosmétiques Phynaria</small></div>
-  <div><p class="rubrique">Ensembles</p><div id="ensembles"></div></div>
+  <nav class="nav" id="ensembles" aria-label="Thèmes et ensembles"></nav>
   <div class="etat-direct" id="direct"><span class="point"></span><span id="direct-txt"></span></div>
 </aside>
 <main>
   <div class="barre">
-    <input type="search" id="recherche" placeholder="Chercher un cosmétique, un ensemble…" aria-label="Chercher un cosmétique">
+    <input type="search" id="recherche" placeholder="Chercher un cosmétique, un ensemble, un thème…" aria-label="Chercher un cosmétique">
     <span class="seg" id="tri" role="group" aria-label="Ranger par"></span>
   </div>
   <div class="cats" id="cats" role="group" aria-label="Catégories"></div>
   <div id="liste"></div>
 </main>
 </div>
-<dialog id="dlg" aria-labelledby="titre"><button class="fermer" id="fermer">Fermer</button><div class="fiche">
-  <div class="scene"><div class="vues" id="vues"></div><div id="vue"></div></div>
-  <div class="cote" id="cote"></div>
-</div></dialog>
+<dialog id="dlg" aria-labelledby="titre">
+  <header class="fiche-tete">
+    <div><h3 id="titre"></h3><div class="sous" id="sous"></div></div>
+    <div class="outils">
+      <button class="icone-btn" type="button" id="prec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg><span class="masque">Cosmétique précédent</span></button>
+      <button class="icone-btn" type="button" id="suiv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg><span class="masque">Cosmétique suivant</span></button>
+      <button class="icone-btn" type="button" id="fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="masque">Fermer la fiche</span></button>
+    </div>
+  </header>
+  <div class="fiche">
+    <div class="scene"><div class="vues" id="vues" role="tablist" aria-label="Aperçus"></div><div id="panneau" role="tabpanel"><div id="etats-scene"></div><div id="vue"></div></div></div>
+    <div class="cote" id="cote"></div>
+  </div>
+</dialog>
 <div class="toast" id="toast" role="status" hidden></div>
+<script>/*VISIONNEUSE*/</script>
 <script>
 let D = /*DONNEES*/;
 const NOMS_ETATS = {idle:"Repos",walk:"Marche",run:"Course",sneak:"Accroupi",fly:"Vol",glide:"Élytres",fall:"En l'air",swim:"Nage",mount:"Monture",sleep:"Sommeil",attack:"Attaque",hurt:"Blessé"};
@@ -119,49 +214,86 @@ const joli = n => n.replace(/_/g, " ").replace(/^./, c => c.toUpperCase());
 const lib = c => D.labels[c] || joli(c);
 const teinte = e => D.teintes[e] || "#a9a4b8";
 const suffixe = (u, f) => u ? u + "?v=" + f.version : null;
-let cat = null, ens = null, tri = "ensemble", ouvert = null, neufs = new Set();
+let visibles = [], cat = null, ens = null, th = null, tri = "ensemble", ouvert = null, neufs = new Set();
 try { const t = localStorage.getItem("vestiaire-tri"); if (t === "ensemble" || t === "categorie") tri = t; } catch (e) {}
-const ordreEns = () => { const n = e => D.fiches.filter(f => f.ensemble === e).length; return [...new Set(D.fiches.map(f => f.ensemble))].sort((a, b) => (a === "Autres") - (b === "Autres") || n(b) - n(a) || a.localeCompare(b)); };
+const rang = (liste, v) => { const i = (liste || []).indexOf(v); return i < 0 ? 98 : i; };
+const ordreThemes = () => [...new Set(D.fiches.map(f => f.theme))].sort((a, b) => rang(D.themes, a) - rang(D.themes, b) || a.localeCompare(b));
+const ordreEns = () => { const n = e => D.fiches.filter(f => f.ensemble === e).length, t = e => (D.fiches.find(f => f.ensemble === e) || {}).theme;
+  return [...new Set(D.fiches.map(f => f.ensemble))].sort((a, b) => rang(D.themes, t(a)) - rang(D.themes, t(b)) || rang(D.ordre_ensembles, a) - rang(D.ordre_ensembles, b) || n(b) - n(a) || a.localeCompare(b)); };
+const garde = f => (!th || f.theme === th) && (!ens || f.ensemble === ens);
 const ordreCat = () => { const o = Object.keys(D.labels); return [...new Set(D.fiches.map(f => f.categorie))].sort((a, b) => (o.indexOf(a) + 1 || 99) - (o.indexOf(b) + 1 || 99)); };
 
 /* Recadre une planche ou un GIF : la première vue de la planche, ou la case d'un état dans le GIF. */
-function cadre(url, colonnes, col, rangee, alt) {
+function cadre(url, colonnes, col, rangee, alt, tout_de_suite) {
   const f = el("div", { className: "fen" });
-  const img = el("img", { src: url, alt: alt || "", loading: "lazy" });
+  const img = el("img", { src: url, alt: alt || "", loading: tout_de_suite ? "eager" : "lazy" });
   img.style.width = colonnes * 100 + "%"; img.style.left = -col * 100 + "%"; img.style.top = -rangee * 100 + "%";
   f.append(img); return f;
 }
-function carte(f) {
-  const b = el("button", { className: "carte", onclick: () => ouvrir(f.nom) }); b.style.setProperty("--c", teinte(f.ensemble));
-  let fen;
-  const planche = suffixe(f.planche, f), gif = suffixe(f.gif, f);
-  if (planche) {
-    fen = cadre(planche, 8, 0, 0);
-    const img = fen.firstChild, c = f.apercu_etats.length ? 4 : 8;
-    if (gif) {
-      b.addEventListener("pointerenter", () => { img.src = gif; img.style.width = c * 100 + "%"; });
-      b.addEventListener("pointerleave", () => { img.src = planche; img.style.width = "800%"; });
-    }
-  } else if (gif) fen = cadre(gif, 4, 0, 0);
-  else fen = el("div", { className: "fen" }, el("div", { className: "vide", textContent: "Pas encore d'aperçu" }));
-  if (neufs.has(f.nom)) fen.append(el("span", { className: "neuf", textContent: "Nouveau" }));
-  b.append(fen, el("div", { className: "corps-carte" },
-    el("div", { className: "nom", textContent: joli(f.nom) }),
-    el("div", { className: "meta", textContent: `${tri === "ensemble" ? lib(f.categorie) : f.ensemble} · ${f.cubes} cubes` })));
-  return b;
+const SVG = "http://www.w3.org/2000/svg";
+function icone(d) {
+  const s = document.createElementNS(SVG, "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("fill", "none"); s.setAttribute("stroke", "currentColor");
+  s.setAttribute("stroke-width", "2"); s.setAttribute("stroke-linecap", "round"); s.setAttribute("stroke-linejoin", "round"); s.setAttribute("aria-hidden", "true"); s.setAttribute("focusable", "false");
+  const p = document.createElementNS(SVG, "path"); p.setAttribute("d", d); s.append(p); return s;
 }
+const ICONES = { lueur: "M12 3v2M12 19v2M5 12H3M21 12h-2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
+  particules: "M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5zM18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8zM5 15l.6 1.4L7 17l-1.4.6L5 19l-.6-1.4L3 17l1.4-.6z",
+  anims: "M5 4l14 8-14 8z", pause: "M7 5v14M17 5v14", recadrer: "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5", telecharger: "M12 4v11M7 10l5 5 5-5M5 20h14", copier: "M9 9h11v11H9zM5 15H4V4h11v1" };
+function badge(cle, texte) { return el("li", { className: "badge" }, icone(ICONES[cle]), el("span", { textContent: texte })); }
+function carte(f) {
+  const art = el("article", { className: "carte" }); art.style.setProperty("--c", teinte(f.ensemble));
+  const vign = suffixe(f.vignette, f), gif = suffixe(f.gif, f), planche = suffixe(f.planche, f);
+  let fen;
+  if (vign) {
+    fen = el("div", { className: "fen" }, el("img", { src: vign, alt: "", loading: "lazy", className: "vignette" }));
+    if (gif) {
+      // Survol : l'animation de repos, première case du GIF.
+      const img = fen.firstChild;
+      art.addEventListener("pointerenter", () => { fen.replaceChildren(cadre(gif, 4, 0, 0).firstChild); if (neufs.has(f.nom)) fen.append(etiquetteNeuf()); });
+      art.addEventListener("pointerleave", () => { fen.replaceChildren(img); if (neufs.has(f.nom)) fen.append(etiquetteNeuf()); });
+    }
+  } else if (planche) fen = cadre(planche, 8, 0, 0);
+  else if (gif) fen = cadre(gif, 4, 0, 0);
+  else fen = el("div", { className: "fen" }, el("div", { className: "vide", textContent: "Pas encore d'aperçu" }));
+  if (neufs.has(f.nom)) fen.append(etiquetteNeuf());
+  const badges = el("ul", { className: "badges" });
+  const n = f.etats.length;
+  if (n) badges.append(badge("anims", `${n} anim${n > 1 ? "s" : ""}`));
+  if (f.lueur) badges.append(badge("lueur", "Lumineux"));
+  if (f.particules.length) badges.append(badge("particules", "Particules"));
+  art.append(el("div", { className: "corps-carte" },
+    el("h3", { className: "carte__titre" }, el("button", { type: "button", className: "carte__lien", textContent: joli(f.nom), onclick: () => ouvrir(f.nom) })),
+    el("p", { className: "meta", textContent: `${tri === "ensemble" ? lib(f.categorie) : f.ensemble} · ${f.cubes} cubes` }), badges), fen);
+  return art;
+}
+function etiquetteNeuf() { return el("span", { className: "neuf", textContent: "Nouveau" }); }
 function barreEnsembles() {
   const box = document.getElementById("ensembles"); box.replaceChildren();
-  [[null, "Tous"], ...ordreEns().map(e => [e, e])].forEach(([v, l]) => {
-    const n = D.fiches.filter(f => (!v || f.ensemble === v) && (!cat || f.categorie === cat)).length;
-    const b = el("button", { className: "ens", onclick: () => { ens = v; tout(); } }, el("span", { className: "pastille" }), el("span", { textContent: l }), el("span", { className: "n", textContent: n }));
-    b.style.setProperty("--c", v ? teinte(v) : "#eeebf4"); b.setAttribute("aria-pressed", String(v === ens)); box.append(b);
+  const compte = p => D.fiches.filter(f => p(f) && (!cat || f.categorie === cat)).length;
+  const pieces = n => `${n} ${n > 1 ? "pièces" : "pièce"}`;
+  const entree = (classe, libelle, n, actif, clic, couleur) => {
+    const b = el("button", { type: "button", className: classe, onclick: clic });
+    if (couleur) { b.style.setProperty("--c", couleur); b.append(el("span", { className: "pastille" })); }
+    const c = el("span", { className: "compteur", textContent: n }); c.setAttribute("aria-hidden", "true");
+    b.append(el("span", { className: "nav__texte", textContent: libelle }), c, el("span", { className: "masque", textContent: `, ${pieces(n)}` }));
+    b.setAttribute("aria-pressed", String(actif)); return b;
+  };
+  // Premier groupe sans titre : tout le vestiaire.
+  box.append(el("div", { className: "nav__groupe" }, el("ul", {}, el("li", {},
+    entree("nav__lien", "Tout le vestiaire", compte(() => true), !th && !ens, () => { th = null; ens = null; tout(); })))));
+  const ensembles = ordreEns();
+  ordreThemes().forEach(t => {
+    const ul = el("ul");
+    ensembles.filter(e => D.fiches.some(f => f.ensemble === e && f.theme === t)).forEach(e =>
+      ul.append(el("li", {}, entree("nav__lien", e, compte(f => f.ensemble === e), ens === e, () => { th = t; ens = e; tout(); }, teinte(e)))));
+    // Le titre du groupe filtre tout le thème.
+    box.append(el("div", { className: "nav__groupe" }, entree("nav__titre", t, compte(f => f.theme === t), th === t && !ens, () => { th = t; ens = null; tout(); }), ul));
   });
 }
 function barreCats() {
   const box = document.getElementById("cats"); box.replaceChildren();
   [[null, "Toutes"], ...ordreCat().map(c => [c, lib(c)])].forEach(([v, l]) => {
-    const n = D.fiches.filter(f => (!v || f.categorie === v) && (!ens || f.ensemble === ens)).length;
+    const n = D.fiches.filter(f => (!v || f.categorie === v) && garde(f)).length;
     const b = el("button", { textContent: `${l} ${n}`, onclick: () => { cat = v; tout(); } }); b.setAttribute("aria-pressed", String(v === cat)); box.append(b);
   });
   const t = document.getElementById("tri"); t.replaceChildren();
@@ -171,16 +303,16 @@ function barreCats() {
 }
 function liste() {
   const q = document.getElementById("recherche").value.trim().toLowerCase();
-  const vis = D.fiches.filter(f => (!cat || f.categorie === cat) && (!ens || f.ensemble === ens) && (!q || [joli(f.nom), f.nom, lib(f.categorie), f.ensemble].some(s => s.toLowerCase().includes(q))));
-  const m = document.getElementById("liste"); m.replaceChildren();
+  const vis = D.fiches.filter(f => (!cat || f.categorie === cat) && garde(f) && (!q || [joli(f.nom), f.nom, lib(f.categorie), f.ensemble, f.theme || ""].some(s => s.toLowerCase().includes(q))));
+  const m = document.getElementById("liste"); m.replaceChildren(); visibles = [];
   if (!vis.length) { m.append(el("p", { className: "rien", textContent: D.fiches.length ? "Aucun cosmétique ne correspond. Effacez la recherche ou changez de filtre." : "L'armoire est vide : les cosmétiques livrés apparaîtront ici." })); return; }
   const parEns = tri === "ensemble", groupes = parEns ? ordreEns() : ordreCat(), oc = ordreCat();
   groupes.forEach(g => {
     const items = vis.filter(f => (parEns ? f.ensemble : f.categorie) === g); if (!items.length) return;
-    const tete = el("div", { className: "section" }, el("h2", { textContent: parEns ? g : lib(g) }), el("span", { textContent: items.length + (items.length > 1 ? " pièces" : " pièce") }));
+    const tete = el("div", { className: "section" }, el("h2", { textContent: parEns ? `${(items[0].theme && items[0].theme !== g) ? items[0].theme + " · " : ""}${g}` : lib(g) }), el("span", { textContent: items.length + (items.length > 1 ? " pièces" : " pièce") }));
     tete.style.setProperty("--c", parEns ? teinte(g) : "#eeebf4"); m.append(tete);
     const gr = el("div", { className: "grille" });
-    items.sort((a, b) => oc.indexOf(a.categorie) - oc.indexOf(b.categorie) || a.nom.localeCompare(b.nom)).forEach(f => gr.append(carte(f)));
+    items.sort((a, b) => oc.indexOf(a.categorie) - oc.indexOf(b.categorie) || a.nom.localeCompare(b.nom)).forEach(f => { visibles.push(f.nom); gr.append(carte(f)); });
     m.append(gr);
   });
 }
@@ -188,56 +320,207 @@ function jauge(nom, val, max, unite) {
   const j = el("div", { className: "jauge" }, el("div", {}, el("span", { textContent: nom }), el("b", { textContent: `${val} / ${max} ${unite}` })), el("div", { className: "rail" }));
   const i = el("i"); i.style.width = Math.min(100, Math.max(1.5, 100 * val / max)) + "%"; j.lastChild.append(i); return j;
 }
-function ouvrir(nom) {
+let ongletCourant = null, etatCourant = null;
+const ONGLETS_SLUG = o => ["3D", "Animation", "4 vues", "États", "De nuit", "Texture", "Calque"].find(t => slug(t) === o);
+function ouvrir(nom, ongletDemande, etatDemande) {
   const f = D.fiches.find(x => x.nom === nom); if (!f) return;
   ouvert = nom;
   const dlg = document.getElementById("dlg"); dlg.style.setProperty("--teinte", teinte(f.ensemble));
-  const vues = document.getElementById("vues"), vue = document.getElementById("vue"), cote = document.getElementById("cote");
-  const gif = suffixe(f.gif, f), lignes = Math.ceil(f.apercu_etats.length / 4) || 1;
-  let boutonsEtats = [];
-  const marquer = n => boutonsEtats.forEach(([e, b]) => b.setAttribute("aria-pressed", String(e === n)));
-  const montrerImg = (url, tex, alt) => { vue.replaceChildren(el("img", { src: url, alt, className: tex ? "tex" : "pleine" })); marquer(null); };
-  const montrerEtat = e => {
-    const i = f.apercu_etats.indexOf(e); if (i < 0 || !gif) return;
-    vue.replaceChildren(cadre(gif, 4, i % 4, Math.floor(i / 4), `${NOMS_ETATS[e] || e} de ${joli(f.nom)}`));
-    vues.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", "false")); marquer(e);
-  };
-  const liste_vues = [["Toutes les animations", gif], ["Planche", suffixe(f.planche, f)], ["De nuit", suffixe(f.nuit, f)], ["Texture", suffixe(f.texture, f), true], ["Calque lumineux", suffixe(f.calque, f), true]].filter(v => v[1]);
-  vues.replaceChildren();
-  liste_vues.forEach((v, i) => {
-    const b = el("button", { textContent: v[0], onclick: () => { vues.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); montrerImg(v[1], v[2], `${v[0]} de ${joli(f.nom)}`); } });
-    vues.append(b); if (!i) b.setAttribute("aria-pressed", "true");
-  });
-  if (liste_vues.length) montrerImg(liste_vues[0][1], liste_vues[0][2], `${liste_vues[0][0]} de ${joli(f.nom)}`);
-  else vue.replaceChildren(el("p", { className: "rien", textContent: "Pas encore d'aperçu pour ce cosmétique." }));
+  document.getElementById("titre").textContent = joli(f.nom);
+  const sous = document.getElementById("sous"); sous.replaceChildren(el("b", { textContent: f.ensemble }), ` · ${f.theme && f.theme !== f.ensemble ? f.theme + " · " : ""}${lib(f.categorie)}`);
+  const i = visibles.indexOf(nom);
+  document.getElementById("prec").disabled = i <= 0; document.getElementById("suiv").disabled = i < 0 || i >= visibles.length - 1;
 
-  const etats = el("div", { className: "etats" });
-  f.etats.forEach(e => {
-    const dispo = f.apercu_etats.includes(e) && gif;
-    const b = el("button", { textContent: NOMS_ETATS[e] || e, disabled: !dispo, onclick: () => montrerEtat(e) });
-    if (!dispo) b.style.opacity = .5;
-    etats.append(b); boutonsEtats.push([e, b]);
+  const vues = document.getElementById("vues"), vue = document.getElementById("vue"), etatsScene = document.getElementById("etats-scene"), cote = document.getElementById("cote");
+  const gif = suffixe(f.gif, f), planche = suffixe(f.planche, f), anims = f.anims_etat || {};
+  const etatsDispo = f.etats.filter(e => anims[e] || (gif && f.apercu_etats.includes(e)));
+  const nomEtat = e => NOMS_ETATS[e] || e;
+  // Zoom : clic pour zoomer à l'endroit visé, le zoom suit le pointeur, nouveau clic pour revenir (Entrée au clavier).
+  const zoomable = (contenu, titre, urlGrand) => {
+    const z = el("div", { className: "zoom", tabIndex: 0, role: "button" }, contenu);
+    z.setAttribute("aria-label", `Zoomer : ${titre}`); z.setAttribute("aria-pressed", "false");
+    const viser = ev => { const r = z.getBoundingClientRect(); contenu.style.transformOrigin = `${(ev.clientX - r.left) / r.width * 100}% ${(ev.clientY - r.top) / r.height * 100}%`; };
+    const basculer = actif => { z.classList.toggle("actif", actif); z.setAttribute("aria-pressed", String(actif)); };
+    z.addEventListener("click", ev => { viser(ev); basculer(!z.classList.contains("actif")); });
+    z.addEventListener("pointermove", ev => { if (z.classList.contains("actif")) viser(ev); });
+    z.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); contenu.style.transformOrigin = "50% 50%"; basculer(!z.classList.contains("actif")); } });
+    return el("div", { style: "width:100%" }, z, el("p", { className: "aide-zoom" }, el("span", { textContent: "Cliquer pour zoomer, déplacer pour explorer" }),
+      urlGrand ? el("a", { href: urlGrand, target: "_blank", rel: "noopener", textContent: "Ouvrir en grand" }) : ""));
+  };
+  // Une case de la planche : 4 états par rangée, chaque case = les 4 vues d'un état.
+  const decoupePlanche = k => {
+    const box = el("div", { className: "decoupe" });
+    const img = el("img", { src: planche, alt: `4 vues, ${nomEtat(f.apercu_etats[k])}, de ${joli(f.nom)}` });
+    const rangs = Math.ceil(f.apercu_etats.length / 4) || 1;
+    img.style.width = "400%"; img.style.left = -(k % 4) * 100 + "%"; img.style.top = -Math.floor(k / 4) * 100 + "%";
+    img.addEventListener("load", () => { box.style.aspectRatio = `${img.naturalWidth / 4} / ${img.naturalHeight / rangs}`; });
+    box.append(img); return box;
+  };
+  let mode = "anim";
+  const jeton = Symbol();
+  ficheJeton = jeton;
+  let nomsAnim = {};   // état -> nom de l'animation dans le modèle
+  const vue3d = { barre: null, curseur: null, temps: null, fusee: null, lire: null, lecture: true };
+  async function panneau3D() {
+    mode = "3d";
+    const canvas = el("canvas", { tabIndex: 0 });
+    canvas.setAttribute("aria-label", `Vue 3D de ${joli(f.nom)}. Glisser ou flèches pour tourner, molette ou plus et moins pour zoomer, double-clic ou zéro pour recadrer.`);
+    vue3d.lire = el("button", { type: "button", className: "icone-btn" }, icone(ICONES.pause), el("span", { className: "masque", textContent: "Pause" }));
+    vue3d.curseur = el("input", { type: "range", min: 0, max: 1, step: 0.01, value: 0 }); vue3d.curseur.setAttribute("aria-label", "Instant de l'animation");
+    vue3d.temps = el("span", { className: "v3d__temps", textContent: "0,00 s" });
+    vue3d.fusee = el("button", { type: "button", className: "v3d__bascule", textContent: "Fusée", hidden: true }); vue3d.fusee.setAttribute("aria-pressed", "false");
+    const recadrer = el("button", { type: "button", className: "icone-btn" }, icone(ICONES.recadrer), el("span", { className: "masque", textContent: "Recadrer la vue" }));
+    const bascule = (texte, actif) => { const b = el("button", { type: "button", className: "v3d__bascule", textContent: texte }); b.setAttribute("aria-pressed", String(actif)); return b; };
+    vue3d.nuit = bascule("Nuit", false);
+    vue3d.calque = bascule("Calque lumineux", true); vue3d.calque.hidden = true;
+    vue3d.parts = bascule("Particules", true); vue3d.parts.hidden = true;
+    vue3d.mouv = el("select", { hidden: true });
+    vue3d.mouv.setAttribute("aria-label", "Mouvement des particules (réglé par le staff en jeu)");
+    [["legere", "Légère"], ["normale", "Normale"], ["lourde", "Lourde"], ["flotte", "Flotte"], ["monte", "Monte"]].forEach(([v, t]) => vue3d.mouv.append(el("option", { value: v, textContent: t })));
+    canvas.title = "Glisser pour tourner, molette pour zoomer, double-clic pour recadrer";
+    vue3d.mouv.title = "Mouvement des particules : réglé par le staff en jeu (ici 2 par seconde, 6 s)";
+    vue.replaceChildren(el("div", { className: "v3d" }, canvas,
+      el("div", { className: "v3d__options" }, vue3d.nuit, vue3d.calque, vue3d.parts, vue3d.mouv),
+      el("div", { className: "v3d__barre" }, vue3d.lire, vue3d.curseur, vue3d.temps, vue3d.fusee, recadrer)));
+    let modele;
+    try { modele = await chargerModele(f); } catch (e) { modele = null; }
+    if (ficheJeton !== jeton || mode !== "3d") return;
+    const v = modele && window.Visionneuse ? Visionneuse.creer(canvas) : null;
+    if (!v) {
+      vue.replaceChildren(el("p", { className: "rien", textContent: location.protocol === "file:" ? "La vue 3D demande le serveur local : ouvrez ouvrir_vestiaire (.sh ou .bat)." : "Vue 3D indisponible sur ce navigateur (WebGL 2)." }));
+      return;
+    }
+    visionneuse = v;
+    nomsAnim = {};
+    (modele.animations || []).forEach(a => { const e = a.name.split(".").pop(); if (!a.name.startsWith("particle_") && !(e in nomsAnim)) nomsAnim[e] = a.name; });
+    const dispo = f.etats.filter(e => nomsAnim[e]);
+    const dep = dispo.includes(etatCourant) ? etatCourant : dispo.includes("idle") ? "idle" : dispo[0];
+    await v.charger(modele, nomsAnim[dep]);
+    if (ficheJeton !== jeton || visionneuse !== v) return;
+    const fmt = t => t.toFixed(2).replace(".", ",") + " s";
+    v.surTemps(t => { const L = v.duree() || 1; const tt = t % (L + 0.6); vue3d.curseur.value = Math.min(tt, L); vue3d.temps.textContent = fmt(Math.min(tt, L)); });
+    const basculerLecture = on => {
+      vue3d.lecture = on; v.lecture(on);
+      vue3d.lire.replaceChildren(icone(on ? ICONES.pause : ICONES.anims), el("span", { className: "masque", textContent: on ? "Pause" : "Lecture" }));
+    };
+    vue3d.lire.onclick = () => basculerLecture(!vue3d.lecture);
+    vue3d.curseur.addEventListener("input", () => { basculerLecture(false); v.temps(Number(vue3d.curseur.value)); vue3d.temps.textContent = fmt(Number(vue3d.curseur.value)); });
+    vue3d.fusee.onclick = () => { const on = vue3d.fusee.getAttribute("aria-pressed") !== "true"; vue3d.fusee.setAttribute("aria-pressed", String(on)); v.requetes(on ? { ground_speed: 33, vertical_speed: 0 } : null); };
+    recadrer.onclick = () => v.recadrer();
+    const basculeur = (b, f) => { b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(on)); f(on); }; };
+    basculeur(vue3d.nuit, on => v.nuit(on));
+    vue3d.calque.hidden = !v.aCalque(); basculeur(vue3d.calque, on => v.calque(on));
+    const avecParts = v.aParticules(); vue3d.parts.hidden = !avecParts; vue3d.mouv.hidden = !avecParts;
+    basculeur(vue3d.parts, on => { v.particules(on); vue3d.mouv.disabled = !on; });
+    vue3d.mouv.onchange = () => v.mouvement(vue3d.mouv.value);
+    pastilles(dispo);
+  }
+  const montrerEtat = e => {
+    etatCourant = e;
+    etatsScene.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.etat === e)));
+    const k = f.apercu_etats.indexOf(e);
+    if (mode === "3d") {
+      if (!visionneuse || !nomsAnim[e]) return;
+      visionneuse.animation(nomsAnim[e]);
+      vue3d.curseur.max = visionneuse.duree() || 1;
+      vue3d.fusee.hidden = e !== "glide";
+      return;
+    }
+    if (mode === "anim") {
+      if (anims[e]) vue.replaceChildren(el("img", { className: "anim-etat", src: suffixe(anims[e], f), alt: `${nomEtat(e)} de ${joli(f.nom)}` }));
+      else if (k >= 0) vue.replaceChildren(cadre(gif, 4, k % 4, Math.floor(k / 4), `${nomEtat(e)} de ${joli(f.nom)}`, true));
+    } else if (k >= 0 && planche) vue.replaceChildren(zoomable(decoupePlanche(k), `4 vues, ${nomEtat(e)}`, planche));
+  };
+  const pastilles = liste_etats => {
+    const box = el("div", { className: "etats", role: "group" }); box.setAttribute("aria-label", "États du joueur");
+    f.etats.forEach(e => {
+      const b = el("button", { type: "button", textContent: nomEtat(e), disabled: !liste_etats.includes(e), onclick: () => montrerEtat(e) });
+      b.dataset.etat = e; b.setAttribute("aria-pressed", "false"); box.append(b);
+    });
+    etatsScene.replaceChildren(box);
+    montrerEtat(liste_etats.includes(etatCourant) ? etatCourant : liste_etats.includes("idle") ? "idle" : liste_etats[0]);
+  };
+  const panneaux = [];
+  if (f.etats.length && location.protocol !== "file:" && window.Visionneuse) panneaux.push(["3D", () => { etatsScene.replaceChildren(); panneau3D(); }]);
+  if (etatsDispo.length && !panneaux.length) panneaux.push(["Animation", () => { mode = "anim"; pastilles(etatsDispo); }]);   // repli sans vue 3D
+  const etatsPlanche = f.apercu_etats.filter(e => f.etats.includes(e));
+  if (planche && etatsPlanche.length) panneaux.push(["4 vues", () => { mode = "vues"; pastilles(etatsPlanche); }]);
+  const image = (url, tex, titre) => () => {
+    etatsScene.replaceChildren();
+    vue.replaceChildren(zoomable(el("img", { src: url, alt: `${titre} de ${joli(f.nom)}`, className: tex ? "tex" : "pleine" }), titre.toLowerCase(), url));
+  };
+  if (gif) panneaux.push(["États", image(gif, false, "Tous les états")]);
+  if (f.nuit) panneaux.push(["De nuit", image(suffixe(f.nuit, f), false, "De nuit")]);
+  [["Texture", f.texture], ["Calque", f.calque]].forEach(([t, u]) => u && panneaux.push([t, image(suffixe(u, f), true, t === "Calque" ? "Calque lumineux" : t)]));
+  vues.replaceChildren();
+  const onglets = panneaux.map(([t], k) => {
+    const b = el("button", { type: "button", role: "tab", textContent: t, id: "onglet-" + k });
+    b.addEventListener("click", () => choisir(k));
+    b.addEventListener("keydown", ev => {
+      const n = panneaux.length, cible = { ArrowRight: (k + 1) % n, ArrowLeft: (k - 1 + n) % n, Home: 0, End: n - 1 }[ev.key];
+      if (cible !== undefined) { ev.preventDefault(); choisir(cible); onglets[cible].focus(); }
+    });
+    vues.append(b); return b;
   });
-  const avec = el("div", { className: "avec" });
-  D.fiches.filter(x => x.ensemble === f.ensemble && x.nom !== f.nom && f.ensemble !== "Autres").forEach(x => avec.append(el("button", { textContent: joli(x.nom), onclick: () => ouvrir(x.nom) })));
-  const dl = el("a", { className: "dl", href: f.bbmodel, download: f.fichier, textContent: "Télécharger le .bbmodel" });
-  const lueur = f.lueur ? "Lueur intégrée au fichier." : f.calque ? "Calque de lueur prêt, désactivé jusqu'au correctif du mod." : "Pas de lueur.";
+  function choisir(k) {
+    fermerVisionneuse();
+    onglets.forEach((b, j) => { b.setAttribute("aria-selected", String(j === k)); b.tabIndex = j === k ? 0 : -1; });
+    document.getElementById("panneau").setAttribute("aria-labelledby", "onglet-" + k);
+    ongletCourant = panneaux[k][0];
+    history.replaceState(null, "", "#" + encodeURIComponent(f.nom) + (k ? "/" + slug(ongletCourant) : ""));
+    panneaux[k][1]();
+  }
+  etatCourant = f.etats.includes(etatDemande) ? etatDemande : null;
+  if (panneaux.length) choisir(Math.max(0, panneaux.findIndex(p => p[0] === ongletDemande)));
+  else { etatsScene.replaceChildren(); vue.replaceChildren(el("p", { className: "rien", textContent: "Pas encore d'aperçu pour ce cosmétique." })); }
+
+  const avec = el("ul", { className: "avec" });
+  D.fiches.filter(x => x.ensemble === f.ensemble && x.nom !== f.nom && f.ensemble !== "Autres").forEach(x => {
+    const v = suffixe(x.vignette, x);
+    avec.append(el("li", {}, el("button", { type: "button", onclick: () => ouvrir(x.nom) },
+      v ? el("img", { src: v, alt: "", loading: "lazy" }) : el("span", { className: "sans" }),
+      el("span", { className: "nom-avec", textContent: joli(x.nom) }), el("span", { className: "cat-avec", textContent: lib(x.categorie) }))));
+  });
+  const dl = el("a", { className: "dl", href: f.bbmodel, download: f.fichier }, icone(ICONES.telecharger), el("span", { textContent: "Télécharger le .bbmodel" }));
+  const chemin = decodeURIComponent(f.bbmodel);
+  const copier = el("button", { type: "button", className: "secondaire" }, icone(ICONES.copier), el("span", { textContent: "Copier le chemin du fichier" }));
+  copier.onclick = async () => { try { await navigator.clipboard.writeText(chemin); annoncer("Chemin copié"); } catch (e) { annoncer(chemin); } };
+  const lueur = f.lueur ? "Calque lumineux embarqué." : f.calque ? "Calque lumineux peint, non embarqué." : "Pas de calque lumineux.";
+  const chiffre = (t, v) => el("div", {}, el("dt", { textContent: t }), el("dd", { textContent: v }));
   cote.replaceChildren(
-    el("div", {}, el("h3", { id: "titre", textContent: joli(f.nom) }), el("div", { className: "sous", textContent: `${f.ensemble} · ${lib(f.categorie)}` })),
-    dl,
+    el("div", { className: "actions" }, dl, copier),
+    el("dl", { className: "chiffres" }, chiffre("Cubes", f.cubes), chiffre("Groupes", f.groupes), chiffre("Envoi", f.ko_compresse + " Ko")),
     el("div", {}, el("p", { className: "rubrique", textContent: "Limites du mod" }),
       el("div", { style: "display:grid;gap:9px" }, jauge("Cubes", f.cubes, 8192, ""), jauge("Groupes", f.groupes, 2048, ""), jauge("Envoi compressé", f.ko_compresse, 1000, "Ko"))),
-    f.etats.length ? el("div", {}, el("p", { className: "rubrique", textContent: "Animations" }), etats) : "",
-    el("p", { className: "note", textContent: lueur + (f.particules.length ? ` Particules : ${f.particules.join(", ")}.` : "") }),
-    avec.children.length ? el("div", {}, el("p", { className: "rubrique", textContent: "Du même ensemble" }), avec, el("p", { className: "note", style: "margin-top:6px", textContent: "Le mod permet d'en porter 3 à la fois." })) : "",
-    el("div", { className: "chemin", textContent: decodeURIComponent(f.bbmodel) }));
-  if (!dlg.open) dlg.showModal();
+    el("p", { className: "note", textContent: lueur + (f.particules.length ? ` Particules : ${f.particules.join(", ")}.` : "") + ` ${f.etats.length} animation${f.etats.length > 1 ? "s" : ""}.` }),
+    avec.children.length ? el("div", {}, el("p", { className: "rubrique", textContent: "Du même ensemble" }), avec, el("p", { className: "note", style: "margin-top:8px", textContent: "Le mod permet d'en porter 3 à la fois." })) : "",
+    el("div", { className: "chemin", textContent: chemin }));
+  if (!dlg.open) { declencheur = document.activeElement; dlg.showModal(); }
 }
+let declencheur = null, visionneuse = null, ficheJeton = null;
+const modeles = new Map();
+async function chargerModele(f) {
+  const cle = f.bbmodel + "?v=" + f.version;
+  if (!modeles.has(cle)) modeles.set(cle, fetch(cle, { cache: "no-store" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }));
+  return modeles.get(cle);
+}
+function fermerVisionneuse() { if (visionneuse) { visionneuse.detruire(); visionneuse = null; } }
+function voisin(d) { const i = visibles.indexOf(ouvert); const n = visibles[i + d]; if (n) ouvrir(n); }
 function tout() { barreEnsembles(); barreCats(); liste(); }
 document.getElementById("recherche").addEventListener("input", liste);
 document.getElementById("fermer").onclick = () => document.getElementById("dlg").close();
+document.getElementById("prec").onclick = () => voisin(-1);
+document.getElementById("suiv").onclick = () => voisin(1);
 document.getElementById("dlg").addEventListener("click", e => { if (e.target.id === "dlg") e.target.close(); });
-document.getElementById("dlg").addEventListener("close", () => { ouvert = null; });
+document.getElementById("dlg").addEventListener("keydown", e => {
+  if (e.target.getAttribute("role") === "tab") return;   // les flèches servent aux onglets
+  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); voisin(1); }
+  if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); voisin(-1); }
+});
+document.getElementById("dlg").addEventListener("close", () => {
+  ouvert = null; fermerVisionneuse(); history.replaceState(null, "", location.pathname + location.search);
+  if (declencheur && document.contains(declencheur)) declencheur.focus();
+});
 
 /* Mise à jour automatique : uniquement avec le petit serveur local (ouvrir_vestiaire.bat). */
 const direct = document.getElementById("direct"), txt = document.getElementById("direct-txt");
@@ -255,10 +538,13 @@ async function suivre() {
     statut(true, "Mise à jour automatique active");
     if (ajouts.length) annoncer(`Nouveau : ${ajouts.map(f => joli(f.nom)).join(", ")}`);
     else if (modifs.length) annoncer(`Mis à jour : ${modifs.map(f => joli(f.nom)).join(", ")}`);
-    if (ouvert && modifs.some(f => f.nom === ouvert)) ouvrir(ouvert);
+    if (ouvert && modifs.some(f => f.nom === ouvert)) ouvrir(ouvert, ongletCourant, etatCourant);
   } catch (e) { statut(false, "Serveur arrêté : relancez ouvrir_vestiaire.bat pour retrouver la mise à jour automatique."); }
 }
 tout();
+// Lien direct : #nom, #nom/onglet ou #nom/onglet/état (ex. #halo_donut/4-vues, #ailes_abyssales/3d/swim).
+const slug = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+if (location.hash.length > 1) { const [n, o, e] = decodeURIComponent(location.hash.slice(1)).split("/"); ouvrir(n, o ? ONGLETS_SLUG(o) : undefined, e); }
 if (location.protocol === "file:") statut(false, "Liste figée à la dernière génération. Ouvrez ouvrir_vestiaire.bat pour la mise à jour automatique.");
 else { statut(true, "Mise à jour automatique active"); setInterval(suivre, 2500); }
 document.addEventListener("keydown", e => { if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); document.getElementById("recherche").focus(); } });

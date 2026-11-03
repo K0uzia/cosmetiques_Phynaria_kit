@@ -10,7 +10,7 @@
 
 ## Vrai volume 3D (retour en jeu, prime sur les sections suivantes)
 
-Vue par la tranche, une aile en plaques découpées se lit comme un tas de feuilles empilées : les tranches transparentes laissent des lignes flottantes séparées par du vide. Modèle de référence : `cosmetiques/ailes/aile_tentacule_demoniaque.bbmodel`.
+Vue par la tranche, une aile en plaques découpées se lit comme un tas de feuilles empilées : les tranches transparentes laissent des lignes flottantes séparées par du vide. Modèle de référence : `cosmetiques/ailes/aile_tentacule_demoniaque/aile_tentacule_demoniaque.bbmodel`.
 - Une plume = peau + âme : deux fines plaques au contour rond découpé par alpha 0/255, tranches transparentes, autour de cubes pleins plus étroits, invisibles de face, qui remplissent l'épaisseur. Des cubes pleins seuls donnent des marches et un aspect « trop carré » (retour en jeu).
 - Une aile doit rester un volume continu sous tous les angles : noyau osseux épais, rangées qui se touchent sans vide en profondeur.
 - Budget : quelques centaines de cubes, selon le guide du mod.
