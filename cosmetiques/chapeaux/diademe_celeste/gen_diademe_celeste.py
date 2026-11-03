@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image
 
 NOM = "diademe_celeste"
-AVEC_E = False      # True : embarque le calque _e en seconde texture. False tant que le bug du mod n'est pas corrigé.
+AVEC_E = True       # True : embarque le calque _e en seconde texture. Réactivé le 2026-11-03 (correctif du mod annoncé, à vérifier en jeu).
 TEX = 512
 SS = 4
 TAU = 2 * math.pi

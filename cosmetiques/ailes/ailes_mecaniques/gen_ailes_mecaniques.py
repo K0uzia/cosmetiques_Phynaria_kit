@@ -12,7 +12,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-AVEC_E = False      # True : embarque ailes_mecaniques_e.png en seconde texture. False tant que le bug du mod n'est pas corrigé.
+AVEC_E = True       # True : embarque ailes_mecaniques_e.png en seconde texture. Réactivé le 2026-11-03 (correctif du mod annoncé, à vérifier en jeu).
 TEX = 512
 V0, DV = 26, 5      # battement à la fusée (glide) : constantes validées en jeu
 TAU = 2 * math.pi
