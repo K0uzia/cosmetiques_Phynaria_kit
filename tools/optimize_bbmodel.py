@@ -42,6 +42,8 @@ def simplify(keyframes, eps_rot=0.3, eps_pos=0.05, eps_scale=0.01):
             k = {"channel": ch, "data_points": [{"x": str(round(v[0], 2)), "y": str(round(v[1], 2)), "z": str(round(v[2], 2))}], "time": round(t, 3)}
             if interp != "linear": k["interpolation"] = interp
             out.append(k)
+    # autres canaux (clés de son de la piste Effets, guide 6.5) : conservés tels quels
+    out += [k for k in keyframes if k["channel"] not in ("rotation", "position", "scale")]
     return out
 
 def optimize(path_in, path_out):

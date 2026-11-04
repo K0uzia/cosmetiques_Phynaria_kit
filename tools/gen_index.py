@@ -80,8 +80,16 @@ def fiche(categorie, nom, modele, dossier):
             return url(p)
         return None
 
-    etats = [a for a in i["anims"] if not a.startswith("particle_")]
+    etats = [a for a in i["anims"] if not a.split(".")[-1].startswith(("particle_", "overlay_", "event_"))]
     gif = fichier("apercu", "animations.gif")
+    # réglages à donner au staff pour les particules (fenêtre « une par sorte », guide 5 ter §5) : <dossier>/reglages.json
+    reglages = []
+    if dossier and fichier("reglages.json"):
+        try:
+            with open(os.path.join(dossier, "reglages.json"), encoding="utf-8") as fr:
+                reglages = json.load(fr).get("particules", [])
+        except (OSError, ValueError):
+            reglages = []
     # Ordre des cases du GIF : apercu/etats.json s'il existe, sinon l'ordre standard des outils d'aperçu.
     apercu_etats = []
     if gif:
@@ -97,7 +105,7 @@ def fiche(categorie, nom, modele, dossier):
         "gif": gif, "planche": fichier("apercu", "planche.png"), "vignette": fichier("apercu", "vignette.png"),
         "anims_etat": {e: u for e in etats if (u := fichier("apercu", "etats", e + ".webp"))}, "nuit": fichier("apercu", "nuit.png"),
         "texture": fichier(nom + ".png"), "calque": fichier(nom + "_e.png"),
-        "lueur": i["lueur"], "cubes": i["cubes"], "groupes": i["groupes"], "etats": etats, "apercu_etats": apercu_etats,
+        "lueur": i["lueur"], "reglages": reglages, "cubes": i["cubes"], "groupes": i["groupes"], "etats": etats, "apercu_etats": apercu_etats,
         "particules": sorted({a.split("_")[1] for a in i["anims"] if a.startswith("particle_") and a.count("_") >= 2}),
         "ko_compresse": i["ko_compresse"], "ko": os.path.getsize(modele) // 1024,
     }

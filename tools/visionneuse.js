@@ -30,7 +30,10 @@
 
   // ------------------------------------------------------------------ Molang (sin et cos en degrés, inconnue = 0)
   const MATH = { sin: d => Math.sin(d * Math.PI / 180), cos: d => Math.cos(d * Math.PI / 180), clamp: (v, a, b) => Math.max(a, Math.min(b, v)),
-    abs: Math.abs, max: Math.max, min: Math.min, sqrt: Math.sqrt, floor: Math.floor, ceil: Math.ceil, round: Math.round, pi: Math.PI };
+    abs: Math.abs, max: Math.max, min: Math.min, sqrt: Math.sqrt, floor: Math.floor, ceil: Math.ceil, round: v => Math.floor(v + 0.5), pi: Math.PI,
+    // Autres fonctions du guide (section 6.3), mêmes définitions que tools/render_bbmodel.py.
+    mod: (v, d) => v % d, trunc: Math.trunc, pow: Math.pow, lerp: (a, b, k) => a + (b - a) * k, exp: Math.exp,
+    atan: v => Math.atan(v) * 180 / Math.PI, atan2: (y, x) => Math.atan2(y, x) * 180 / Math.PI };
   const cache = new Map();
   function molang(expr, q) {
     if (typeof expr === "number") return expr;
@@ -40,7 +43,22 @@
     let f = cache.get(s);
     if (!f) {
       const e = s.replace(/\bquery\./g, "q.").replace(/\bMath\./g, "math.").replace(/\bvariable\./g, "v.");
-      try { f = new Function("q", "math", "v", "return (" + e + ");"); } catch (err) { f = () => 0; }
+      if (!/;|\bv\./.test(e)) {
+        try { f = new Function("q", "math", "v", "return (" + e + ");"); } catch (err) { f = () => 0; }
+      } else {
+        // Instructions « ; » et variables mémorisées (guide 6.3) : état stable sur 80 images de 0,05 s, comme render_bbmodel.py
+        const instr = e.split(";").map(x => x.trim().replace(/^return\s+/, "")).filter(Boolean)
+          .map(x => { const m = /^v\.(\w+)\s*=(?!=)\s*(.+)$/.exec(x); return m ? [m[1], m[2]] : [null, x]; });
+        let fs;
+        try { fs = instr.map(([n, x]) => [n, new Function("q", "math", "v", "return (" + x + ");")]); } catch (err) { fs = null; }
+        f = fs ? (q, M) => {
+          const v = new Proxy({}, { get: (o, k) => (k in o ? o[k] : 0) });
+          const qq = new Proxy(q, { get: (o, k) => (k === "delta_time" && !o[k] ? 0.05 : o[k]) });
+          let val = 0;
+          for (let i = 0; i < 80; i++) for (const [n, g] of fs) { val = Number(g(qq, M, v)); if (n) v[n] = val; }
+          return val;
+        } : () => 0;
+      }
       cache.set(s, f);
     }
     try { const v = Number(f(q, MATH, q)); return Number.isFinite(v) ? v : 0; } catch (err) { return 0; }
@@ -76,6 +94,7 @@
   function etatDe(nom) {
     if (!nom) return "idle";
     const mot = String(nom).split(".").pop().toLowerCase();
+    if (/^(overlay_|event_)/.test(mot)) return "idle";   // couches et événements (guide 6.4) : jamais un état, comme render_bbmodel.py
     const table = [["glide", ["glide", "elytra", "plane"]], ["swim", ["swim", "nage"]], ["sleep", ["sleep", "dort", "dodo"]], ["mount", ["ride", "mount", "monture"]],
       ["sneak", ["sneak", "crouch", "accroupi"]], ["run", ["sprint", "run", "cours", "course"]], ["walk", ["walk", "marche"]]];
     for (const [e, mots] of table) if (mots.some(m => mot.includes(m))) return e;
@@ -123,7 +142,7 @@
     const parId = new Map(m.elements.map(e => [e.uuid, e]));
     const faces = [];          // {el, coins locaux, uv | couleur}
     const elements = [];       // {M élément, chaîne de groupes, partie}
-    function parcourir(n, chaine, partie) {
+    function parcourir(n, chaine, partie, mode = 0, bill = null) {
       if (typeof n === "string") {
         const e = parId.get(n); if (!e) return;
         const o = e.origin || [0, 0, 0], r = e.rotation || [0, 0, 0];
@@ -133,11 +152,15 @@
           if (fd.texture === null || fd.texture === undefined) continue;
           const [u1, v1, u2, v2] = fd.uv;
           if (u1 === u2 || v1 === v2) continue;
-          faces.push({ el: idx, coins: COINS[nom](a, b), uv: [u1 / tw, v1 / th, u2 / tw, v1 / th, u2 / tw, v2 / th, u1 / tw, v2 / th] });
+          faces.push({ el: idx, coins: COINS[nom](a, b), uv: [u1 / tw, v1 / th, u2 / tw, v1 / th, u2 / tw, v2 / th, u1 / tw, v2 / th], mode, bill });
         }
       } else {
         const suite = chaine.concat([n]);
-        for (const c of n.children || []) parcourir(c, suite, partie);
+        // fonctions anticipées (.claude/rules/conventions-anticipees.md) : trans_ = translucide (1), add_ = additif (2), comme le renderer
+        const nomG = String(n.name || ""), m2 = nomG.startsWith("add_") ? 2 : nomG.startsWith("trans_") ? 1 : mode;
+        // face caméra (guide 4 bis) : le groupe le plus proche, ses ancêtres, et le genre (sphérique ou debout)
+        const b2 = /^camy?_/.test(nomG) ? { noeud: n, chaine, debout: nomG.startsWith("camy_") } : bill;
+        for (const c of n.children || []) parcourir(c, suite, partie, m2, b2);
       }
     }
     // Particules (guide, section 5 ter) : forme dans un groupe particle_<nom> à la racine, non portée.
@@ -173,13 +196,16 @@
     const anims = new Map((m.animations || []).map(a => [a.name, a]));
     // Calque lumineux : seconde texture dont le nom finit par _e (guide, section 5 bis).
     const calque = (m.textures || []).slice(1).find(t => /_e(\.png)?$/i.test(t.name || "") && t.source);
-    return { m, faces, elements, mannequin, anims, particules, emetteurs, calque: calque ? calque.source : null };
+    const overlays = [...anims.keys()].filter(n => n.split(".").pop().startsWith("overlay_"));
+    return { m, faces, elements, mannequin, anims, particules, emetteurs, overlays, calque: calque ? calque.source : null };
   }
 
   /** Matrices des groupes à l'instant t (convention du mod : rotation de base + rotation animée). */
-  function matricesGroupes(P, anim, t, extra) {
+  function matricesGroupes(P, anim, t, extra, couches) {
     const anims = anim ? anim.animators || {} : {};
     const q = requetes(t, extra);
+    // couches jouées par-dessus (overlay_, event_) : [{ anim, t }], chacune avec son propre temps
+    const sup = (couches || []).filter(c => c.anim).map(c => ({ a: c.anim.animators || {}, t: c.t, q: requetes(c.t, extra) }));
     const cacheM = new Map();
     return function (g) {
       if (cacheM.has(g)) return cacheM.get(g);
@@ -191,6 +217,11 @@
         rot = [rot[0] + ar[0], rot[1] + ar[1], rot[2] + ar[2]];
         sc = echantillon(a.keyframes, "scale", t, [1, 1, 1], q);
         pos = echantillon(a.keyframes, "position", t, [0, 0, 0], q);
+      }
+      for (const c of sup) {
+        const b = c.a[g.uuid]; if (!b) continue;
+        const r2 = echantillon(b.keyframes, "rotation", c.t, [0, 0, 0], c.q), s2 = echantillon(b.keyframes, "scale", c.t, [1, 1, 1], c.q), p2 = echantillon(b.keyframes, "position", c.t, [0, 0, 0], c.q);
+        rot = [rot[0] + r2[0], rot[1] + r2[1], rot[2] + r2[2]]; sc = [sc[0] * s2[0], sc[1] * s2[1], sc[2] * s2[2]]; pos = [pos[0] + p2[0], pos[1] + p2[1], pos[2] + p2[2]];
       }
       const M = mul(T(o[0] + pos[0], o[1] + pos[1], o[2] + pos[2]), mul(R(...rot), mul(S(...sc), T(-o[0], -o[1], -o[2]))));
       cacheM.set(g, M); return M;
@@ -211,13 +242,42 @@
     const tl = tempsLocal(anim, t);
     const duree = anim ? Number(anim.length) || 1 : 1;
     const pose = opt.poser ? poseJoueur(etatDe(nomAnim), tl, duree) : null;
-    const groupe = matricesGroupes(P, anim, tl, opt.extra);
+    const couches = (opt.couches || []).map(c => ({ anim: P.anims.get(c.nom) || null, t: tempsLocal(P.anims.get(c.nom), c.t) }));
+    const groupe = matricesGroupes(P, anim, tl, opt.extra, couches);
     const Mel = P.elements.map(el => {
       let M = el.M;
       for (let i = el.chaine.length - 1; i >= 0; i--) M = mul(groupe(el.chaine[i]), M);
       return pose ? mul(pose[el.partie], M) : M;
     });
-    const cosm = P.faces.map(f => f.coins.map(c => appliquer(Mel[f.el], c[0], c[1], c[2])));
+    // ctrl_alpha (« 1 + position x ») sous 10 % : le groupe et ses enfants disparaissent (guide 4 bis), comme render_bbmodel.py
+    const anims_ = anim ? anim.animators || {} : {}, qa = requetes(tl, opt.extra), cacheA = new Map();
+    const cacheGroupe = g => {
+      if (cacheA.has(g)) return cacheA.get(g);
+      const c = (g.children || []).find(x => typeof x === "object" && x.name === "ctrl_alpha" && (anims_[x.uuid] || couches.some(k => k.anim && (k.anim.animators || {})[x.uuid])));
+      let x = c && anims_[c.uuid] ? echantillon(anims_[c.uuid].keyframes, "position", tl, [0, 0, 0], qa)[0] : 0;
+      for (const k of couches) { const b = c && k.anim && (k.anim.animators || {})[c.uuid]; if (b) x += echantillon(b.keyframes, "position", k.t, [0, 0, 0], requetes(k.t, opt.extra))[0]; }
+      const v = c ? 1 + x < 0.1 : false;
+      cacheA.set(g, v); return v;
+    };
+    const masque = P.elements.map(el => el.chaine.some(cacheGroupe));
+    const cosm = P.faces.map(f => masque[f.el] ? f.coins.map(() => [0, 0, 0]) : f.coins.map(c => appliquer(Mel[f.el], c[0], c[1], c[2])));
+    // Faces caméra : pivot et orientation monde du groupe sans sa rotation animée ; dessiner() les tourne vers l'œil.
+    const memo = new Map();
+    const bill = P.faces.map(f => {
+      if (!f.bill) return null;
+      if (memo.has(f.bill)) return memo.get(f.bill);
+      const n = f.bill.noeud, o = n.origin || [0, 0, 0], r = n.rotation || [0, 0, 0];
+      let M = ID;
+      for (let i = f.bill.chaine.length - 1; i >= 0; i--) M = mul(groupe(f.bill.chaine[i]), M);
+      const partie = P.elements[f.el].partie;
+      const Mp = pose ? mul(pose[partie], M) : M;
+      const Pw = appliquer(mul(Mp, groupe(n)), o[0], o[1], o[2]);
+      const Mb = mul(Mp, mul(T(o[0], o[1], o[2]), mul(R(...r), T(-o[0], -o[1], -o[2]))));
+      const P0 = appliquer(Mb, o[0], o[1], o[2]);
+      const col = [[1, 0, 0], [0, 1, 0], [0, 0, 1]].map(e => { const q = appliquer(Mb, o[0] + e[0], o[1] + e[1], o[2] + e[2]); const v = [q[0] - P0[0], q[1] - P0[1], q[2] - P0[2]]; const l = Math.hypot(...v) || 1; return v.map(x => x / l); });
+      const b = { debout: f.bill.debout, Pw, col };
+      memo.set(f.bill, b); return b;
+    });
     const mann = opt.mannequin ? P.mannequin.map(f => f.coins.map(c => pose ? appliquer(pose[f.partie], c[0], c[1], c[2]) : c)) : [];
     const emit = (P.emetteurs || []).map(e => {
       let M = groupe(e.noeud);
@@ -226,7 +286,24 @@
       const o = e.noeud.origin || [0, 0, 0];
       return { nom: e.nom, pos: appliquer(M, o[0], o[1], o[2]) };
     });
-    return { cosm, mann, emit };
+    return { cosm, mann, emit, bill };
+  }
+
+  /** Tourne les faces cam_ / camy_ vers l'œil (même calcul que render_bbmodel.py). */
+  function faceCamera(cosm, bill, oeil) {
+    return cosm.map((q, i) => {
+      const b = bill[i]; if (!b) return q;
+      const d = [oeil[0] - b.Pw[0], oeil[1] - b.Pw[1], oeil[2] - b.Pw[2]];
+      const yaw = Math.atan2(d[0], d[2]) * 180 / Math.PI;
+      const pitch = b.debout ? 0 : Math.atan2(d[1], Math.hypot(d[0], d[2])) * 180 / Math.PI;
+      const Rt = mul(R(0, yaw, 0), R(-pitch, 0, 0));
+      return q.map(p => {
+        const v = [p[0] - b.Pw[0], p[1] - b.Pw[1], p[2] - b.Pw[2]];
+        const l = [b.col[0][0] * v[0] + b.col[0][1] * v[1] + b.col[0][2] * v[2], b.col[1][0] * v[0] + b.col[1][1] * v[1] + b.col[1][2] * v[2], b.col[2][0] * v[0] + b.col[2][1] * v[1] + b.col[2][2] * v[2]];
+        const w = appliquer(Rt, l[0], l[1], l[2]);
+        return [b.Pw[0] + w[0], b.Pw[1] + w[1], b.Pw[2] + w[2]];
+      });
+    });
   }
 
   /** Quads monde d'une particule : pivot de son groupe placé en pos, animée par particle_<nom>_fall ou _rest. */
@@ -256,16 +333,20 @@
   void main(){ gl_Position = uVP * vec4(aPos, 1.0); vUv = aUv; vCol = aCol; vOmbre = aOmbre; }`;
   const FS = `#version 300 es
   precision mediump float; in vec2 vUv; in vec3 vCol; in float vOmbre;
-  uniform sampler2D uTex; uniform sampler2D uLum; uniform float uJour; uniform float uAvecLum; out vec4 sortie;
+  uniform sampler2D uTex; uniform sampler2D uLum; uniform float uJour; uniform float uAvecLum; uniform float uPasse; out vec4 sortie;
   void main(){
+    // passes : 0 opaque (cutout), 1 translucide (trans_), 2 additif (add_) ; vCol.g porte le mode d'une face texturée
     if (vCol.r < 0.0) {
-      vec4 c = texture(uTex, vUv); if (c.a < 0.5) discard;
+      if (abs(vCol.g - uPasse) > 0.5) discard;
+      vec4 c = texture(uTex, vUv);
       vec4 e = texture(uLum, vUv);
       // Calque _e : s'ajoute à la couleur, visible dans le noir ; noir ou transparent = rien.
       vec3 lum = uAvecLum * e.rgb * step(0.5, e.a);
-      sortie = vec4(min(c.rgb * vOmbre * uJour + lum, 1.0), 1.0);
+      if (uPasse < 0.5) { if (c.a < 0.5) discard; sortie = vec4(min(c.rgb * vOmbre * uJour + lum, 1.0), 1.0); }
+      else if (uPasse < 1.5) { if (c.a < 0.004) discard; sortie = vec4(min(c.rgb * vOmbre * uJour + lum, 1.0), c.a); }
+      else { if (c.a < 0.004) discard; sortie = vec4(c.rgb * c.a, 1.0); }
     }
-    else sortie = vec4(vCol * vOmbre * uJour, 1.0);
+    else { if (uPasse > 0.5) discard; sortie = vec4(vCol * vOmbre * uJour, 1.0); }
   }`;
   const LUMIERE = (() => { const l = [-0.4, 1.0, 0.6], n = Math.hypot(...l); return l.map(v => v / n); })();
 
@@ -275,7 +356,7 @@
     const prog = programme(gl, VS, FS);
     const loc = { pos: gl.getAttribLocation(prog, "aPos"), uv: gl.getAttribLocation(prog, "aUv"), col: gl.getAttribLocation(prog, "aCol"), ombre: gl.getAttribLocation(prog, "aOmbre"),
       vp: gl.getUniformLocation(prog, "uVP"), tex: gl.getUniformLocation(prog, "uTex"), lum: gl.getUniformLocation(prog, "uLum"),
-      jour: gl.getUniformLocation(prog, "uJour"), avecLum: gl.getUniformLocation(prog, "uAvecLum") };
+      jour: gl.getUniformLocation(prog, "uJour"), avecLum: gl.getUniformLocation(prog, "uAvecLum"), passe: gl.getUniformLocation(prog, "uPasse") };
     const tampons = { pos: gl.createBuffer(), uv: gl.createBuffer(), col: gl.createBuffer(), ombre: gl.createBuffer(), idx: gl.createBuffer() };
     const tex = gl.createTexture(), texLum = gl.createTexture();
     const MAX_PART = 64;
@@ -292,7 +373,8 @@
       const fixe = P.faces.length + P.mannequin.length, nq = fixe + MAX_PART * maxFacesPart;
       etat.n = nq; etat.fixe = fixe; etat.parts = []; etat.cumul = {};
       const uv = new Float32Array(nq * 8), col = new Float32Array(nq * 12), idx = new Uint32Array(nq * 6);
-      P.faces.forEach((f, i) => { uv.set(f.uv, i * 8); for (let k = 0; k < 4; k++) col.set([-1, 0, 0], i * 12 + k * 3); });
+      P.faces.forEach((f, i) => { uv.set(f.uv, i * 8); for (let k = 0; k < 4; k++) col.set([-1, f.mode || 0, 0], i * 12 + k * 3); });
+      etat.speciales = P.faces.some(f => f.mode);
       P.mannequin.forEach((f, j) => { const i = P.faces.length + j; for (let k = 0; k < 4; k++) col.set(f.couleur.map(v => v / 255), i * 12 + k * 3); });
       for (let i = fixe; i < nq; i++) for (let k = 0; k < 4; k++) col.set([-1, 0, 0], i * 12 + k * 3);
       etat.uvArr = uv;
@@ -334,7 +416,14 @@
         if (etat.surTemps) etat.surTemps(etat.t);
       }
       etat.dernier = maintenant;
-      const { cosm, mann, emit } = image(etat.P, etat.anim, etat.t, { extra: etat.extra });
+      const couches = etat.P.overlays.map(nom => ({ nom, t: etat.t }));
+      if (etat.evt) {
+        const a = etat.P.anims.get(etat.evt.nom), te = etat.t - etat.evt.t0;
+        if (a && te >= 0 && te <= Number(a.length)) couches.push({ nom: etat.evt.nom, t: te }); else if (etat.evt.fin) { etat.evt.fin(); etat.evt = null; }
+      }
+      const im = image(etat.P, etat.anim, etat.t, { extra: etat.extra, couches });
+      const { mann, emit } = im;
+      const cosm = faceCamera(im.cosm, im.bill, oeilDe(etat));
       const dt = etat.lecture && etat.dernierPart ? Math.min(0.1, (maintenant - etat.dernierPart) / 1000) : 0;
       etat.dernierPart = maintenant;
       simulerParticules(emit, dt);
@@ -371,23 +460,31 @@
       gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texLum); gl.uniform1i(loc.lum, 1);
       gl.uniform1f(loc.jour, etat.nuit ? 0.16 : 1.0); gl.uniform1f(loc.avecLum, etat.aCalque && etat.calqueVisible ? 1 : 0);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tampons.idx);
-      gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+      gl.uniform1f(loc.passe, 0); gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+      if (etat.speciales) {
+        // translucide puis additif, après l'opaque, sans écrire la profondeur (le renderer trie aussi les translucides)
+        gl.depthMask(false); gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.uniform1f(loc.passe, 1); gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+        gl.blendFunc(gl.ONE, gl.ONE); gl.uniform1f(loc.passe, 2); gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+        gl.disable(gl.BLEND); gl.depthMask(true);
+      }
     }
 
     /** Particules : réglages par défaut du guide (2 par seconde et par sorte, 6 s, Légère, se posent au sol y = 0). */
     function simulerParticules(emit, dt) {
       if (!etat.P || !dt) return;
-      const [vy, derive] = MOUVEMENTS[etat.mouvement] || MOUVEMENTS.legere;
+      const reglage = nom => (etat.reglages && etat.reglages[nom]) || {};
+      const mvt = nom => reglage(nom).mouvement || etat.mouvement;
       if (etat.particules) {
         const parSorte = {};
         for (const e of emit) if (etat.P.particules.has(e.nom)) (parSorte[e.nom] = parSorte[e.nom] || []).push(e.pos);
         for (const nom in parSorte) {
-          etat.cumul[nom] = (etat.cumul[nom] || 0) + dt * 2;
+          etat.cumul[nom] = (etat.cumul[nom] || 0) + dt * (reglage(nom).nombre || 2);
           while (etat.cumul[nom] >= 1 && etat.parts.length < MAX_PART) {
             etat.cumul[nom] -= 1;
             const pts = parSorte[nom], d = pts[Math.floor(Math.random() * pts.length)];
-            const a = Math.random() * Math.PI * 2;
-            etat.parts.push({ nom, pos: d.slice(), v: [Math.cos(a) * derive, vy, Math.sin(a) * derive], age: 0, vie: 6, pose: "fall", posee: 0, balance: Math.random() });
+            const a = Math.random() * Math.PI * 2, m = mvt(nom), [vy, derive] = MOUVEMENTS[m] || MOUVEMENTS.legere;
+            etat.parts.push({ nom, mvt: m, pos: d.slice(), v: [Math.cos(a) * derive, vy, Math.sin(a) * derive], age: 0, vie: reglage(nom).vie || 6, pose: "fall", posee: 0, balance: Math.random() });
           }
           if (etat.cumul[nom] > 1) etat.cumul[nom] = 1;
         }
@@ -396,7 +493,7 @@
         p.age += dt;
         if (p.pose === "fall") {
           for (let i = 0; i < 3; i++) p.pos[i] += p.v[i] * dt;
-          if (etat.mouvement !== "flotte" && etat.mouvement !== "monte" && p.pos[1] <= 0.3) { p.pos[1] = 0.3; p.pose = "rest"; p.posee = p.age; }
+          if (p.mvt !== "flotte" && p.mvt !== "monte" && p.pos[1] <= 0.3) { p.pos[1] = 0.3; p.pose = "rest"; p.posee = p.age; }
         }
       }
       etat.parts = etat.parts.filter(p => p.age < p.vie);
@@ -444,6 +541,9 @@
       aParticules: () => !!(etat.P && etat.P.particules.size && etat.P.emetteurs.length),
       particules: v => { etat.particules = v; if (!v) etat.parts = []; },
       mouvement: v => { etat.mouvement = v; },
+      reglages: r => { etat.reglages = r; },                                    // { sorte: { mouvement, vie, nombre } }
+      evenement: (nom, fin) => { etat.evt = nom ? { nom, t0: etat.t, fin } : null; },
+      evenements: () => [...(etat.P ? etat.P.anims.keys() : [])].filter(n => n.split(".").pop().startsWith("event_")),
       stats: () => ({ particules: etat.parts.length, t: etat.t, quads: etat.n }),
       /** Pour les tests : avance l'animation et les particules de s secondes, par pas de 50 ms. */
       avancer: s => { for (let k = 0; k < s / 0.05; k++) { etat.t += 0.05; simulerParticules(image(etat.P, etat.anim, etat.t, { extra: etat.extra }).emit, 0.05); } },
@@ -451,10 +551,13 @@
     };
   }
 
-  function vueProjection(e, ratio) {
+  function oeilDe(e) {
     const th = e.theta * Math.PI / 180, ph = e.phi * Math.PI / 180;
     // theta = 0 : caméra devant le joueur (côté −z).
-    const oeil = [e.cible[0] + e.dist * Math.cos(ph) * Math.sin(th), e.cible[1] + e.dist * Math.sin(ph), e.cible[2] - e.dist * Math.cos(ph) * Math.cos(th)];
+    return [e.cible[0] + e.dist * Math.cos(ph) * Math.sin(th), e.cible[1] + e.dist * Math.sin(ph), e.cible[2] - e.dist * Math.cos(ph) * Math.cos(th)];
+  }
+  function vueProjection(e, ratio) {
+    const oeil = oeilDe(e);
     const f = norm(sub(e.cible, oeil)), d = norm(croix(f, [0, 1, 0])), h = croix(d, f);
     const V = [d[0], h[0], -f[0], 0, d[1], h[1], -f[1], 0, d[2], h[2], -f[2], 0, -dot(d, oeil), -dot(h, oeil), dot(f, oeil), 1];
     const fov = 30 * Math.PI / 180, t = 1 / Math.tan(fov / 2), pres = 1, loin = 2000;

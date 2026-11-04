@@ -31,7 +31,8 @@ def apercus(modele, sortie, categorie, env):
     cam, cible, zoom = CADRAGES.get(categorie, DEFAUT)
     with open(modele, encoding="utf-8") as f:
         m = json.load(f)
-    longueurs = {a["name"]: float(a["length"]) for a in m["animations"] if not a["name"].startswith("particle_")}
+    # états seulement : ni particules, ni couches permanentes, ni événements (guide 6.4)
+    longueurs = {a["name"]: float(a["length"]) for a in m["animations"] if not a["name"].split(".")[-1].startswith(("particle_", "overlay_", "event_"))}
     noms = list(longueurs)
     if not noms:
         sys.exit("ÉCHEC : aucune animation d'état à montrer.")
@@ -49,8 +50,14 @@ def apercus(modele, sortie, categorie, env):
         subprocess.run([sys.executable, RENDU, modele, f"{tmp}/vignette.png", "--seule", cam, cible],
                        env=dict(env, ANIM=n, T=str(round(longueurs[n] * 0.3, 2))), check=True, capture_output=True)
 
+    def nuit():
+        # Vue de nuit (calque _e et lumière seule), repos : panneau « De nuit » du Vestiaire.
+        n = "idle" if "idle" in noms else noms[0]
+        subprocess.run([sys.executable, RENDU, modele, f"{tmp}/nuit.png", zoom], env=dict(env, ANIM=n, T=str(round(longueurs[n] * 0.3, 2)), CADRAGE="auto", NUIT="1"),
+                       check=True, capture_output=True)
+
     with ThreadPoolExecutor(6) as ex:
-        taches = [ex.submit(rendre, n) for n in noms] + [ex.submit(vignette)]
+        taches = [ex.submit(rendre, n) for n in noms] + [ex.submit(vignette), ex.submit(nuit)]
         for t in taches:
             t.result()
     rangees = (len(noms) + COLONNES - 1) // COLONNES
@@ -69,6 +76,7 @@ def apercus(modele, sortie, categorie, env):
         planche.paste(im, ((i % COLONNES) * L, (i // COLONNES) * H))
     planche.save(f"{sortie}/planche.png", optimize=True)
     shutil.copy2(f"{tmp}/vignette.png", f"{sortie}/vignette.png")
+    shutil.copy2(f"{tmp}/nuit.png", f"{sortie}/nuit.png")
     # GIF : une case par état, toutes les animations sur 8 s.
     C = 300
     clips = {}
@@ -106,7 +114,7 @@ def main():
     apercus(opt, tampon, categorie, env)
     cible = os.path.join(dossier, "apercu")
     os.makedirs(cible, exist_ok=True)
-    for f in ("planche.png", "animations.gif", "etats.json", "vignette.png"):
+    for f in ("planche.png", "animations.gif", "etats.json", "vignette.png", "nuit.png"):
         shutil.copy2(os.path.join(tampon, f), os.path.join(cible, f))
     shutil.rmtree(os.path.join(cible, "etats"), ignore_errors=True)   # anciens WebP par état, remplacés par la vue 3D
     shutil.copy2(opt, os.path.join(dossier, nom + ".bbmodel"))

@@ -37,6 +37,28 @@ class _MolangMath:
     def min(a, b): return min(a, b)
     @staticmethod
     def sqrt(v): return math.sqrt(v)
+    # Autres fonctions du guide (section 6.3), mêmes définitions que tools/visionneuse.js.
+    @staticmethod
+    def mod(v, d): return math.fmod(v, d)
+    @staticmethod
+    def floor(v): return math.floor(v)
+    @staticmethod
+    def ceil(v): return math.ceil(v)
+    @staticmethod
+    def round(v): return math.floor(v + 0.5)
+    @staticmethod
+    def trunc(v): return math.trunc(v)
+    @staticmethod
+    def pow(a, b): return math.pow(a, b)
+    @staticmethod
+    def lerp(a, b, k): return a + (b - a) * k
+    @staticmethod
+    def atan(v): return math.degrees(math.atan(v))
+    @staticmethod
+    def atan2(y, x): return math.degrees(math.atan2(y, x))
+    @staticmethod
+    def exp(v): return math.exp(v)
+    pi = math.pi
 class _Q:
     """Variables Molang. Simuler un état : MOLANG_QUERY="ground_speed=33,vertical_speed=0,is_gliding=1". Inconnue = 0, comme le mod."""
     def __init__(self, t):
@@ -47,11 +69,35 @@ class _Q:
             k, v = kv.split("=")
             setattr(self, k.strip(), float(v))
     def __getattr__(self, name): return 0.0
+class _V:
+    """Variables mémorisées (v.nom) : jamais écrite = 0."""
+    def __getattr__(self, name): return 0.0
+
+
 def molang(expr, t):
+    """Expression Molang du guide (6.3). Avec des instructions « ; » ou des variables v.… : l'aperçu n'a pas d'image
+    précédente, on calcule donc l'état stable (80 images de 0,05 s), comme après quelques secondes en jeu."""
     try: return float(expr)
     except ValueError: pass
-    e = expr.replace("query.", "q.").replace("Math.", "math.")
-    return float(eval(e, {"__builtins__": {}}, {"math": _MolangMath, "q": _Q(t)}))
+    e = expr.replace("query.", "q.").replace("Math.", "math.").replace("variable.", "v.")
+    if ";" not in e and "v." not in e:
+        return float(eval(e, {"__builtins__": {}}, {"math": _MolangMath, "q": _Q(t)}))
+    import re
+    q, v = _Q(t), _V()
+    if not getattr(q, "delta_time", 0):
+        q.delta_time = 0.05
+    instr = [s.strip() for s in e.split(";") if s.strip()]
+    val = 0.0
+    for _ in range(80):
+        for s in instr:
+            s = re.sub(r"^return\s+", "", s)
+            m = re.match(r"^v\.(\w+)\s*=(?!=)\s*(.+)$", s)
+            if m:
+                setattr(v, m.group(1), float(eval(m.group(2), {"__builtins__": {}}, {"math": _MolangMath, "q": q, "v": v})))
+                val = getattr(v, m.group(1))
+            else:
+                val = float(eval(s, {"__builtins__": {}}, {"math": _MolangMath, "q": q, "v": v}))
+    return val
 
 def sample(keyframes, channel, t, default):
     kfs = sorted([k for k in keyframes if k["channel"] == channel], key=lambda k: k["time"])
@@ -87,6 +133,8 @@ def etat_de(anim_name):
     if not anim_name:
         return "idle"
     mot = anim_name.split(".")[-1].lower()
+    if mot.startswith(("overlay_", "event_")):
+        return "idle"          # couches et événements (guide 6.4) : jamais un état ; « engrenages » contient « nage »
     for etat, mots in (("glide", ("glide", "elytra", "plane")), ("swim", ("swim", "nage")), ("sleep", ("sleep", "dort", "dodo")),
                        ("mount", ("ride", "mount", "monture")), ("sneak", ("sneak", "crouch", "accroupi")),
                        ("run", ("sprint", "run", "cours", "course")), ("walk", ("walk", "marche"))):
@@ -142,10 +190,14 @@ def load_model(path, anim_time=None, anim_name=None, pose=None):
     if m.get("textures"):
         src = m["textures"][0]["source"].split(",", 1)[1]
         tex = Image.open(io.BytesIO(base64.b64decode(src))).convert("RGBA")
+        # calque lumineux _e (guide 5 bis) : ajouté à la couleur dans render(), comme en jeu et dans le Vestiaire
+        te = next((t for t in m["textures"][1:] if t.get("name", "").rsplit(".", 1)[0].endswith("_e") and t.get("source")), None)
+        if te is not None:
+            tex.calque = Image.open(io.BytesIO(base64.b64decode(te["source"].split(",", 1)[1]))).convert("RGBA")
     tw = m["resolution"]["width"]; th = m["resolution"]["height"]
     by_id = {e["uuid"]: e for e in m["elements"]}
 
-    quads = []  # (4 points world, 4 uv (0..1), color or None)
+    quads = []  # (4 points world, 4 uv (0..1), couleur, ou None / "add" / "trans" pour une face texturée)
 
     def transform_chain(chain):
         def f(p):
@@ -155,7 +207,16 @@ def load_model(path, anim_time=None, anim_name=None, pose=None):
             return p
         return f
 
-    def walk2(node, parents, partie="body"):
+    def cache_alpha(node):
+        """Opacité pilotée par un enfant ctrl_alpha (« 1 + position x ») < 10 % : le groupe disparaît (guide 4 bis)."""
+        for c in node.get("children", []):
+            if isinstance(c, dict) and c.get("name") == "ctrl_alpha" and c.get("uuid") in animators:
+                kfs, t = animators[c["uuid"]]
+                if 1 + sample(kfs, "position", t, [0, 0, 0])[0] < 0.1:
+                    return True
+        return False
+
+    def walk2(node, parents, partie="body", mode=None, bill=None, cache=False):
         if isinstance(node, str):
             e = by_id[node]
             R = rot_matrix(*e.get("rotation", [0, 0, 0]))
@@ -172,8 +233,10 @@ def load_model(path, anim_time=None, anim_name=None, pose=None):
                 pts = [T(p) for p in FACE_CORNERS[fname](a, b)]
                 if pose is not None:
                     pts = [pose[partie](p) for p in pts]
+                if cache:
+                    pts = [np.zeros(3) for _ in pts]
                 uvs = [(u1 / tw, v1 / th), (u2 / tw, v1 / th), (u2 / tw, v2 / th), (u1 / tw, v2 / th)]
-                quads.append((pts, uvs, None))
+                quads.append((pts, uvs, {"mode": mode, "bill": bill} if bill else mode))
         else:
             rot = np.array(node.get("rotation", [0, 0, 0]), float)
             S, pos = np.ones(3), np.zeros(3)
@@ -188,8 +251,26 @@ def load_model(path, anim_time=None, anim_name=None, pose=None):
                 S = sample(kfs, "scale", t, [1, 1, 1])
                 pos = sample(kfs, "position", t, [0, 0, 0])
             R = rot_matrix(*rot)
+            # fonctions anticipées (.claude/rules/conventions-anticipees.md) : add_ = additif, trans_ = translucide
+            nom = node.get("name", "")
+            m2 = "add" if nom.startswith("add_") else "trans" if nom.startswith("trans_") else mode
+            suite = parents + [(np.array(node.get("origin", [0, 0, 0]), float), R, S, pos)]
+            b2 = bill
+            if nom.startswith(("cam_", "camy_")):
+                # face caméra (guide 4 bis) : pivot et orientation monde du groupe sans son animation de rotation ;
+                # render() tourne ces faces vers chaque caméra, l'animation s'applique ensuite
+                o = np.array(node.get("origin", [0, 0, 0]), float)
+                base = parents + [(o, rot_matrix(*node.get("rotation", [0, 0, 0])), S, pos)]
+                Tb = transform_chain(list(reversed(base)))
+                P0 = Tb(o)
+                f = (lambda q: pose[partie](q)) if pose is not None else (lambda q: q)
+                Pw = f(P0)
+                cols = [f(Tb(o + e)) - Pw for e in np.eye(3)]
+                Rw = np.column_stack([c / max(np.linalg.norm(c), 1e-9) for c in cols])
+                b2 = ("camy" if nom.startswith("camy_") else "cam", Pw, Rw)
+            c2 = cache or cache_alpha(node)
             for c in node.get("children", []):
-                walk2(c, parents + [(np.array(node.get("origin", [0, 0, 0]), float), R, S, pos)], partie)
+                walk2(c, suite, partie, m2, b2, c2)
 
     for n in m["outliner"]:
         if isinstance(n, dict) and n.get("name", "").startswith("particle_"):
@@ -243,16 +324,41 @@ def render(quads, tex, cam_pos, target, size=900, fov=28, bg=(18, 14, 20)):
     f = 1 / math.tan(math.radians(fov) / 2)
     light = np.array([-0.4, 1.0, 0.6]); light /= np.linalg.norm(light)
 
+    import os
+    jour = 0.16 if os.environ.get("NUIT") == "1" else 1.0     # comme la vue de nuit du Vestiaire
+    if jour < 1:
+        bg = (3, 3, 6)
     color = np.zeros((H, W, 3), np.float32); color[:] = np.array(bg) / 255
     zbuf = np.full((H, W), np.inf, np.float32)
     texarr = np.array(tex) if tex is not None else None
+    earr = np.array(tex.calque) if tex is not None and getattr(tex, "calque", None) is not None and tex.calque.size == tex.size else None
 
     def project(p):
         d = p - cam_pos
         x, y, z = d @ right, d @ up, d @ fwd
         return np.array([(x / z) * f * 0.5 * W + W / 2, -(y / z) * f * 0.5 * H + H / 2, z])
 
-    for pts, uvs, col in quads:
+    def face_cam(q):
+        """Groupes cam_ / camy_ : faces tournées vers cette caméra autour du pivot du groupe."""
+        pts, uvs, col = q
+        if not isinstance(col, dict):
+            return q
+        kind, Pw, Rw = col["bill"]
+        d = cam_pos - Pw
+        yaw = math.degrees(math.atan2(d[0], d[2]))
+        pitch = math.degrees(math.atan2(d[1], math.hypot(d[0], d[2]))) if kind == "cam" else 0.0
+        Rt = rot_matrix(0, yaw, 0) @ rot_matrix(-pitch, 0, 0)
+        C = Rt @ Rw.T
+        return ([Pw + C @ (p - Pw) for p in pts], uvs, col["mode"])
+
+    quads = [face_cam(q) for q in quads]
+
+    def prof(q):
+        return float(np.mean([(p - cam_pos) @ fwd for p in q[0]]))
+    opaques = [q for q in quads if q[2] not in ("add", "trans")]
+    trans = sorted((q for q in quads if q[2] == "trans"), key=prof, reverse=True)
+    adds = [q for q in quads if q[2] == "add"]
+    for pts, uvs, col in opaques + trans + adds:
         n = np.cross(pts[1] - pts[0], pts[3] - pts[0])
         ln = np.linalg.norm(n)
         if ln < 1e-9:
@@ -284,22 +390,32 @@ def render(quads, tex, cam_pos, target, size=900, fov=28, bg=(18, 14, 20)):
             z = 1 / np.where(iz == 0, 1e-9, iz)
             sub_z = zbuf[ymin:ymax + 1, xmin:xmax + 1]
             mask &= z < sub_z
-            if col is None:
+            special = col in ("add", "trans")
+            if col is None or special:
                 uvA, uvB, uvC = (np.array(uvs[i]) for i in tri)
                 u = (l1 * uvA[0] / A[2] + l2 * uvB[0] / B[2] + l3 * uvC[0] / C[2]) * z
                 v = (l1 * uvA[1] / A[2] + l2 * uvB[1] / B[2] + l3 * uvC[1] / C[2]) * z
                 tu = np.clip((u * texarr.shape[1]).astype(int), 0, texarr.shape[1] - 1)
                 tv = np.clip((v * texarr.shape[0]).astype(int), 0, texarr.shape[0] - 1)
                 samp = texarr[tv, tu]
-                mask &= samp[..., 3] > 127
+                mask &= samp[..., 3] > (0 if special else 127)
                 rgb = samp[..., :3] / 255.0
+                lum = (earr[tv, tu][..., :3] / 255.0) * (earr[tv, tu][..., 3:4] > 127) if earr is not None else 0.0
             else:
                 rgb = np.broadcast_to(np.array(col) / 255.0, xs.shape + (3,))
+                lum = 0.0
             if not mask.any():
                 continue
             sub_c = color[ymin:ymax + 1, xmin:xmax + 1]
-            sub_c[mask] = (rgb * shade)[mask]
-            sub_z[mask] = z[mask]
+            lumf = np.broadcast_to(lum, rgb.shape) if not np.isscalar(lum) else lum
+            if col == "add":
+                sub_c[mask] = np.minimum(sub_c[mask] + rgb[mask], 1.0)
+            elif col == "trans":
+                al = (samp[..., 3:4] / 255.0)
+                sub_c[mask] = np.minimum(rgb * shade * jour * al + sub_c * (1 - al) + lumf * al, 1.0)[mask]
+            else:
+                sub_c[mask] = np.minimum(rgb * shade * jour + lumf, 1.0)[mask]
+                sub_z[mask] = z[mask]
 
     img = Image.fromarray((np.clip(color, 0, 1) * 255).astype(np.uint8))
     return img.resize((size, size), Image.LANCZOS)

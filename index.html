@@ -4,199 +4,382 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap">
 <style>
-/* Concept : l'armoire d'un personnage. Colonne des thèmes et de leurs ensembles à gauche, vitrine à droite ; chaque ensemble impose sa teinte. */
+/* Concept : l'armoire d'un personnage. Colonne des thèmes et de leurs ensembles à gauche, vitrine à droite ; chaque ensemble impose sa teinte.
+   Sur mobile, la colonne devient un tiroir et une rangée d'ensembles donne l'accès rapide. */
 :root{
   color-scheme:dark;
-  --fond:#14131b;--creux:#0e0d13;--surface:#1d1b26;--surface2:#282533;--trait:#3a3648;--texte:#eeebf4;--doux:#a9a4b8;
+  --fond:#14131b;--creux:#0e0d13;--surface:#1d1b26;--surface2:#282533;--trait:#3a3648;--texte:#eeebf4;--doux:#b3aec2;
   --teinte:#b9a7e8;--sur-teinte:#16131f;--ok:#7fd49b;--alerte:#e8b45f;
   --titre:"Alegreya SC",Georgia,serif;--corps:"Alegreya Sans","Segoe UI",system-ui,sans-serif;--chiffre:"JetBrains Mono",Consolas,monospace;
+  --aside:clamp(250px,15vw,300px);--marge:clamp(16px,2vw,40px);
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--fond);color:var(--texte);font:16px/1.45 var(--corps)}
 button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
 :focus-visible{outline:2px solid var(--teinte);outline-offset:2px}
-.page{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
-aside{background:var(--creux);border-right:1px solid var(--trait);padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:18px}
-.marque{font:700 25px/1.05 var(--titre);padding:0 8px}
-.marque small{display:block;font:400 13px/1.4 var(--corps);color:var(--doux);margin-top:6px}
-.rubrique{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);padding:0 8px;margin:0 0 6px}
-/* Navigation : modèle de la coquille d'administration (boîte à outils Kouzia, gabarits/admin-coquille) :
-   groupes titrés, entrées pleine largeur à compteur, entrée courante marquée par le fond et la graisse, jamais par une bordure latérale. */
-.nav{display:grid;gap:16px}
+.masque{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.page{display:grid;grid-template-columns:var(--aside) minmax(0,1fr);min-height:100vh}
+
+/* ---- Panneau latéral ---- */
+aside{background:var(--creux);border-right:1px solid var(--trait);padding:22px 14px 16px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:18px;scrollbar-color:var(--trait) transparent}
+aside > *{flex-shrink:0}
+.aside-tete{display:flex;align-items:flex-start;gap:8px}
+.marque{flex:1;font:700 27px/1.05 var(--titre);padding:0 8px}
+.marque small{display:block;font:400 14px/1.4 var(--corps);color:var(--doux);margin-top:6px}
+#fermer-filtres{display:none}
+.nav{display:grid;gap:14px}
 .nav ul{display:grid;gap:1px;margin:0;padding:0;list-style:none}
-.nav__titre{display:flex;align-items:center;gap:8px;width:100%;min-height:34px;padding:0 10px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);text-align:left}
-.nav__lien{--c:var(--texte);display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 10px;border-radius:7px;font-size:15px;font-weight:500;color:var(--doux);text-align:left;transition:background-color .15s,color .15s}
+.nav__tete{display:flex;align-items:center;gap:2px}
+.nav__plier{flex:none;display:grid;place-items:center;width:30px;height:36px;border-radius:6px;color:var(--doux)}
+.nav__plier:hover{color:var(--texte);background:var(--surface)}
+.nav__plier svg{width:15px;height:15px;transition:transform .15s}
+.nav__plier[aria-expanded=false] svg{transform:rotate(-90deg)}
+.nav ul[hidden]{display:none}
+.nav__groupe > ul{margin-left:14px;padding-left:8px;border-left:1px solid var(--trait)}
+.nav__groupe:first-of-type > ul{margin:0;padding:0;border:0}
+.seg--aside{display:flex;margin:0 4px}
+.nav__outils{display:flex;gap:6px;padding:0 4px}
+.nav__outils button{flex:1;min-height:32px;padding:5px 6px;border:1px solid var(--trait);border-radius:7px;font-size:13.5px;color:var(--doux)}
+.nav__outils button:hover{color:var(--texte);background:var(--surface)}
+.nav__outils button:disabled{opacity:.45;cursor:default;background:none}
+.seg--aside button{flex:1;padding:8px;font-size:14.5px}
+.nav__titre{display:flex;align-items:center;gap:8px;flex:1;min-width:0;min-height:36px;padding:0 10px;border-radius:6px;font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);text-align:left}
+.nav__lien{--c:var(--texte);display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 10px;border-radius:7px;font-size:15.5px;font-weight:500;color:var(--doux);text-align:left;transition:background-color .15s,color .15s}
 .nav__titre:hover,.nav__lien:hover{color:var(--texte);background:var(--surface)}
 .nav__titre[aria-pressed=true],.nav__lien[aria-pressed=true]{color:var(--texte);background:var(--surface2)}
 .nav__lien[aria-pressed=true]{font-weight:700}
 .nav__texte{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pastille{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
-.compteur{min-width:1.7em;padding:0 .45em;border-radius:999px;font:700 12px/1.65 var(--chiffre);text-align:center;color:var(--doux);background:var(--surface)}
+.compteur{min-width:1.9em;padding:0 .5em;border-radius:999px;font:700 12.5px/1.7 var(--chiffre);text-align:center;color:var(--doux);background:var(--surface)}
 .nav__titre .compteur{background:none;font-weight:400}
 .nav__lien[aria-pressed=true] .compteur{color:var(--sur-teinte);background:var(--c)}
-.masque{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-@media (prefers-reduced-motion:reduce){.nav__lien{transition:none}}
-@media (forced-colors:active){.nav__titre[aria-pressed=true],.nav__lien[aria-pressed=true]{outline:2px solid CanvasText}}
-.etat-direct{margin-top:auto;padding:10px 8px 0;border-top:1px solid var(--trait);font-size:13px;color:var(--doux);display:flex;gap:8px;align-items:flex-start}
+.etat-direct{margin-top:auto;padding:12px 8px 0;border-top:1px solid var(--trait);font-size:13.5px;color:var(--doux);display:flex;gap:8px;align-items:flex-start}
 .point{width:8px;height:8px;border-radius:50%;background:var(--alerte);margin-top:6px;flex:none}
-.etat-direct.actif .point{background:var(--ok)}
-main{min-width:0;padding:22px 26px 50px}
-.barre{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
-#recherche{flex:1 1 240px;min-width:0;background:var(--surface);border:1px solid var(--trait);border-radius:7px;color:var(--texte);padding:9px 12px;font:inherit}
-.seg{display:inline-flex;border:1px solid var(--trait);border-radius:7px;overflow:hidden}
+.etat-direct.actif .point{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent)}
+.voile{position:fixed;inset:0;z-index:40;background:#07060bb3}
+.voile[hidden]{display:none}
+
+/* ---- Segments et boutons communs ---- */
+.seg{display:inline-flex;border:1px solid var(--trait);border-radius:8px;overflow:hidden}
 .seg button{padding:8px 13px;color:var(--doux);background:var(--surface)}
+.seg button:hover{color:var(--texte)}
 .seg button[aria-pressed=true]{background:var(--surface2);color:var(--texte);font-weight:700}
-.cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
-.cats button{padding:4px 12px;border:1px solid var(--trait);border-radius:6px;color:var(--doux);font-size:15px}
-.cats button:hover{color:var(--texte)}
-.cats button[aria-pressed=true]{background:var(--texte);border-color:var(--texte);color:var(--fond);font-weight:700}
-.section{display:flex;align-items:baseline;gap:12px;margin:26px 0 12px;--teinte:var(--c)}
-.section h2{font:700 24px/1.1 var(--titre);margin:0;color:var(--teinte);text-wrap:balance}
-.section span{color:var(--doux);font-size:14px}
-.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-/* Carte : modèle composants/cartes de la boîte à outils (un seul déclencheur étiré sur le titre, méta après le titre dans le code). */
-.carte{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--trait);border-radius:10px;overflow:hidden;min-width:0;transition:transform .15s,border-color .15s,box-shadow .15s}
-.carte:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 55%,var(--trait));box-shadow:0 10px 26px #0007}
+.icone-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;color:var(--doux);background:var(--surface2);flex:none}
+.icone-btn:hover{color:var(--texte);background:var(--trait)}
+.icone-btn:disabled{opacity:.35;cursor:default}
+.icone-btn svg{width:20px;height:20px}
+.puce{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:4px 12px;border:1px solid var(--trait);border-radius:999px;font-size:14.5px;color:var(--doux);white-space:nowrap}
+.puce:hover:not(:disabled){color:var(--texte);border-color:var(--doux)}
+.puce[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
+
+/* ---- En-tête de la vitrine ---- */
+main{min-width:0;padding:0 var(--marge) 56px}
+.entete{position:sticky;top:0;z-index:20;margin:0 calc(-1 * var(--marge));padding:18px var(--marge) 14px;background:color-mix(in srgb,var(--fond) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--trait);display:grid;gap:12px}
+.entete__haut{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.entete__titre{flex:0 1 auto;min-width:0}
+.entete__sur{margin:0;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);min-height:1.2em}
+.entete h1{margin:0;font:700 clamp(24px,1.9vw,34px)/1.1 var(--titre);color:var(--teinte)}
+.entete__resume{margin:0 0 3px;align-self:flex-end;color:var(--doux);font-size:15px}
+.entete__resume b{color:var(--texte);font:700 15px var(--chiffre)}
+.entete__outils{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.recherche{position:relative;flex:1 1 300px;max-width:720px;min-width:0}
+.recherche svg{position:absolute;left:12px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--doux);pointer-events:none}
+#recherche{width:100%;min-height:42px;background:var(--surface);border:1px solid var(--trait);border-radius:9px;color:var(--texte);padding:9px 40px 9px 40px;font:inherit}
+#recherche::placeholder{color:#8f8a9e}
+#recherche:focus{border-color:var(--teinte);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--teinte) 25%,transparent)}
+.recherche kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);font:12px var(--chiffre);color:var(--doux);border:1px solid var(--trait);border-radius:5px;padding:1px 6px;pointer-events:none}
+#recherche:focus + kbd,#recherche:not(:placeholder-shown) + kbd{display:none}
+.filtre-actif{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filtre-actif:empty{display:none}
+.filtre{--c:var(--teinte);display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:4px 6px 4px 12px;border-radius:999px;background:color-mix(in srgb,var(--c) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 45%,var(--trait));font-size:14.5px}
+.filtre .pastille{width:9px;height:9px}
+.filtre button{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:var(--doux)}
+.filtre button:hover{background:var(--surface2);color:var(--texte)}
+.filtre button svg{width:14px;height:14px}
+.effacer{min-height:34px;padding:4px 10px;border-radius:8px;color:var(--doux);font-size:14.5px;text-decoration:underline;text-underline-offset:3px}
+.effacer:hover{color:var(--texte)}
+.filtres-btn{display:none}
+.rapides{display:none}
+
+/* ---- Sections et cartes ---- */
+.section{--teinte:var(--c);margin-top:34px}
+.section__tete{display:flex;align-items:flex-end;gap:14px;padding-bottom:10px;margin-bottom:16px;border-bottom:1px solid color-mix(in srgb,var(--c) 35%,var(--trait))}
+.section__tete > div{min-width:0}
+.section__theme{margin:0 0 2px;font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--doux)}
+.section h2{font:700 clamp(24px,1.7vw,30px)/1.1 var(--titre);margin:0;color:var(--teinte);text-wrap:balance}
+.section__n{margin-left:auto;flex:none;padding:2px 11px;border-radius:999px;background:var(--surface);border:1px solid var(--trait);color:var(--doux);font-size:14px}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(190px,11.5vw,290px),1fr));gap:clamp(14px,1.1vw,22px)}
+/* Carte : un seul déclencheur étiré sur le titre, méta après le titre dans le code. */
+.carte{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--trait);border-radius:12px;overflow:hidden;min-width:0;transition:transform .15s,border-color .15s,box-shadow .15s}
+.carte:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 60%,var(--trait));box-shadow:0 12px 30px #0008}
 .carte:focus-within{outline:2px solid var(--c);outline-offset:2px}
 .carte .fen{order:-1;border-bottom:1px solid var(--trait)}
 .carte .fen::after{content:"";position:absolute;inset:auto 0 0;height:3px;background:var(--c)}
-.carte__titre{margin:0;font:700 18px/1.2 var(--titre);overflow-wrap:anywhere}
+.carte__titre{margin:0;font:700 clamp(17px,1.05vw,20px)/1.2 var(--titre);overflow-wrap:anywhere}
 .carte__lien{all:unset;cursor:pointer}
 .carte__lien::after{content:"";position:absolute;inset:0;z-index:1}
 .carte__lien:focus-visible{outline:none}
-.corps-carte{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.meta{color:var(--doux);font-size:14px;margin:0}
-.badges{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 0;padding:0;list-style:none}
-.badge{display:inline-flex;align-items:center;gap:5px;padding:1px 8px;border-radius:999px;font-size:12.5px;color:var(--doux);background:var(--surface2)}
-.badge svg{width:13px;height:13px;flex:none}
+.corps-carte{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.meta{color:var(--doux);font-size:14.5px;margin:0}
+.meta b{font-weight:500;color:var(--texte)}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin:auto 0 0;padding:4px 0 0;list-style:none}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:13.5px;color:#cfcadb;background:var(--surface2)}
+.badge svg{width:14px;height:14px;flex:none}
 .fen{position:relative;overflow:hidden;aspect-ratio:1;background:var(--creux);max-width:100%}
 .fen img{position:absolute;left:0;top:0;max-width:none;display:block}
 .fen img.vignette{width:100%;height:100%;object-fit:cover;transition:transform .3s}
 .carte:hover .fen img.vignette{transform:scale(1.04)}
+.fen canvas.survol3d{position:absolute;inset:0;width:100%;height:100%;display:block;background:var(--creux)}
 .vide{height:100%;display:grid;place-items:center;color:var(--doux);font-size:14px;padding:12px;text-align:center}
-.neuf{position:absolute;right:8px;top:8px;z-index:2;background:var(--ok);color:#0d2415;font-size:12px;font-weight:700;padding:1px 7px;border-radius:4px}
-.rien{color:var(--doux);padding:50px 0;text-align:center}
-/* Fiche : modèle composants/dialogue (dialog natif, en-tête, corps qui défile seul, focus rendu au déclencheur). */
-dialog{width:fit-content;max-width:calc(100vw - 24px);max-height:calc(100vh - 24px);background:var(--surface);color:var(--texte);border:1px solid var(--trait);padding:0;border-radius:12px;overflow:hidden;flex-direction:column}
+.neuf{position:absolute;right:8px;top:8px;z-index:2;background:var(--ok);color:#0d2415;font-size:12.5px;font-weight:700;padding:2px 8px;border-radius:5px}
+.rien{color:var(--doux);padding:60px 0;text-align:center;display:grid;justify-items:center;gap:14px}
+.rien button{min-height:40px;padding:6px 16px;border-radius:8px;background:var(--surface2);color:var(--texte)}
+
+/* ---- Fiche (dialog natif) : en-tête, scène, colonne d'infos qui défile seule ----
+   La vue reste carrée et prend la plus grande taille qui tient dans la scène (unités de conteneur).
+   La largeur de la fiche suit la hauteur de l'écran, pour que la scène ne soit ni écrasée ni vide. */
+dialog{--cote:clamp(320px,24vw,500px);width:min(calc(100vw - 32px),calc(100dvh + 560px));height:calc(100dvh - 32px);max-width:none;max-height:none;background:var(--surface);color:var(--texte);border:1px solid var(--trait);padding:0;border-radius:14px;overflow:hidden;flex-direction:column;box-shadow:0 30px 80px #000a}
 dialog[open]{display:flex}
-dialog::backdrop{background:#07060bd9}
-.fiche-tete{display:flex;align-items:center;gap:14px;padding:14px 16px 14px 20px;border-bottom:1px solid var(--trait);background:linear-gradient(90deg,color-mix(in srgb,var(--teinte) 14%,transparent),transparent 60%)}
-.fiche-tete h3{font:700 28px/1.1 var(--titre);margin:0;overflow-wrap:anywhere;text-wrap:balance}
-.sous{color:var(--doux);margin-top:3px;font-size:15px}
-.sous b{color:var(--teinte);font-weight:600}
-.fiche-tete .outils{margin-left:auto;display:flex;gap:6px;flex:none}
-.icone-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;color:var(--doux);background:var(--surface2)}
-.icone-btn:hover{color:var(--texte);background:var(--trait)}
-.icone-btn:disabled{opacity:.35;cursor:default}
-.icone-btn svg{width:20px;height:20px}
-.masque{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.fiche{--w:max(300px,min(600px,calc(100dvh - 300px),calc(100vw - 400px)));display:grid;grid-template-columns:calc(var(--w) + 32px) 310px;overflow-x:hidden;min-height:0;overflow:auto;scrollbar-color:var(--trait) transparent}
-.scene{background:var(--creux);padding:14px 16px 18px;min-width:0;display:flex;flex-direction:column;gap:12px;box-sizing:content-box}
-/* Onglets soulignés : modèle composants/onglets (flèches, Début, Fin, tabindex itinérant). */
-.vues{display:flex;flex-wrap:wrap;gap:4px 18px;border-bottom:1px solid var(--trait)}
-.vues button{padding:8px 2px;margin-bottom:-1px;border-bottom:2px solid transparent;color:var(--doux);font-size:15px;font-weight:600}
+dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
+.fiche-tete{display:flex;align-items:center;gap:14px;padding:14px 16px 14px 22px;border-bottom:1px solid var(--trait);background:linear-gradient(90deg,color-mix(in srgb,var(--teinte) 16%,transparent),transparent 65%)}
+.fiche-tete__txt{flex:1;min-width:0}
+.fiche-tete h3{font:700 clamp(22px,1.7vw,32px)/1.1 var(--titre);margin:0;overflow-wrap:anywhere;text-wrap:balance}
+.sous{color:var(--doux);margin-top:4px;font-size:15px}
+.sous b{color:var(--teinte);font-weight:700}
+.position{flex:none;font:13px var(--chiffre);color:var(--doux)}
+.fiche-tete .outils{display:flex;gap:6px;flex:none}
+.fiche{flex:1;display:grid;grid-template-columns:minmax(0,1fr) var(--cote);min-height:0;overflow:hidden;scrollbar-color:var(--trait) transparent}
+.scene{background:var(--creux);padding:12px 18px 16px;min-width:0;min-height:0;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+#panneau{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
+/* Onglets soulignés (flèches, Début, Fin, tabindex itinérant). */
+.vues{display:flex;gap:4px 22px;border-bottom:1px solid var(--trait);overflow-x:auto;scrollbar-width:none}
+.vues button{flex:none;padding:10px 2px;margin-bottom:-1px;border-bottom:2px solid transparent;color:var(--doux);font-size:15.5px;font-weight:700;white-space:nowrap}
 .vues button:hover{color:var(--texte)}
 .vues button[aria-selected=true]{color:var(--texte);border-bottom-color:var(--teinte)}
-.etats{display:flex;flex-wrap:wrap;gap:6px}
-.etats button{padding:4px 11px;border:1px solid var(--trait);border-radius:999px;font-size:14px;color:var(--doux)}
+#etats-scene{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
+#etats-scene:empty{display:none}
+.etats{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.etats button{min-height:34px;padding:4px 13px;border:1px solid var(--trait);border-radius:999px;font-size:14.5px;color:var(--doux)}
 .etats button:hover:not(:disabled){color:var(--texte);border-color:var(--doux)}
 .etats button:disabled{opacity:.4;cursor:default}
 .etats button[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
-#vue{display:grid;place-items:center;min-height:0}
-#vue img.pleine{width:100%;display:block}
-#vue img.tex{image-rendering:pixelated;display:block;width:100%;max-width:512px;margin:auto;background:repeating-conic-gradient(#2a2733 0 25%,#1c1a24 0 50%) 0 0/24px 24px}
-#vue .fen{width:100%;border-radius:8px}
-/* Zoom des planches et textures : clic pour zoomer à l'endroit visé, le zoom suit le pointeur, nouveau clic pour revenir. */
-.zoom{position:relative;width:100%;overflow:hidden;border-radius:8px;cursor:zoom-in}
+.evts{gap:6px 8px}
+.evts__titre{font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);margin-right:4px}
+.evts button{border-style:dashed}
+#vue{flex:1;min-height:0;container-type:size;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#vue > *{width:min(100cqw,100cqh);max-width:100%;flex:none}
+#vue > .rien,#vue > .cadre-img{width:100%}
+#vue .fen{width:100%;border-radius:10px}
+/* Images (planches, textures) : la plus grande taille qui tient, zoom au clic à l'endroit visé, le zoom suit le pointeur. */
+.cadre-img{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:0;max-height:100%}
+.zoom{position:relative;overflow:hidden;border-radius:10px;cursor:zoom-in;max-width:100%}
 .zoom > *{transition:transform .2s;transform-origin:50% 50%}
 .zoom.actif{cursor:zoom-out}
 .zoom.actif > *{transform:scale(var(--z,2.5))}
-.decoupe{position:relative;overflow:hidden;width:100%;aspect-ratio:1}
-.decoupe img{position:absolute;left:0;top:0;max-width:none;display:block}
-/* Vue 3D : glisser pour tourner, molette ou pincement pour zoomer, double-clic pour recadrer. */
-.v3d{width:100%;position:relative}
-.v3d canvas{display:block;width:100%;aspect-ratio:1;border-radius:8px;background:var(--creux);touch-action:none;cursor:grab}
-.v3d canvas:active{cursor:grabbing}
-.v3d canvas:focus-visible{outline:2px solid var(--teinte);outline-offset:2px}
-.v3d__barre{display:flex;align-items:center;gap:8px;margin-top:8px}
-.v3d__barre input[type=range]{flex:1;min-width:0;accent-color:var(--teinte)}
-.v3d__temps{font:12px var(--chiffre);color:var(--doux);min-width:7ch;text-align:right}
-.v3d__bascule{padding:6px 11px;border:1px solid var(--trait);border-radius:999px;font-size:13px;color:var(--doux)}
-.v3d__bascule[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
-.v3d__options{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.v3d__options .v3d__bascule,.v3d__options select{background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(4px)}
-.v3d__options .v3d__bascule[aria-pressed=true]{background:var(--teinte)}
-.v3d__options select{padding:5px 8px;border:1px solid var(--trait);border-radius:999px;background:var(--surface);color:var(--texte);font:inherit;font-size:13px}
-.v3d__aide{color:var(--doux);font-size:13px;margin:6px 0 0}
-.anim-etat{display:block;width:100%;aspect-ratio:1;object-fit:contain;border-radius:8px;background:var(--creux)}
 .zoom:focus-visible{outline:2px solid var(--teinte);outline-offset:2px}
-.aide-zoom{display:flex;justify-content:space-between;gap:10px;color:var(--doux);font-size:13px;margin:6px 0 0}
+.zoom img.pleine{display:block;max-width:100%;max-height:calc(100cqh - 34px);width:auto;height:auto}
+.zoom img.tex{display:block;image-rendering:pixelated;width:min(100cqw,calc(100cqh - 34px),1024px);height:auto;background:repeating-conic-gradient(#2a2733 0 25%,#1c1a24 0 50%) 0 0/24px 24px}
+.decoupe{position:relative;overflow:hidden;width:min(100cqw,calc((100cqh - 34px) * var(--r,1)));aspect-ratio:var(--r,1)}
+.decoupe img{position:absolute;left:0;top:0;max-width:none;display:block}
+.aide-zoom{display:flex;justify-content:space-between;gap:14px;width:100%;color:var(--doux);font-size:13.5px;margin:0}
 .aide-zoom a{color:var(--doux)}
 .aide-zoom a:hover{color:var(--texte)}
-.legende{color:var(--doux);font-size:14px;margin:0;text-align:center}
-.cote{padding:18px;display:flex;flex-direction:column;gap:18px;min-width:0}
-.rubrique{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);margin:0 0 8px}
+.anim-etat{display:block;width:100%;aspect-ratio:1;object-fit:contain;border-radius:10px;background:var(--creux)}
+/* Vue 3D : glisser pour tourner, molette ou pincement pour zoomer, double-clic pour recadrer. Les contrôles flottent sur la vue. */
+.v3d{position:relative;aspect-ratio:1;container-type:inline-size;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 42%,color-mix(in srgb,var(--teinte) 9%,var(--creux)),var(--creux) 70%);border:1px solid var(--trait)}
+.v3d canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.v3d canvas:active{cursor:grabbing}
+.v3d canvas:focus-visible{outline:2px solid var(--teinte);outline-offset:-3px}
+.verre{background:color-mix(in srgb,var(--surface) 80%,transparent);backdrop-filter:blur(6px);border:1px solid var(--trait)}
+.v3d__options{position:absolute;top:10px;right:10px;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:calc(100% - 20px)}
+.v3d__bascule{min-height:34px;padding:5px 12px;border:1px solid var(--trait);border-radius:999px;font-size:14px;color:var(--texte)}
+.v3d__options .v3d__bascule,.v3d__options select{background:color-mix(in srgb,var(--surface) 80%,transparent);backdrop-filter:blur(6px)}
+.v3d__bascule[aria-pressed=true],.v3d__options .v3d__bascule[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
+.v3d__options select{min-height:34px;padding:5px 10px;border:1px solid var(--trait);border-radius:999px;color:var(--texte);font:inherit;font-size:14px}
+.v3d__aide{position:absolute;left:12px;top:12px;margin:0;font-size:13px;color:var(--doux);pointer-events:none;max-width:45%}
+@container (max-width:720px){.v3d__aide{display:none}}
+.v3d__barre{position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:10px;padding:6px;border-radius:12px}
+.v3d__barre .icone-btn{background:transparent}
+.v3d__barre .icone-btn:hover{background:var(--surface2)}
+.v3d__barre input[type=range]{flex:1;min-width:0;accent-color:var(--teinte);height:28px}
+.v3d__temps{font:13px var(--chiffre);color:var(--texte);min-width:7ch;text-align:right}
+/* Colonne d'infos */
+.cote{padding:20px;display:flex;flex-direction:column;gap:22px;min-width:0;min-height:0;overflow:auto;border-left:1px solid var(--trait)}
+.rubrique{font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);margin:0 0 10px}
 .actions{display:grid;gap:8px}
-.dl{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--teinte);color:var(--sur-teinte);font-weight:700;padding:11px;border-radius:8px;text-decoration:none}
+.dl{display:flex;align-items:center;justify-content:center;gap:9px;min-height:48px;background:var(--teinte);color:var(--sur-teinte);font-weight:700;font-size:16.5px;padding:11px;border-radius:10px;text-decoration:none}
 .dl:hover{filter:brightness(1.1)}
-.dl svg{width:18px;height:18px}
-.secondaire{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border:1px solid var(--trait);border-radius:8px;color:var(--doux);font-size:14px}
+.dl svg{width:19px;height:19px}
+.secondaire{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:9px;border:1px solid var(--trait);border-radius:10px;color:var(--doux);font-size:15px}
 .secondaire svg{width:18px;height:18px;flex:none}
 .secondaire:hover{color:var(--texte);border-color:var(--doux)}
-.chiffres{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0}
-.chiffres div{background:var(--surface2);border-radius:8px;padding:8px 10px}
-.chiffres dt{font-size:12px;color:var(--doux)}
-.chiffres dd{margin:2px 0 0;font:700 17px/1.2 var(--chiffre)}
-.jauge{display:grid;gap:4px;font-size:14px}
+.chiffres{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0}
+.chiffres div{background:var(--surface2);border-radius:10px;padding:10px 12px}
+.chiffres dt{font-size:13px;color:var(--doux)}
+.chiffres dd{margin:2px 0 0;font:700 clamp(18px,1.2vw,22px)/1.2 var(--chiffre)}
+.jauges{display:grid;gap:12px}
+.jauge{display:grid;gap:5px;font-size:14.5px}
 .jauge div:first-child{display:flex;justify-content:space-between;gap:8px;color:var(--doux)}
-.jauge b{font:12px var(--chiffre);color:var(--texte)}
-.rail{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
-.rail i{display:block;height:100%;background:var(--teinte)}
+.jauge b{font:13px var(--chiffre);color:var(--texte)}
+.rail{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.rail i{display:block;height:100%;background:var(--teinte);border-radius:3px}
+.jauge.haute .rail i{background:var(--alerte)}
+.proprietes{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:15px}
+.proprietes li{display:flex;gap:9px;align-items:flex-start;color:var(--texte)}
+.proprietes svg{width:17px;height:17px;flex:none;margin-top:3px;color:var(--teinte)}
+.proprietes .non{color:var(--doux)}
+.proprietes .non svg{color:var(--doux)}
 .avec{display:grid;gap:2px;margin:0;padding:0;list-style:none}
-.avec button{display:flex;align-items:center;gap:10px;width:100%;padding:4px 6px;border-radius:6px;text-align:left;font-size:14px;color:var(--doux)}
-.avec button:hover{color:var(--texte);background:var(--surface2)}
-.avec img,.avec .sans{width:34px;height:34px;flex:none;border-radius:5px;background:var(--creux);border:1px solid var(--trait);object-fit:cover}
+.avec button{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:5px 8px;border-radius:8px;text-align:left;font-size:15px;color:var(--texte)}
+.avec button:hover{background:var(--surface2)}
+.avec img,.avec .sans{width:40px;height:40px;flex:none;border-radius:6px;background:var(--creux);border:1px solid var(--trait);object-fit:cover}
 .avec .nom-avec{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.avec .cat-avec{font-size:12px;color:var(--doux);flex:none}
+.avec .cat-avec{font-size:13px;color:var(--doux);flex:none}
 .note{font-size:14px;color:var(--doux);margin:0}
-.chemin{font:12px var(--chiffre);color:var(--doux);overflow-wrap:anywhere}
-.toast{position:fixed;right:18px;bottom:18px;background:var(--ok);color:#0d2415;font-weight:700;padding:10px 14px;border-radius:6px;max-width:calc(100vw - 36px)}
+.reglages-boite summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;min-height:32px}
+.reglages-boite summary::-webkit-details-marker{display:none}
+.reglages-boite summary .rubrique{margin:0}
+.reglages-boite summary svg{width:15px;height:15px;color:var(--doux);transition:transform .15s;transform:rotate(-90deg)}
+.reglages-boite[open] summary svg{transform:none}
+.reglages{display:grid;gap:10px;margin:8px 0 0;padding:0;list-style:none}
+.reglages li{background:var(--surface2);border-radius:10px;padding:11px 13px}
+.reglages b{font-size:15px}
+.reglages .role{font-size:14px;color:var(--doux);margin:2px 0 8px}
+.reglages dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:14px}
+.reglages dt{color:var(--doux)}
+.reglages dd{margin:0}
+.chemin{font:12.5px var(--chiffre);color:var(--doux);overflow-wrap:anywhere;padding-top:12px;border-top:1px solid var(--trait)}
+.toast{position:fixed;right:20px;bottom:20px;z-index:60;background:var(--ok);color:#0d2415;font-weight:700;padding:11px 16px;border-radius:8px;max-width:calc(100vw - 40px);box-shadow:0 10px 30px #0008}
+@media (max-width:1100px) and (min-width:861px){
+  dialog{--cote:300px}
+}
+/* Scène plus large que haute (le cas des écrans d'ordinateur) : les états passent en colonne à gauche de la vue, qui gagne en hauteur. */
+@media (min-width:861px){
+  .scene{container:scene/size}
+  @container scene (min-aspect-ratio:6/5){
+    #panneau{display:grid;grid-template-columns:auto minmax(0,calc(100cqh - 60px));justify-content:center;grid-template-rows:minmax(0,1fr);grid-template-areas:"e v";gap:0 18px}
+    #etats-scene{grid-area:e;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:14px;width:clamp(140px,11cqw,180px);min-height:0;overflow-y:auto;padding:2px;scrollbar-width:thin}
+    #etats-scene .etats{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:4px}
+    #etats-scene .etats button{text-align:left;border-radius:8px;padding:5px 12px;min-height:36px}
+    .evts{padding-top:12px;border-top:1px solid var(--trait)}
+    .evts__titre{margin:0 0 2px 4px}
+    #vue{grid-area:v}
+  }
+}
+/* ---- Mobile et tablette étroite : tiroir de filtres, fiche plein écran en une colonne ---- */
 @media (max-width:860px){
   .page{grid-template-columns:minmax(0,1fr)}
-  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--trait);padding:16px}
-  .etat-direct{margin-top:0}
-  main{padding:16px 16px 40px}
-  .fiche{grid-template-columns:minmax(0,1fr)}
-  .scene{box-sizing:border-box}
-  dialog{width:100vw;max-width:100vw;max-height:100dvh;height:100dvh;border-radius:0}
-  .fiche-tete h3{font-size:22px}
+  aside{position:fixed;z-index:50;inset:0 auto 0 0;width:min(340px,88vw);height:100dvh;border-right:1px solid var(--trait);transform:translateX(-105%);transition:transform .2s ease;visibility:hidden;padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
+  .page.tiroir aside{transform:none;visibility:visible;box-shadow:20px 0 50px #000a}
+  #fermer-filtres{display:inline-grid}
+  .nav__plier{width:40px;height:44px}
+  .nav__titre{min-height:44px}
+  .nav__lien{min-height:44px}
+  .nav__outils button,.seg--aside button{min-height:40px}
+  main{padding:0 16px 40px}
+  .entete{padding:12px 16px 10px;gap:10px}
+  .entete__haut{flex-wrap:nowrap;gap:10px}
+  .entete h1{font-size:22px}
+  .entete__sur{font-size:11.5px;min-height:0}
+  .entete__resume{font-size:14px;flex:none}
+  .entete__resume .ens-resume{display:none}
+  .filtres-btn{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 13px;border:1px solid var(--trait);border-radius:9px;background:var(--surface);font-weight:700;flex:none}
+  .filtres-btn svg{width:18px;height:18px}
+  .filtres-btn .n-filtre{min-width:20px;padding:0 6px;border-radius:999px;background:var(--teinte);color:var(--sur-teinte);font:700 12px/20px var(--chiffre);text-align:center}
+  .filtres-btn .n-filtre:empty{display:none}
+  .recherche{flex-basis:100%;max-width:none}
+  #recherche{min-height:44px}
+  .recherche kbd{display:none}
+  .rapides{display:flex;gap:6px;overflow-x:auto;margin:0 -16px;padding:2px 16px 2px;scrollbar-width:none;scroll-snap-type:x proximity}
+  .rapides::-webkit-scrollbar{display:none}
+  .rapides .puce{min-height:40px;scroll-snap-align:start;flex:none}
+  .rapides .puce .pastille{width:9px;height:9px}
+  .filtre-actif{display:none}
+  .section{margin-top:26px}
+  .section__tete{margin-bottom:12px}
+  .section h2{font-size:22px}
+  .grille{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .corps-carte{padding:10px 11px 12px}
+  .carte__titre{font-size:16px}
+  .meta{font-size:13.5px}
+  .badge{font-size:12.5px;padding:2px 8px}
+  /* Fiche */
+  dialog{width:100vw;height:100dvh;border-radius:0;border:0}
+  .fiche-tete{padding:10px 10px 10px 16px;gap:8px;padding-top:max(10px,env(safe-area-inset-top))}
+  .fiche-tete h3{font-size:21px}
+  .sous{font-size:14px}
+  .position{display:none}
+  .fiche-tete .icone-btn{width:44px;height:44px}
+  .fiche{display:block;overflow:auto;overscroll-behavior:contain}
+  .scene{overflow:visible;padding:0 12px 14px;gap:10px}
+  .vues{position:sticky;top:0;z-index:3;background:var(--creux);margin:0 -12px;padding:0 12px;gap:18px}
+  .vues button{padding:12px 2px}
+  #etats-scene{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px;padding:0 12px;gap:6px 14px;scrollbar-width:none}
+  #etats-scene::-webkit-scrollbar{display:none}
+  .etats{flex-wrap:nowrap}
+  .etats button{min-height:40px;flex:none;white-space:nowrap}
+  .evts{padding-left:14px}
+  .evts__titre{display:none}
+  #vue{container-type:inline-size;flex:none}
+  #vue > *{width:100%}
+  .cadre-img{align-items:stretch}
+  .zoom img.pleine{max-height:none;width:100%}
+  .zoom img.tex{width:100%}
+  .decoupe{width:100%}
+  .v3d__aide{display:none}
+  .v3d__options{top:8px;right:8px}
+  .v3d__bascule,.v3d__options select{min-height:40px}
+  .v3d__barre{left:8px;right:8px;bottom:8px;gap:6px}
+  .v3d__barre .icone-btn{width:44px;height:44px}
+  .v3d__barre input[type=range]{height:40px}
+  .cote{overflow:visible;border-left:0;border-top:1px solid var(--trait);padding:18px 16px calc(28px + env(safe-area-inset-bottom))}
+  .toast{left:16px;right:16px;bottom:16px}
 }
-@media (prefers-reduced-motion:reduce){.zoom > *{transition:none}.carte,.fen img.vignette{transition:none}.carte:hover{transform:none}.carte:hover .fen img.vignette{transform:none}}
-@media (forced-colors:active){.vues button[aria-selected=true],.etats button[aria-pressed=true]{outline:2px solid CanvasText}}
+@media (prefers-reduced-motion:reduce){
+  .nav__lien,.nav__plier svg,aside,.reglages-boite summary svg{transition:none}
+  .zoom > *{transition:none}.carte,.fen img.vignette{transition:none}.carte:hover{transform:none}.carte:hover .fen img.vignette{transform:none}
+}
+@media (forced-colors:active){
+  .nav__titre[aria-pressed=true],.nav__lien[aria-pressed=true],.vues button[aria-selected=true],.etats button[aria-pressed=true],.puce[aria-pressed=true],.v3d__bascule[aria-pressed=true]{outline:2px solid CanvasText}
+  .rail i{background:Highlight}
+}
 </style></head><body>
-<div class="page">
-<aside>
-  <div class="marque">Vestiaire<small>Cosmétiques Phynaria</small></div>
-  <nav class="nav" id="ensembles" aria-label="Thèmes et ensembles"></nav>
-  <div class="etat-direct" id="direct"><span class="point"></span><span id="direct-txt"></span></div>
-</aside>
-<main>
-  <div class="barre">
-    <input type="search" id="recherche" placeholder="Chercher un cosmétique, un ensemble, un thème…" aria-label="Chercher un cosmétique">
-    <span class="seg" id="tri" role="group" aria-label="Ranger par"></span>
+<div class="page" id="page">
+<aside id="panneau-filtres" aria-label="Filtres du vestiaire">
+  <div class="aside-tete">
+    <div class="marque">Vestiaire<small>Cosmétiques Phynaria</small></div>
+    <button class="icone-btn" type="button" id="fermer-filtres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="masque">Fermer les filtres</span></button>
   </div>
-  <div class="cats" id="cats" role="group" aria-label="Catégories"></div>
+  <span class="seg seg--aside" id="tri" role="group" aria-label="Ranger par"></span>
+  <nav class="nav" id="ensembles" aria-label="Filtres"></nav>
+  <div class="etat-direct" id="direct" role="status"><span class="point"></span><span id="direct-txt"></span></div>
+</aside>
+<div class="voile" id="voile" hidden></div>
+<main>
+  <header class="entete">
+    <div class="entete__haut">
+      <button class="filtres-btn" type="button" id="ouvrir-filtres" aria-controls="panneau-filtres" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtres<span class="n-filtre" id="n-filtre"></span></button>
+      <div class="entete__titre"><p class="entete__sur" id="sur-titre"></p><h1 id="titre-liste">Tout le vestiaire</h1></div>
+      <p class="entete__resume" id="resume" aria-live="polite"></p>
+    </div>
+    <div class="entete__outils">
+      <div class="recherche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"/></svg><input type="search" id="recherche" placeholder="Chercher une pièce, un ensemble, un thème…" aria-label="Chercher un cosmétique" aria-keyshortcuts="/"><kbd aria-hidden="true">/</kbd></div>
+      <div class="filtre-actif" id="filtre-actif"></div>
+    </div>
+    <div class="rapides" id="rapides" role="group" aria-label="Accès rapide"></div>
+  </header>
   <div id="liste"></div>
 </main>
 </div>
 <dialog id="dlg" aria-labelledby="titre">
   <header class="fiche-tete">
-    <div><h3 id="titre"></h3><div class="sous" id="sous"></div></div>
+    <div class="fiche-tete__txt"><h3 id="titre"></h3><div class="sous" id="sous"></div></div>
+    <span class="position" id="position" aria-hidden="true"></span>
     <div class="outils">
-      <button class="icone-btn" type="button" id="prec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg><span class="masque">Cosmétique précédent</span></button>
-      <button class="icone-btn" type="button" id="suiv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg><span class="masque">Cosmétique suivant</span></button>
-      <button class="icone-btn" type="button" id="fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="masque">Fermer la fiche</span></button>
+      <button class="icone-btn" type="button" id="prec" aria-keyshortcuts="ArrowLeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg><span class="masque">Cosmétique précédent</span></button>
+      <button class="icone-btn" type="button" id="suiv" aria-keyshortcuts="ArrowRight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg><span class="masque">Cosmétique suivant</span></button>
+      <button class="icone-btn" type="button" id="fermer" aria-keyshortcuts="Escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="masque">Fermer la fiche</span></button>
     </div>
   </header>
   <div class="fiche">
@@ -237,7 +420,10 @@ dialog::backdrop{background:#07060bd9}
 
   // ------------------------------------------------------------------ Molang (sin et cos en degrés, inconnue = 0)
   const MATH = { sin: d => Math.sin(d * Math.PI / 180), cos: d => Math.cos(d * Math.PI / 180), clamp: (v, a, b) => Math.max(a, Math.min(b, v)),
-    abs: Math.abs, max: Math.max, min: Math.min, sqrt: Math.sqrt, floor: Math.floor, ceil: Math.ceil, round: Math.round, pi: Math.PI };
+    abs: Math.abs, max: Math.max, min: Math.min, sqrt: Math.sqrt, floor: Math.floor, ceil: Math.ceil, round: v => Math.floor(v + 0.5), pi: Math.PI,
+    // Autres fonctions du guide (section 6.3), mêmes définitions que tools/render_bbmodel.py.
+    mod: (v, d) => v % d, trunc: Math.trunc, pow: Math.pow, lerp: (a, b, k) => a + (b - a) * k, exp: Math.exp,
+    atan: v => Math.atan(v) * 180 / Math.PI, atan2: (y, x) => Math.atan2(y, x) * 180 / Math.PI };
   const cache = new Map();
   function molang(expr, q) {
     if (typeof expr === "number") return expr;
@@ -247,7 +433,22 @@ dialog::backdrop{background:#07060bd9}
     let f = cache.get(s);
     if (!f) {
       const e = s.replace(/\bquery\./g, "q.").replace(/\bMath\./g, "math.").replace(/\bvariable\./g, "v.");
-      try { f = new Function("q", "math", "v", "return (" + e + ");"); } catch (err) { f = () => 0; }
+      if (!/;|\bv\./.test(e)) {
+        try { f = new Function("q", "math", "v", "return (" + e + ");"); } catch (err) { f = () => 0; }
+      } else {
+        // Instructions « ; » et variables mémorisées (guide 6.3) : état stable sur 80 images de 0,05 s, comme render_bbmodel.py
+        const instr = e.split(";").map(x => x.trim().replace(/^return\s+/, "")).filter(Boolean)
+          .map(x => { const m = /^v\.(\w+)\s*=(?!=)\s*(.+)$/.exec(x); return m ? [m[1], m[2]] : [null, x]; });
+        let fs;
+        try { fs = instr.map(([n, x]) => [n, new Function("q", "math", "v", "return (" + x + ");")]); } catch (err) { fs = null; }
+        f = fs ? (q, M) => {
+          const v = new Proxy({}, { get: (o, k) => (k in o ? o[k] : 0) });
+          const qq = new Proxy(q, { get: (o, k) => (k === "delta_time" && !o[k] ? 0.05 : o[k]) });
+          let val = 0;
+          for (let i = 0; i < 80; i++) for (const [n, g] of fs) { val = Number(g(qq, M, v)); if (n) v[n] = val; }
+          return val;
+        } : () => 0;
+      }
       cache.set(s, f);
     }
     try { const v = Number(f(q, MATH, q)); return Number.isFinite(v) ? v : 0; } catch (err) { return 0; }
@@ -283,6 +484,7 @@ dialog::backdrop{background:#07060bd9}
   function etatDe(nom) {
     if (!nom) return "idle";
     const mot = String(nom).split(".").pop().toLowerCase();
+    if (/^(overlay_|event_)/.test(mot)) return "idle";   // couches et événements (guide 6.4) : jamais un état, comme render_bbmodel.py
     const table = [["glide", ["glide", "elytra", "plane"]], ["swim", ["swim", "nage"]], ["sleep", ["sleep", "dort", "dodo"]], ["mount", ["ride", "mount", "monture"]],
       ["sneak", ["sneak", "crouch", "accroupi"]], ["run", ["sprint", "run", "cours", "course"]], ["walk", ["walk", "marche"]]];
     for (const [e, mots] of table) if (mots.some(m => mot.includes(m))) return e;
@@ -330,7 +532,7 @@ dialog::backdrop{background:#07060bd9}
     const parId = new Map(m.elements.map(e => [e.uuid, e]));
     const faces = [];          // {el, coins locaux, uv | couleur}
     const elements = [];       // {M élément, chaîne de groupes, partie}
-    function parcourir(n, chaine, partie) {
+    function parcourir(n, chaine, partie, mode = 0, bill = null) {
       if (typeof n === "string") {
         const e = parId.get(n); if (!e) return;
         const o = e.origin || [0, 0, 0], r = e.rotation || [0, 0, 0];
@@ -340,11 +542,15 @@ dialog::backdrop{background:#07060bd9}
           if (fd.texture === null || fd.texture === undefined) continue;
           const [u1, v1, u2, v2] = fd.uv;
           if (u1 === u2 || v1 === v2) continue;
-          faces.push({ el: idx, coins: COINS[nom](a, b), uv: [u1 / tw, v1 / th, u2 / tw, v1 / th, u2 / tw, v2 / th, u1 / tw, v2 / th] });
+          faces.push({ el: idx, coins: COINS[nom](a, b), uv: [u1 / tw, v1 / th, u2 / tw, v1 / th, u2 / tw, v2 / th, u1 / tw, v2 / th], mode, bill });
         }
       } else {
         const suite = chaine.concat([n]);
-        for (const c of n.children || []) parcourir(c, suite, partie);
+        // fonctions anticipées (.claude/rules/conventions-anticipees.md) : trans_ = translucide (1), add_ = additif (2), comme le renderer
+        const nomG = String(n.name || ""), m2 = nomG.startsWith("add_") ? 2 : nomG.startsWith("trans_") ? 1 : mode;
+        // face caméra (guide 4 bis) : le groupe le plus proche, ses ancêtres, et le genre (sphérique ou debout)
+        const b2 = /^camy?_/.test(nomG) ? { noeud: n, chaine, debout: nomG.startsWith("camy_") } : bill;
+        for (const c of n.children || []) parcourir(c, suite, partie, m2, b2);
       }
     }
     // Particules (guide, section 5 ter) : forme dans un groupe particle_<nom> à la racine, non portée.
@@ -380,13 +586,16 @@ dialog::backdrop{background:#07060bd9}
     const anims = new Map((m.animations || []).map(a => [a.name, a]));
     // Calque lumineux : seconde texture dont le nom finit par _e (guide, section 5 bis).
     const calque = (m.textures || []).slice(1).find(t => /_e(\.png)?$/i.test(t.name || "") && t.source);
-    return { m, faces, elements, mannequin, anims, particules, emetteurs, calque: calque ? calque.source : null };
+    const overlays = [...anims.keys()].filter(n => n.split(".").pop().startsWith("overlay_"));
+    return { m, faces, elements, mannequin, anims, particules, emetteurs, overlays, calque: calque ? calque.source : null };
   }
 
   /** Matrices des groupes à l'instant t (convention du mod : rotation de base + rotation animée). */
-  function matricesGroupes(P, anim, t, extra) {
+  function matricesGroupes(P, anim, t, extra, couches) {
     const anims = anim ? anim.animators || {} : {};
     const q = requetes(t, extra);
+    // couches jouées par-dessus (overlay_, event_) : [{ anim, t }], chacune avec son propre temps
+    const sup = (couches || []).filter(c => c.anim).map(c => ({ a: c.anim.animators || {}, t: c.t, q: requetes(c.t, extra) }));
     const cacheM = new Map();
     return function (g) {
       if (cacheM.has(g)) return cacheM.get(g);
@@ -398,6 +607,11 @@ dialog::backdrop{background:#07060bd9}
         rot = [rot[0] + ar[0], rot[1] + ar[1], rot[2] + ar[2]];
         sc = echantillon(a.keyframes, "scale", t, [1, 1, 1], q);
         pos = echantillon(a.keyframes, "position", t, [0, 0, 0], q);
+      }
+      for (const c of sup) {
+        const b = c.a[g.uuid]; if (!b) continue;
+        const r2 = echantillon(b.keyframes, "rotation", c.t, [0, 0, 0], c.q), s2 = echantillon(b.keyframes, "scale", c.t, [1, 1, 1], c.q), p2 = echantillon(b.keyframes, "position", c.t, [0, 0, 0], c.q);
+        rot = [rot[0] + r2[0], rot[1] + r2[1], rot[2] + r2[2]]; sc = [sc[0] * s2[0], sc[1] * s2[1], sc[2] * s2[2]]; pos = [pos[0] + p2[0], pos[1] + p2[1], pos[2] + p2[2]];
       }
       const M = mul(T(o[0] + pos[0], o[1] + pos[1], o[2] + pos[2]), mul(R(...rot), mul(S(...sc), T(-o[0], -o[1], -o[2]))));
       cacheM.set(g, M); return M;
@@ -418,13 +632,42 @@ dialog::backdrop{background:#07060bd9}
     const tl = tempsLocal(anim, t);
     const duree = anim ? Number(anim.length) || 1 : 1;
     const pose = opt.poser ? poseJoueur(etatDe(nomAnim), tl, duree) : null;
-    const groupe = matricesGroupes(P, anim, tl, opt.extra);
+    const couches = (opt.couches || []).map(c => ({ anim: P.anims.get(c.nom) || null, t: tempsLocal(P.anims.get(c.nom), c.t) }));
+    const groupe = matricesGroupes(P, anim, tl, opt.extra, couches);
     const Mel = P.elements.map(el => {
       let M = el.M;
       for (let i = el.chaine.length - 1; i >= 0; i--) M = mul(groupe(el.chaine[i]), M);
       return pose ? mul(pose[el.partie], M) : M;
     });
-    const cosm = P.faces.map(f => f.coins.map(c => appliquer(Mel[f.el], c[0], c[1], c[2])));
+    // ctrl_alpha (« 1 + position x ») sous 10 % : le groupe et ses enfants disparaissent (guide 4 bis), comme render_bbmodel.py
+    const anims_ = anim ? anim.animators || {} : {}, qa = requetes(tl, opt.extra), cacheA = new Map();
+    const cacheGroupe = g => {
+      if (cacheA.has(g)) return cacheA.get(g);
+      const c = (g.children || []).find(x => typeof x === "object" && x.name === "ctrl_alpha" && (anims_[x.uuid] || couches.some(k => k.anim && (k.anim.animators || {})[x.uuid])));
+      let x = c && anims_[c.uuid] ? echantillon(anims_[c.uuid].keyframes, "position", tl, [0, 0, 0], qa)[0] : 0;
+      for (const k of couches) { const b = c && k.anim && (k.anim.animators || {})[c.uuid]; if (b) x += echantillon(b.keyframes, "position", k.t, [0, 0, 0], requetes(k.t, opt.extra))[0]; }
+      const v = c ? 1 + x < 0.1 : false;
+      cacheA.set(g, v); return v;
+    };
+    const masque = P.elements.map(el => el.chaine.some(cacheGroupe));
+    const cosm = P.faces.map(f => masque[f.el] ? f.coins.map(() => [0, 0, 0]) : f.coins.map(c => appliquer(Mel[f.el], c[0], c[1], c[2])));
+    // Faces caméra : pivot et orientation monde du groupe sans sa rotation animée ; dessiner() les tourne vers l'œil.
+    const memo = new Map();
+    const bill = P.faces.map(f => {
+      if (!f.bill) return null;
+      if (memo.has(f.bill)) return memo.get(f.bill);
+      const n = f.bill.noeud, o = n.origin || [0, 0, 0], r = n.rotation || [0, 0, 0];
+      let M = ID;
+      for (let i = f.bill.chaine.length - 1; i >= 0; i--) M = mul(groupe(f.bill.chaine[i]), M);
+      const partie = P.elements[f.el].partie;
+      const Mp = pose ? mul(pose[partie], M) : M;
+      const Pw = appliquer(mul(Mp, groupe(n)), o[0], o[1], o[2]);
+      const Mb = mul(Mp, mul(T(o[0], o[1], o[2]), mul(R(...r), T(-o[0], -o[1], -o[2]))));
+      const P0 = appliquer(Mb, o[0], o[1], o[2]);
+      const col = [[1, 0, 0], [0, 1, 0], [0, 0, 1]].map(e => { const q = appliquer(Mb, o[0] + e[0], o[1] + e[1], o[2] + e[2]); const v = [q[0] - P0[0], q[1] - P0[1], q[2] - P0[2]]; const l = Math.hypot(...v) || 1; return v.map(x => x / l); });
+      const b = { debout: f.bill.debout, Pw, col };
+      memo.set(f.bill, b); return b;
+    });
     const mann = opt.mannequin ? P.mannequin.map(f => f.coins.map(c => pose ? appliquer(pose[f.partie], c[0], c[1], c[2]) : c)) : [];
     const emit = (P.emetteurs || []).map(e => {
       let M = groupe(e.noeud);
@@ -433,7 +676,24 @@ dialog::backdrop{background:#07060bd9}
       const o = e.noeud.origin || [0, 0, 0];
       return { nom: e.nom, pos: appliquer(M, o[0], o[1], o[2]) };
     });
-    return { cosm, mann, emit };
+    return { cosm, mann, emit, bill };
+  }
+
+  /** Tourne les faces cam_ / camy_ vers l'œil (même calcul que render_bbmodel.py). */
+  function faceCamera(cosm, bill, oeil) {
+    return cosm.map((q, i) => {
+      const b = bill[i]; if (!b) return q;
+      const d = [oeil[0] - b.Pw[0], oeil[1] - b.Pw[1], oeil[2] - b.Pw[2]];
+      const yaw = Math.atan2(d[0], d[2]) * 180 / Math.PI;
+      const pitch = b.debout ? 0 : Math.atan2(d[1], Math.hypot(d[0], d[2])) * 180 / Math.PI;
+      const Rt = mul(R(0, yaw, 0), R(-pitch, 0, 0));
+      return q.map(p => {
+        const v = [p[0] - b.Pw[0], p[1] - b.Pw[1], p[2] - b.Pw[2]];
+        const l = [b.col[0][0] * v[0] + b.col[0][1] * v[1] + b.col[0][2] * v[2], b.col[1][0] * v[0] + b.col[1][1] * v[1] + b.col[1][2] * v[2], b.col[2][0] * v[0] + b.col[2][1] * v[1] + b.col[2][2] * v[2]];
+        const w = appliquer(Rt, l[0], l[1], l[2]);
+        return [b.Pw[0] + w[0], b.Pw[1] + w[1], b.Pw[2] + w[2]];
+      });
+    });
   }
 
   /** Quads monde d'une particule : pivot de son groupe placé en pos, animée par particle_<nom>_fall ou _rest. */
@@ -463,16 +723,20 @@ dialog::backdrop{background:#07060bd9}
   void main(){ gl_Position = uVP * vec4(aPos, 1.0); vUv = aUv; vCol = aCol; vOmbre = aOmbre; }`;
   const FS = `#version 300 es
   precision mediump float; in vec2 vUv; in vec3 vCol; in float vOmbre;
-  uniform sampler2D uTex; uniform sampler2D uLum; uniform float uJour; uniform float uAvecLum; out vec4 sortie;
+  uniform sampler2D uTex; uniform sampler2D uLum; uniform float uJour; uniform float uAvecLum; uniform float uPasse; out vec4 sortie;
   void main(){
+    // passes : 0 opaque (cutout), 1 translucide (trans_), 2 additif (add_) ; vCol.g porte le mode d'une face texturée
     if (vCol.r < 0.0) {
-      vec4 c = texture(uTex, vUv); if (c.a < 0.5) discard;
+      if (abs(vCol.g - uPasse) > 0.5) discard;
+      vec4 c = texture(uTex, vUv);
       vec4 e = texture(uLum, vUv);
       // Calque _e : s'ajoute à la couleur, visible dans le noir ; noir ou transparent = rien.
       vec3 lum = uAvecLum * e.rgb * step(0.5, e.a);
-      sortie = vec4(min(c.rgb * vOmbre * uJour + lum, 1.0), 1.0);
+      if (uPasse < 0.5) { if (c.a < 0.5) discard; sortie = vec4(min(c.rgb * vOmbre * uJour + lum, 1.0), 1.0); }
+      else if (uPasse < 1.5) { if (c.a < 0.004) discard; sortie = vec4(min(c.rgb * vOmbre * uJour + lum, 1.0), c.a); }
+      else { if (c.a < 0.004) discard; sortie = vec4(c.rgb * c.a, 1.0); }
     }
-    else sortie = vec4(vCol * vOmbre * uJour, 1.0);
+    else { if (uPasse > 0.5) discard; sortie = vec4(vCol * vOmbre * uJour, 1.0); }
   }`;
   const LUMIERE = (() => { const l = [-0.4, 1.0, 0.6], n = Math.hypot(...l); return l.map(v => v / n); })();
 
@@ -482,7 +746,7 @@ dialog::backdrop{background:#07060bd9}
     const prog = programme(gl, VS, FS);
     const loc = { pos: gl.getAttribLocation(prog, "aPos"), uv: gl.getAttribLocation(prog, "aUv"), col: gl.getAttribLocation(prog, "aCol"), ombre: gl.getAttribLocation(prog, "aOmbre"),
       vp: gl.getUniformLocation(prog, "uVP"), tex: gl.getUniformLocation(prog, "uTex"), lum: gl.getUniformLocation(prog, "uLum"),
-      jour: gl.getUniformLocation(prog, "uJour"), avecLum: gl.getUniformLocation(prog, "uAvecLum") };
+      jour: gl.getUniformLocation(prog, "uJour"), avecLum: gl.getUniformLocation(prog, "uAvecLum"), passe: gl.getUniformLocation(prog, "uPasse") };
     const tampons = { pos: gl.createBuffer(), uv: gl.createBuffer(), col: gl.createBuffer(), ombre: gl.createBuffer(), idx: gl.createBuffer() };
     const tex = gl.createTexture(), texLum = gl.createTexture();
     const MAX_PART = 64;
@@ -499,7 +763,8 @@ dialog::backdrop{background:#07060bd9}
       const fixe = P.faces.length + P.mannequin.length, nq = fixe + MAX_PART * maxFacesPart;
       etat.n = nq; etat.fixe = fixe; etat.parts = []; etat.cumul = {};
       const uv = new Float32Array(nq * 8), col = new Float32Array(nq * 12), idx = new Uint32Array(nq * 6);
-      P.faces.forEach((f, i) => { uv.set(f.uv, i * 8); for (let k = 0; k < 4; k++) col.set([-1, 0, 0], i * 12 + k * 3); });
+      P.faces.forEach((f, i) => { uv.set(f.uv, i * 8); for (let k = 0; k < 4; k++) col.set([-1, f.mode || 0, 0], i * 12 + k * 3); });
+      etat.speciales = P.faces.some(f => f.mode);
       P.mannequin.forEach((f, j) => { const i = P.faces.length + j; for (let k = 0; k < 4; k++) col.set(f.couleur.map(v => v / 255), i * 12 + k * 3); });
       for (let i = fixe; i < nq; i++) for (let k = 0; k < 4; k++) col.set([-1, 0, 0], i * 12 + k * 3);
       etat.uvArr = uv;
@@ -541,7 +806,14 @@ dialog::backdrop{background:#07060bd9}
         if (etat.surTemps) etat.surTemps(etat.t);
       }
       etat.dernier = maintenant;
-      const { cosm, mann, emit } = image(etat.P, etat.anim, etat.t, { extra: etat.extra });
+      const couches = etat.P.overlays.map(nom => ({ nom, t: etat.t }));
+      if (etat.evt) {
+        const a = etat.P.anims.get(etat.evt.nom), te = etat.t - etat.evt.t0;
+        if (a && te >= 0 && te <= Number(a.length)) couches.push({ nom: etat.evt.nom, t: te }); else if (etat.evt.fin) { etat.evt.fin(); etat.evt = null; }
+      }
+      const im = image(etat.P, etat.anim, etat.t, { extra: etat.extra, couches });
+      const { mann, emit } = im;
+      const cosm = faceCamera(im.cosm, im.bill, oeilDe(etat));
       const dt = etat.lecture && etat.dernierPart ? Math.min(0.1, (maintenant - etat.dernierPart) / 1000) : 0;
       etat.dernierPart = maintenant;
       simulerParticules(emit, dt);
@@ -578,23 +850,31 @@ dialog::backdrop{background:#07060bd9}
       gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texLum); gl.uniform1i(loc.lum, 1);
       gl.uniform1f(loc.jour, etat.nuit ? 0.16 : 1.0); gl.uniform1f(loc.avecLum, etat.aCalque && etat.calqueVisible ? 1 : 0);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tampons.idx);
-      gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+      gl.uniform1f(loc.passe, 0); gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+      if (etat.speciales) {
+        // translucide puis additif, après l'opaque, sans écrire la profondeur (le renderer trie aussi les translucides)
+        gl.depthMask(false); gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.uniform1f(loc.passe, 1); gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+        gl.blendFunc(gl.ONE, gl.ONE); gl.uniform1f(loc.passe, 2); gl.drawElements(gl.TRIANGLES, quads.length * 6, gl.UNSIGNED_INT, 0);
+        gl.disable(gl.BLEND); gl.depthMask(true);
+      }
     }
 
     /** Particules : réglages par défaut du guide (2 par seconde et par sorte, 6 s, Légère, se posent au sol y = 0). */
     function simulerParticules(emit, dt) {
       if (!etat.P || !dt) return;
-      const [vy, derive] = MOUVEMENTS[etat.mouvement] || MOUVEMENTS.legere;
+      const reglage = nom => (etat.reglages && etat.reglages[nom]) || {};
+      const mvt = nom => reglage(nom).mouvement || etat.mouvement;
       if (etat.particules) {
         const parSorte = {};
         for (const e of emit) if (etat.P.particules.has(e.nom)) (parSorte[e.nom] = parSorte[e.nom] || []).push(e.pos);
         for (const nom in parSorte) {
-          etat.cumul[nom] = (etat.cumul[nom] || 0) + dt * 2;
+          etat.cumul[nom] = (etat.cumul[nom] || 0) + dt * (reglage(nom).nombre || 2);
           while (etat.cumul[nom] >= 1 && etat.parts.length < MAX_PART) {
             etat.cumul[nom] -= 1;
             const pts = parSorte[nom], d = pts[Math.floor(Math.random() * pts.length)];
-            const a = Math.random() * Math.PI * 2;
-            etat.parts.push({ nom, pos: d.slice(), v: [Math.cos(a) * derive, vy, Math.sin(a) * derive], age: 0, vie: 6, pose: "fall", posee: 0, balance: Math.random() });
+            const a = Math.random() * Math.PI * 2, m = mvt(nom), [vy, derive] = MOUVEMENTS[m] || MOUVEMENTS.legere;
+            etat.parts.push({ nom, mvt: m, pos: d.slice(), v: [Math.cos(a) * derive, vy, Math.sin(a) * derive], age: 0, vie: reglage(nom).vie || 6, pose: "fall", posee: 0, balance: Math.random() });
           }
           if (etat.cumul[nom] > 1) etat.cumul[nom] = 1;
         }
@@ -603,7 +883,7 @@ dialog::backdrop{background:#07060bd9}
         p.age += dt;
         if (p.pose === "fall") {
           for (let i = 0; i < 3; i++) p.pos[i] += p.v[i] * dt;
-          if (etat.mouvement !== "flotte" && etat.mouvement !== "monte" && p.pos[1] <= 0.3) { p.pos[1] = 0.3; p.pose = "rest"; p.posee = p.age; }
+          if (p.mvt !== "flotte" && p.mvt !== "monte" && p.pos[1] <= 0.3) { p.pos[1] = 0.3; p.pose = "rest"; p.posee = p.age; }
         }
       }
       etat.parts = etat.parts.filter(p => p.age < p.vie);
@@ -651,6 +931,9 @@ dialog::backdrop{background:#07060bd9}
       aParticules: () => !!(etat.P && etat.P.particules.size && etat.P.emetteurs.length),
       particules: v => { etat.particules = v; if (!v) etat.parts = []; },
       mouvement: v => { etat.mouvement = v; },
+      reglages: r => { etat.reglages = r; },                                    // { sorte: { mouvement, vie, nombre } }
+      evenement: (nom, fin) => { etat.evt = nom ? { nom, t0: etat.t, fin } : null; },
+      evenements: () => [...(etat.P ? etat.P.anims.keys() : [])].filter(n => n.split(".").pop().startsWith("event_")),
       stats: () => ({ particules: etat.parts.length, t: etat.t, quads: etat.n }),
       /** Pour les tests : avance l'animation et les particules de s secondes, par pas de 50 ms. */
       avancer: s => { for (let k = 0; k < s / 0.05; k++) { etat.t += 0.05; simulerParticules(image(etat.P, etat.anim, etat.t, { extra: etat.extra }).emit, 0.05); } },
@@ -658,10 +941,13 @@ dialog::backdrop{background:#07060bd9}
     };
   }
 
-  function vueProjection(e, ratio) {
+  function oeilDe(e) {
     const th = e.theta * Math.PI / 180, ph = e.phi * Math.PI / 180;
     // theta = 0 : caméra devant le joueur (côté −z).
-    const oeil = [e.cible[0] + e.dist * Math.cos(ph) * Math.sin(th), e.cible[1] + e.dist * Math.sin(ph), e.cible[2] - e.dist * Math.cos(ph) * Math.cos(th)];
+    return [e.cible[0] + e.dist * Math.cos(ph) * Math.sin(th), e.cible[1] + e.dist * Math.sin(ph), e.cible[2] - e.dist * Math.cos(ph) * Math.cos(th)];
+  }
+  function vueProjection(e, ratio) {
+    const oeil = oeilDe(e);
     const f = norm(sub(e.cible, oeil)), d = norm(croix(f, [0, 1, 0])), h = croix(d, f);
     const V = [d[0], h[0], -f[0], 0, d[1], h[1], -f[1], 0, d[2], h[2], -f[2], 0, -dot(d, oeil), -dot(h, oeil), dot(f, oeil), 1];
     const fov = 30 * Math.PI / 180, t = 1 / Math.tan(fov / 2), pres = 1, loin = 2000;
@@ -705,7 +991,7 @@ dialog::backdrop{background:#07060bd9}
 })(typeof window !== "undefined" ? window : globalThis);
 </script>
 <script>
-let D = {"fiches": [{"nom": "aile_tentacule_demoniaque", "categorie": "ailes", "ensemble": "Tentacule", "theme": "Démoniaque", "bbmodel": "cosmetiques/ailes/aile_tentacule_demoniaque/aile_tentacule_demoniaque.bbmodel", "fichier": "aile_tentacule_demoniaque.bbmodel", "gif": "cosmetiques/ailes/aile_tentacule_demoniaque/apercu/animations.gif", "planche": "cosmetiques/ailes/aile_tentacule_demoniaque/apercu/planche.png", "vignette": "cosmetiques/ailes/aile_tentacule_demoniaque/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/aile_tentacule_demoniaque/aile_tentacule_demoniaque.png", "calque": null, "lueur": false, "cubes": 175, "groupes": 41, "etats": ["ondulation"], "apercu_etats": ["ondulation"], "particules": [], "ko_compresse": 31, "ko": 171, "version": 1793720577}, {"nom": "ailes_abyssales", "categorie": "ailes", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales.bbmodel", "fichier": "ailes_abyssales.bbmodel", "gif": "cosmetiques/ailes/ailes_abyssales/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_abyssales/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_abyssales/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales.png", "calque": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales_e.png", "lueur": true, "cubes": 275, "groupes": 37, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 121, "ko": 425, "version": 1793706330}, {"nom": "ailes_givre", "categorie": "ailes", "ensemble": "Givre", "theme": "Éléments", "bbmodel": "cosmetiques/ailes/ailes_givre/ailes_givre.bbmodel", "fichier": "ailes_givre.bbmodel", "gif": "cosmetiques/ailes/ailes_givre/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_givre/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_givre/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_givre/ailes_givre.png", "calque": "cosmetiques/ailes/ailes_givre/ailes_givre_e.png", "lueur": true, "cubes": 353, "groupes": 45, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["givre"], "ko_compresse": 74, "ko": 399, "version": 1793721235}, {"nom": "ailes_mecaniques", "categorie": "ailes", "ensemble": "Steampunk", "theme": "Mécanique", "bbmodel": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques.bbmodel", "fichier": "ailes_mecaniques.bbmodel", "gif": "cosmetiques/ailes/ailes_mecaniques/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_mecaniques/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_mecaniques/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques.png", "calque": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques_e.png", "lueur": true, "cubes": 334, "groupes": 82, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["vapeur"], "ko_compresse": 134, "ko": 660, "version": 1793715662}, {"nom": "ailes_nuage_guimauve", "categorie": "ailes", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/ailes/ailes_nuage_guimauve/ailes_nuage_guimauve.bbmodel", "fichier": "ailes_nuage_guimauve.bbmodel", "gif": "cosmetiques/ailes/ailes_nuage_guimauve/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_nuage_guimauve/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_nuage_guimauve/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_nuage_guimauve/ailes_nuage_guimauve.png", "calque": "cosmetiques/ailes/ailes_nuage_guimauve/ailes_nuage_guimauve_e.png", "lueur": true, "cubes": 260, "groupes": 27, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 59, "ko": 323, "version": 1793709623}, {"nom": "ailes_papillon_bonbon", "categorie": "ailes", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/ailes/ailes_papillon_bonbon/ailes_papillon_bonbon.bbmodel", "fichier": "ailes_papillon_bonbon.bbmodel", "gif": "cosmetiques/ailes/ailes_papillon_bonbon/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_papillon_bonbon/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_papillon_bonbon/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_papillon_bonbon/ailes_papillon_bonbon.png", "calque": "cosmetiques/ailes/ailes_papillon_bonbon/ailes_papillon_bonbon_e.png", "lueur": true, "cubes": 274, "groupes": 7, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 141, "ko": 368, "version": 1793710900}, {"nom": "aurelion_wings", "categorie": "ailes", "ensemble": "Céleste", "theme": "Divin", "bbmodel": "cosmetiques/ailes/aurelion_wings/aurelion_wings.bbmodel", "fichier": "aurelion_wings.bbmodel", "gif": "cosmetiques/ailes/aurelion_wings/apercu/animations.gif", "planche": "cosmetiques/ailes/aurelion_wings/apercu/planche.png", "vignette": "cosmetiques/ailes/aurelion_wings/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/ailes/aurelion_wings/apercu/nuit.png", "texture": "cosmetiques/ailes/aurelion_wings/aurelion_wings.png", "calque": "cosmetiques/ailes/aurelion_wings/aurelion_wings_e.png", "lueur": true, "cubes": 504, "groupes": 67, "etats": ["idle", "fly", "glide", "sneak", "walk", "run", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "fly", "glide", "sneak", "walk", "run", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["plume"], "ko_compresse": 201, "ko": 698, "version": 1793719548}, {"nom": "baguette_sucre_orge", "categorie": "armes", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/armes/baguette_sucre_orge/baguette_sucre_orge.bbmodel", "fichier": "baguette_sucre_orge.bbmodel", "gif": "cosmetiques/armes/baguette_sucre_orge/apercu/animations.gif", "planche": "cosmetiques/armes/baguette_sucre_orge/apercu/planche.png", "vignette": "cosmetiques/armes/baguette_sucre_orge/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/armes/baguette_sucre_orge/baguette_sucre_orge.png", "calque": "cosmetiques/armes/baguette_sucre_orge/baguette_sucre_orge_e.png", "lueur": true, "cubes": 41, "groupes": 12, "etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "particules": ["etincelle"], "ko_compresse": 36, "ko": 87, "version": 1793708125}, {"nom": "lames_abyssales", "categorie": "armes", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/armes/lames_abyssales/lames_abyssales.bbmodel", "fichier": "lames_abyssales.bbmodel", "gif": "cosmetiques/armes/lames_abyssales/apercu/animations.gif", "planche": "cosmetiques/armes/lames_abyssales/apercu/planche.png", "vignette": "cosmetiques/armes/lames_abyssales/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/armes/lames_abyssales/lames_abyssales.png", "calque": "cosmetiques/armes/lames_abyssales/lames_abyssales_e.png", "lueur": true, "cubes": 97, "groupes": 19, "etats": ["idle", "run", "sneak", "attack"], "apercu_etats": ["idle", "run", "sneak", "attack"], "particules": ["braise"], "ko_compresse": 40, "ko": 128, "version": 1793716317}, {"nom": "aura_abyssale", "categorie": "auras", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/auras/aura_abyssale/aura_abyssale.bbmodel", "fichier": "aura_abyssale.bbmodel", "gif": "cosmetiques/auras/aura_abyssale/apercu/animations.gif", "planche": "cosmetiques/auras/aura_abyssale/apercu/planche.png", "vignette": "cosmetiques/auras/aura_abyssale/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_abyssale/aura_abyssale.png", "calque": "cosmetiques/auras/aura_abyssale/aura_abyssale_e.png", "lueur": true, "cubes": 35, "groupes": 39, "etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "particules": ["braise"], "ko_compresse": 50, "ko": 295, "version": 1793714251}, {"nom": "aura_bulle_chewing_gum", "categorie": "auras", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/auras/aura_bulle_chewing_gum/aura_bulle_chewing_gum.bbmodel", "fichier": "aura_bulle_chewing_gum.bbmodel", "gif": "cosmetiques/auras/aura_bulle_chewing_gum/apercu/animations.gif", "planche": "cosmetiques/auras/aura_bulle_chewing_gum/apercu/planche.png", "vignette": "cosmetiques/auras/aura_bulle_chewing_gum/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_bulle_chewing_gum/aura_bulle_chewing_gum.png", "calque": "cosmetiques/auras/aura_bulle_chewing_gum/aura_bulle_chewing_gum_e.png", "lueur": true, "cubes": 82, "groupes": 19, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "hurt"], "particules": ["bullette", "gomme"], "ko_compresse": 48, "ko": 201, "version": 1793712818}, {"nom": "aura_celeste", "categorie": "auras", "ensemble": "Céleste", "theme": "Divin", "bbmodel": "cosmetiques/auras/aura_celeste/aura_celeste.bbmodel", "fichier": "aura_celeste.bbmodel", "gif": "cosmetiques/auras/aura_celeste/apercu/animations.gif", "planche": "cosmetiques/auras/aura_celeste/apercu/planche.png", "vignette": "cosmetiques/auras/aura_celeste/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_celeste/aura_celeste.png", "calque": "cosmetiques/auras/aura_celeste/aura_celeste_e.png", "lueur": true, "cubes": 43, "groupes": 23, "etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "particules": ["plume"], "ko_compresse": 54, "ko": 244, "version": 1793716918}, {"nom": "aura_coeurs_nuage", "categorie": "auras", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/auras/aura_coeurs_nuage/aura_coeurs_nuage.bbmodel", "fichier": "aura_coeurs_nuage.bbmodel", "gif": "cosmetiques/auras/aura_coeurs_nuage/apercu/animations.gif", "planche": "cosmetiques/auras/aura_coeurs_nuage/apercu/planche.png", "vignette": "cosmetiques/auras/aura_coeurs_nuage/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_coeurs_nuage/aura_coeurs_nuage.png", "calque": "cosmetiques/auras/aura_coeurs_nuage/aura_coeurs_nuage_e.png", "lueur": true, "cubes": 24, "groupes": 28, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "mount", "sleep", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "mount", "sleep", "hurt"], "particules": ["coeur"], "ko_compresse": 88, "ko": 477, "version": 1793711853}, {"nom": "bandeau_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal.bbmodel", "fichier": "bandeau_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/bandeau_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/bandeau_abyssal/apercu/planche.png", "vignette": "cosmetiques/chapeaux/bandeau_abyssal/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal.png", "calque": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal_e.png", "lueur": true, "cubes": 98, "groupes": 18, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 48, "ko": 164, "version": 1793716132}, {"nom": "chapeau_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal.bbmodel", "fichier": "chapeau_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/chapeau_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/chapeau_abyssal/apercu/planche.png", "vignette": "cosmetiques/chapeaux/chapeau_abyssal/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal.png", "calque": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal_e.png", "lueur": true, "cubes": 145, "groupes": 20, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 110, "ko": 269, "version": 1793713576}, {"nom": "chapeau_macaron", "categorie": "chapeaux", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/chapeaux/chapeau_macaron/chapeau_macaron.bbmodel", "fichier": "chapeau_macaron.bbmodel", "gif": "cosmetiques/chapeaux/chapeau_macaron/apercu/animations.gif", "planche": "cosmetiques/chapeaux/chapeau_macaron/apercu/planche.png", "vignette": "cosmetiques/chapeaux/chapeau_macaron/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/chapeau_macaron/chapeau_macaron.png", "calque": "cosmetiques/chapeaux/chapeau_macaron/chapeau_macaron_e.png", "lueur": true, "cubes": 86, "groupes": 3, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "hurt"], "particules": [], "ko_compresse": 27, "ko": 102, "version": 1793712601}, {"nom": "diademe_celeste", "categorie": "chapeaux", "ensemble": "Céleste", "theme": "Divin", "bbmodel": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste.bbmodel", "fichier": "diademe_celeste.bbmodel", "gif": "cosmetiques/chapeaux/diademe_celeste/apercu/animations.gif", "planche": "cosmetiques/chapeaux/diademe_celeste/apercu/planche.png", "vignette": "cosmetiques/chapeaux/diademe_celeste/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste.png", "calque": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste_e.png", "lueur": true, "cubes": 89, "groupes": 20, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["plume"], "ko_compresse": 64, "ko": 185, "version": 1793721627}, {"nom": "halo_donut", "categorie": "chapeaux", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/chapeaux/halo_donut/halo_donut.bbmodel", "fichier": "halo_donut.bbmodel", "gif": "cosmetiques/chapeaux/halo_donut/apercu/animations.gif", "planche": "cosmetiques/chapeaux/halo_donut/apercu/planche.png", "vignette": "cosmetiques/chapeaux/halo_donut/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/halo_donut/halo_donut.png", "calque": "cosmetiques/chapeaux/halo_donut/halo_donut_e.png", "lueur": true, "cubes": 60, "groupes": 3, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "particules": [], "ko_compresse": 38, "ko": 117, "version": 1793707732}, {"nom": "masque_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal.bbmodel", "fichier": "masque_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/masque_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/masque_abyssal/apercu/planche.png", "vignette": "cosmetiques/chapeaux/masque_abyssal/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal.png", "calque": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal_e.png", "lueur": true, "cubes": 131, "groupes": 17, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 45, "ko": 146, "version": 1793714511}, {"nom": "oreilles_lapin_nuage", "categorie": "chapeaux", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/chapeaux/oreilles_lapin_nuage/oreilles_lapin_nuage.bbmodel", "fichier": "oreilles_lapin_nuage.bbmodel", "gif": "cosmetiques/chapeaux/oreilles_lapin_nuage/apercu/animations.gif", "planche": "cosmetiques/chapeaux/oreilles_lapin_nuage/apercu/planche.png", "vignette": "cosmetiques/chapeaux/oreilles_lapin_nuage/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/oreilles_lapin_nuage/oreilles_lapin_nuage.png", "calque": "cosmetiques/chapeaux/oreilles_lapin_nuage/oreilles_lapin_nuage_e.png", "lueur": true, "cubes": 73, "groupes": 10, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "particules": [], "ko_compresse": 145, "ko": 282, "version": 1793717181}, {"nom": "epaulettes_guimauve", "categorie": "epaules", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/epaules/epaulettes_guimauve/epaulettes_guimauve.bbmodel", "fichier": "epaulettes_guimauve.bbmodel", "gif": "cosmetiques/epaules/epaulettes_guimauve/apercu/animations.gif", "planche": "cosmetiques/epaules/epaulettes_guimauve/apercu/planche.png", "vignette": "cosmetiques/epaules/epaulettes_guimauve/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/epaules/epaulettes_guimauve/epaulettes_guimauve.png", "calque": "cosmetiques/epaules/epaulettes_guimauve/epaulettes_guimauve_e.png", "lueur": true, "cubes": 112, "groupes": 8, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "attack", "hurt"], "particules": [], "ko_compresse": 63, "ko": 233, "version": 1793717524}, {"nom": "epaulieres_abyssales", "categorie": "epaules", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales.bbmodel", "fichier": "epaulieres_abyssales.bbmodel", "gif": "cosmetiques/epaules/epaulieres_abyssales/apercu/animations.gif", "planche": "cosmetiques/epaules/epaulieres_abyssales/apercu/planche.png", "vignette": "cosmetiques/epaules/epaulieres_abyssales/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales.png", "calque": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales_e.png", "lueur": true, "cubes": 149, "groupes": 30, "etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 61, "ko": 283, "version": 1793716610}, {"nom": "familier_chat_lanterne", "categorie": "familiers", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/familiers/familier_chat_lanterne/familier_chat_lanterne.bbmodel", "fichier": "familier_chat_lanterne.bbmodel", "gif": "cosmetiques/familiers/familier_chat_lanterne/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_chat_lanterne/apercu/planche.png", "vignette": "cosmetiques/familiers/familier_chat_lanterne/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/familiers/familier_chat_lanterne/familier_chat_lanterne.png", "calque": "cosmetiques/familiers/familier_chat_lanterne/familier_chat_lanterne_e.png", "lueur": true, "cubes": 88, "groupes": 13, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "sleep", "mount", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "sleep", "mount", "attack", "hurt"], "particules": [], "ko_compresse": 166, "ko": 360, "version": 1793710212}, {"nom": "familier_crane", "categorie": "familiers", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/familiers/familier_crane/familier_crane.bbmodel", "fichier": "familier_crane.bbmodel", "gif": "cosmetiques/familiers/familier_crane/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_crane/apercu/planche.png", "vignette": "cosmetiques/familiers/familier_crane/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/familiers/familier_crane/familier_crane.png", "calque": "cosmetiques/familiers/familier_crane/familier_crane_e.png", "lueur": true, "cubes": 103, "groupes": 15, "etats": ["idle", "walk", "run", "fly", "glide", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "fly", "glide", "sneak", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 116, "ko": 266, "version": 1793713889}, {"nom": "familier_nuage_mochi", "categorie": "familiers", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/familiers/familier_nuage_mochi/familier_nuage_mochi.bbmodel", "fichier": "familier_nuage_mochi.bbmodel", "gif": "cosmetiques/familiers/familier_nuage_mochi/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_nuage_mochi/apercu/planche.png", "vignette": "cosmetiques/familiers/familier_nuage_mochi/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/familiers/familier_nuage_mochi/familier_nuage_mochi.png", "calque": "cosmetiques/familiers/familier_nuage_mochi/familier_nuage_mochi_e.png", "lueur": true, "cubes": 95, "groupes": 11, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 118, "ko": 270, "version": 1793718008}, {"nom": "queue_abyssale", "categorie": "queues", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/queues/queue_abyssale/queue_abyssale.bbmodel", "fichier": "queue_abyssale.bbmodel", "gif": "cosmetiques/queues/queue_abyssale/apercu/animations.gif", "planche": "cosmetiques/queues/queue_abyssale/apercu/planche.png", "vignette": "cosmetiques/queues/queue_abyssale/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/queues/queue_abyssale/queue_abyssale.png", "calque": "cosmetiques/queues/queue_abyssale/queue_abyssale_e.png", "lueur": true, "cubes": 129, "groupes": 18, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 44, "ko": 222, "version": 1793713178}, {"nom": "queue_abyssale_v2", "categorie": "queues", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2.bbmodel", "fichier": "queue_abyssale_v2.bbmodel", "gif": "cosmetiques/queues/queue_abyssale_v2/apercu/animations.gif", "planche": "cosmetiques/queues/queue_abyssale_v2/apercu/planche.png", "vignette": "cosmetiques/queues/queue_abyssale_v2/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2.png", "calque": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2_e.png", "lueur": true, "cubes": 78, "groupes": 17, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 43, "ko": 208, "version": 1793715907}, {"nom": "queue_pompon_nuage", "categorie": "queues", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/queues/queue_pompon_nuage/queue_pompon_nuage.bbmodel", "fichier": "queue_pompon_nuage.bbmodel", "gif": "cosmetiques/queues/queue_pompon_nuage/apercu/animations.gif", "planche": "cosmetiques/queues/queue_pompon_nuage/apercu/planche.png", "vignette": "cosmetiques/queues/queue_pompon_nuage/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/queues/queue_pompon_nuage/queue_pompon_nuage.png", "calque": "cosmetiques/queues/queue_pompon_nuage/queue_pompon_nuage_e.png", "lueur": true, "cubes": 56, "groupes": 11, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 43, "ko": 183, "version": 1793719943}, {"nom": "sac_cupcake", "categorie": "sacs", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/sacs/sac_cupcake/sac_cupcake.bbmodel", "fichier": "sac_cupcake.bbmodel", "gif": "cosmetiques/sacs/sac_cupcake/apercu/animations.gif", "planche": "cosmetiques/sacs/sac_cupcake/apercu/planche.png", "vignette": "cosmetiques/sacs/sac_cupcake/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/sacs/sac_cupcake/sac_cupcake.png", "calque": "cosmetiques/sacs/sac_cupcake/sac_cupcake_e.png", "lueur": true, "cubes": 107, "groupes": 5, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "sleep", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "sleep", "hurt"], "particules": [], "ko_compresse": 52, "ko": 150, "version": 1793720493}], "labels": {"ailes": "Ailes", "chapeaux": "Tête", "queues": "Queues", "epaules": "Épaules", "armes": "Armes", "auras": "Auras", "familiers": "Familiers", "sacs": "Sacs", "outils": "Outils", "blocs": "Blocs"}, "teintes": {"Abyssal": "#9fe04e", "Tentacule": "#c4506e", "Céleste": "#e6c675", "Givre": "#7fd3ef", "Kawaii": "#f7d27a", "Pâtisserie": "#e88a9a", "Steampunk": "#d69a62", "Autres": "#b9a7e8"}, "themes": ["Démoniaque", "Divin", "Éléments", "Mignon", "Mécanique", "Autres"], "ordre_ensembles": ["Abyssal", "Tentacule", "Céleste", "Givre", "Kawaii", "Pâtisserie", "Steampunk", "Autres"], "signature": "aile_tentacule_demoniaque:1793720577|ailes_abyssales:1793706330|ailes_givre:1793721235|ailes_mecaniques:1793715662|ailes_nuage_guimauve:1793709623|ailes_papillon_bonbon:1793710900|aurelion_wings:1793719548|baguette_sucre_orge:1793708125|lames_abyssales:1793716317|aura_abyssale:1793714251|aura_bulle_chewing_gum:1793712818|aura_celeste:1793716918|aura_coeurs_nuage:1793711853|bandeau_abyssal:1793716132|chapeau_abyssal:1793713576|chapeau_macaron:1793712601|diademe_celeste:1793721627|halo_donut:1793707732|masque_abyssal:1793714511|oreilles_lapin_nuage:1793717181|epaulettes_guimauve:1793717524|epaulieres_abyssales:1793716610|familier_chat_lanterne:1793710212|familier_crane:1793713889|familier_nuage_mochi:1793718008|queue_abyssale:1793713178|queue_abyssale_v2:1793715907|queue_pompon_nuage:1793719943|sac_cupcake:1793720493"};
+let D = {"fiches": [{"nom": "aile_tentacule_demoniaque", "categorie": "ailes", "ensemble": "Tentacule", "theme": "Démoniaque", "bbmodel": "cosmetiques/ailes/aile_tentacule_demoniaque/aile_tentacule_demoniaque.bbmodel", "fichier": "aile_tentacule_demoniaque.bbmodel", "gif": "cosmetiques/ailes/aile_tentacule_demoniaque/apercu/animations.gif", "planche": "cosmetiques/ailes/aile_tentacule_demoniaque/apercu/planche.png", "vignette": "cosmetiques/ailes/aile_tentacule_demoniaque/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/aile_tentacule_demoniaque/aile_tentacule_demoniaque.png", "calque": null, "lueur": false, "reglages": [], "cubes": 175, "groupes": 41, "etats": ["ondulation"], "apercu_etats": ["ondulation"], "particules": [], "ko_compresse": 31, "ko": 171, "version": 1793728650}, {"nom": "ailes_abyssales", "categorie": "ailes", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales.bbmodel", "fichier": "ailes_abyssales.bbmodel", "gif": "cosmetiques/ailes/ailes_abyssales/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_abyssales/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_abyssales/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales.png", "calque": "cosmetiques/ailes/ailes_abyssales/ailes_abyssales_e.png", "lueur": true, "reglages": [], "cubes": 275, "groupes": 37, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["braise"], "ko_compresse": 121, "ko": 425, "version": 1793728650}, {"nom": "ailes_givre", "categorie": "ailes", "ensemble": "Givre", "theme": "Éléments", "bbmodel": "cosmetiques/ailes/ailes_givre/ailes_givre.bbmodel", "fichier": "ailes_givre.bbmodel", "gif": "cosmetiques/ailes/ailes_givre/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_givre/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_givre/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_givre/ailes_givre.png", "calque": "cosmetiques/ailes/ailes_givre/ailes_givre_e.png", "lueur": true, "reglages": [], "cubes": 353, "groupes": 45, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["givre"], "ko_compresse": 74, "ko": 399, "version": 1793728650}, {"nom": "ailes_mecaniques", "categorie": "ailes", "ensemble": "Steampunk", "theme": "Mécanique", "bbmodel": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques.bbmodel", "fichier": "ailes_mecaniques.bbmodel", "gif": "cosmetiques/ailes/ailes_mecaniques/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_mecaniques/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_mecaniques/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/ailes/ailes_mecaniques/apercu/nuit.png", "texture": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques.png", "calque": "cosmetiques/ailes/ailes_mecaniques/ailes_mecaniques_e.png", "lueur": true, "reglages": [{"particule": "vapeur (modélisée)", "role": "Vapeur qui s'échappe des deux évents et de la soupape de sûreté de la petite chaudière (dans le dos). Les décharges des tuyères sont modélisées.", "reglages": {"Quand": "Toujours", "Nombre": "1 par seconde", "Durée": "2 s", "Mouvement": "Monte", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "15°", "Élan": "40 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "64"}}], "cubes": 385, "groupes": 141, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["vapeur"], "ko_compresse": 225, "ko": 1684, "version": 1793754771}, {"nom": "ailes_nuage_guimauve", "categorie": "ailes", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/ailes/ailes_nuage_guimauve/ailes_nuage_guimauve.bbmodel", "fichier": "ailes_nuage_guimauve.bbmodel", "gif": "cosmetiques/ailes/ailes_nuage_guimauve/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_nuage_guimauve/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_nuage_guimauve/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_nuage_guimauve/ailes_nuage_guimauve.png", "calque": "cosmetiques/ailes/ailes_nuage_guimauve/ailes_nuage_guimauve_e.png", "lueur": true, "reglages": [], "cubes": 260, "groupes": 27, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 59, "ko": 323, "version": 1793728650}, {"nom": "ailes_papillon_bonbon", "categorie": "ailes", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/ailes/ailes_papillon_bonbon/ailes_papillon_bonbon.bbmodel", "fichier": "ailes_papillon_bonbon.bbmodel", "gif": "cosmetiques/ailes/ailes_papillon_bonbon/apercu/animations.gif", "planche": "cosmetiques/ailes/ailes_papillon_bonbon/apercu/planche.png", "vignette": "cosmetiques/ailes/ailes_papillon_bonbon/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/ailes/ailes_papillon_bonbon/ailes_papillon_bonbon.png", "calque": "cosmetiques/ailes/ailes_papillon_bonbon/ailes_papillon_bonbon_e.png", "lueur": true, "reglages": [], "cubes": 274, "groupes": 7, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 141, "ko": 368, "version": 1793728650}, {"nom": "aurelion_wings", "categorie": "ailes", "ensemble": "Céleste", "theme": "Divin", "bbmodel": "cosmetiques/ailes/aurelion_wings/aurelion_wings.bbmodel", "fichier": "aurelion_wings.bbmodel", "gif": "cosmetiques/ailes/aurelion_wings/apercu/animations.gif", "planche": "cosmetiques/ailes/aurelion_wings/apercu/planche.png", "vignette": "cosmetiques/ailes/aurelion_wings/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/ailes/aurelion_wings/apercu/nuit.png", "texture": "cosmetiques/ailes/aurelion_wings/aurelion_wings.png", "calque": "cosmetiques/ailes/aurelion_wings/aurelion_wings_e.png", "lueur": true, "reglages": [], "cubes": 504, "groupes": 67, "etats": ["idle", "fly", "glide", "sneak", "walk", "run", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "fly", "glide", "sneak", "walk", "run", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["plume"], "ko_compresse": 201, "ko": 698, "version": 1793728650}, {"nom": "baguette_sucre_orge", "categorie": "armes", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/armes/baguette_sucre_orge/baguette_sucre_orge.bbmodel", "fichier": "baguette_sucre_orge.bbmodel", "gif": "cosmetiques/armes/baguette_sucre_orge/apercu/animations.gif", "planche": "cosmetiques/armes/baguette_sucre_orge/apercu/planche.png", "vignette": "cosmetiques/armes/baguette_sucre_orge/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/armes/baguette_sucre_orge/baguette_sucre_orge.png", "calque": "cosmetiques/armes/baguette_sucre_orge/baguette_sucre_orge_e.png", "lueur": true, "reglages": [], "cubes": 40, "groupes": 6, "etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "particules": [], "ko_compresse": 36, "ko": 83, "version": 1793736047}, {"nom": "lames_abyssales", "categorie": "armes", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/armes/lames_abyssales/lames_abyssales.bbmodel", "fichier": "lames_abyssales.bbmodel", "gif": "cosmetiques/armes/lames_abyssales/apercu/animations.gif", "planche": "cosmetiques/armes/lames_abyssales/apercu/planche.png", "vignette": "cosmetiques/armes/lames_abyssales/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/armes/lames_abyssales/lames_abyssales.png", "calque": "cosmetiques/armes/lames_abyssales/lames_abyssales_e.png", "lueur": true, "reglages": [], "cubes": 96, "groupes": 12, "etats": ["idle", "run", "sneak", "attack"], "apercu_etats": ["idle", "run", "sneak", "attack"], "particules": [], "ko_compresse": 39, "ko": 123, "version": 1793735629}, {"nom": "pistolet_mecanique", "categorie": "armes", "ensemble": "Steampunk", "theme": "Mécanique", "bbmodel": "cosmetiques/armes/pistolet_mecanique/pistolet_mecanique.bbmodel", "fichier": "pistolet_mecanique.bbmodel", "gif": "cosmetiques/armes/pistolet_mecanique/apercu/animations.gif", "planche": "cosmetiques/armes/pistolet_mecanique/apercu/planche.png", "vignette": "cosmetiques/armes/pistolet_mecanique/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/armes/pistolet_mecanique/apercu/nuit.png", "texture": "cosmetiques/armes/pistolet_mecanique/pistolet_mecanique.png", "calque": "cosmetiques/armes/pistolet_mecanique/pistolet_mecanique_e.png", "lueur": true, "reglages": [{"particule": "vapeur (modélisée)", "role": "Décharge au tir (pavillon) et petite fumée de la soupape.", "reglages": {"Quand": "À l'arrêt", "Nombre": "0,5 par seconde", "Durée": "1,5 s", "Mouvement": "Monte", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Rapide", "Dispersion": "15°", "Élan": "40 %", "Variation": "Forte", "Rafale": "À l'attaque", "Limite": "64"}}], "cubes": 134, "groupes": 17, "etats": ["idle", "walk", "run", "sneak", "fall", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fall", "attack", "hurt"], "particules": ["vapeur"], "ko_compresse": 48, "ko": 198, "version": 1793752023}, {"nom": "aura_abyssale", "categorie": "auras", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/auras/aura_abyssale/aura_abyssale.bbmodel", "fichier": "aura_abyssale.bbmodel", "gif": "cosmetiques/auras/aura_abyssale/apercu/animations.gif", "planche": "cosmetiques/auras/aura_abyssale/apercu/planche.png", "vignette": "cosmetiques/auras/aura_abyssale/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_abyssale/aura_abyssale.png", "calque": "cosmetiques/auras/aura_abyssale/aura_abyssale_e.png", "lueur": true, "reglages": [], "cubes": 34, "groupes": 33, "etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "particules": [], "ko_compresse": 49, "ko": 291, "version": 1793735918}, {"nom": "aura_brasier", "categorie": "auras", "ensemble": "Autres", "theme": "Autres", "bbmodel": "cosmetiques/auras/aura_brasier/aura_brasier.bbmodel", "fichier": "aura_brasier.bbmodel", "gif": "cosmetiques/auras/aura_brasier/apercu/animations.gif", "planche": "cosmetiques/auras/aura_brasier/apercu/planche.png", "vignette": "cosmetiques/auras/aura_brasier/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/auras/aura_brasier/apercu/nuit.png", "texture": "cosmetiques/auras/aura_brasier/aura_brasier.png", "calque": "cosmetiques/auras/aura_brasier/aura_brasier_e.png", "lueur": true, "reglages": [{"particule": "etincelle (modélisée)", "role": "Étincelles qui montent autour du joueur.", "reglages": {"Quand": "Toujours", "Nombre": "2 à 3 par seconde", "Durée": "2 à 3 s", "Mouvement": "Monte", "Rendu": "Lumineux", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "45°", "Élan": "0 %", "Variation": "Légère", "Rafale": "À l'attaque", "Limite": "64"}}], "cubes": 29, "groupes": 105, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "mount", "sleep", "attack", "hurt"], "particules": ["etincelle"], "ko_compresse": 73, "ko": 216, "version": 1793752095}, {"nom": "aura_bulle_chewing_gum", "categorie": "auras", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/auras/aura_bulle_chewing_gum/aura_bulle_chewing_gum.bbmodel", "fichier": "aura_bulle_chewing_gum.bbmodel", "gif": "cosmetiques/auras/aura_bulle_chewing_gum/apercu/animations.gif", "planche": "cosmetiques/auras/aura_bulle_chewing_gum/apercu/planche.png", "vignette": "cosmetiques/auras/aura_bulle_chewing_gum/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_bulle_chewing_gum/aura_bulle_chewing_gum.png", "calque": "cosmetiques/auras/aura_bulle_chewing_gum/aura_bulle_chewing_gum_e.png", "lueur": true, "reglages": [], "cubes": 80, "groupes": 12, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "hurt"], "particules": [], "ko_compresse": 47, "ko": 194, "version": 1793736146}, {"nom": "aura_celeste", "categorie": "auras", "ensemble": "Céleste", "theme": "Divin", "bbmodel": "cosmetiques/auras/aura_celeste/aura_celeste.bbmodel", "fichier": "aura_celeste.bbmodel", "gif": "cosmetiques/auras/aura_celeste/apercu/animations.gif", "planche": "cosmetiques/auras/aura_celeste/apercu/planche.png", "vignette": "cosmetiques/auras/aura_celeste/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_celeste/aura_celeste.png", "calque": "cosmetiques/auras/aura_celeste/aura_celeste_e.png", "lueur": true, "reglages": [], "cubes": 42, "groupes": 17, "etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "hurt"], "particules": [], "ko_compresse": 53, "ko": 239, "version": 1793734837}, {"nom": "aura_coeurs_nuage", "categorie": "auras", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/auras/aura_coeurs_nuage/aura_coeurs_nuage.bbmodel", "fichier": "aura_coeurs_nuage.bbmodel", "gif": "cosmetiques/auras/aura_coeurs_nuage/apercu/animations.gif", "planche": "cosmetiques/auras/aura_coeurs_nuage/apercu/planche.png", "vignette": "cosmetiques/auras/aura_coeurs_nuage/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/auras/aura_coeurs_nuage/aura_coeurs_nuage.png", "calque": "cosmetiques/auras/aura_coeurs_nuage/aura_coeurs_nuage_e.png", "lueur": true, "reglages": [], "cubes": 24, "groupes": 28, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "mount", "sleep", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "mount", "sleep", "hurt"], "particules": ["coeur"], "ko_compresse": 88, "ko": 473, "version": 1793736356}, {"nom": "bandeau_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal.bbmodel", "fichier": "bandeau_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/bandeau_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/bandeau_abyssal/apercu/planche.png", "vignette": "cosmetiques/chapeaux/bandeau_abyssal/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal.png", "calque": "cosmetiques/chapeaux/bandeau_abyssal/bandeau_abyssal_e.png", "lueur": true, "reglages": [], "cubes": 97, "groupes": 14, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": [], "ko_compresse": 47, "ko": 160, "version": 1793735053}, {"nom": "chapeau_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal.bbmodel", "fichier": "chapeau_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/chapeau_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/chapeau_abyssal/apercu/planche.png", "vignette": "cosmetiques/chapeaux/chapeau_abyssal/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal.png", "calque": "cosmetiques/chapeaux/chapeau_abyssal/chapeau_abyssal_e.png", "lueur": true, "reglages": [], "cubes": 144, "groupes": 16, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": [], "ko_compresse": 108, "ko": 263, "version": 1793735171}, {"nom": "chapeau_macaron", "categorie": "chapeaux", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/chapeaux/chapeau_macaron/chapeau_macaron.bbmodel", "fichier": "chapeau_macaron.bbmodel", "gif": "cosmetiques/chapeaux/chapeau_macaron/apercu/animations.gif", "planche": "cosmetiques/chapeaux/chapeau_macaron/apercu/planche.png", "vignette": "cosmetiques/chapeaux/chapeau_macaron/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/chapeau_macaron/chapeau_macaron.png", "calque": "cosmetiques/chapeaux/chapeau_macaron/chapeau_macaron_e.png", "lueur": true, "reglages": [], "cubes": 86, "groupes": 3, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "hurt"], "particules": [], "ko_compresse": 27, "ko": 102, "version": 1793728651}, {"nom": "diademe_celeste", "categorie": "chapeaux", "ensemble": "Céleste", "theme": "Divin", "bbmodel": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste.bbmodel", "fichier": "diademe_celeste.bbmodel", "gif": "cosmetiques/chapeaux/diademe_celeste/apercu/animations.gif", "planche": "cosmetiques/chapeaux/diademe_celeste/apercu/planche.png", "vignette": "cosmetiques/chapeaux/diademe_celeste/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste.png", "calque": "cosmetiques/chapeaux/diademe_celeste/diademe_celeste_e.png", "lueur": true, "reglages": [], "cubes": 88, "groupes": 17, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": [], "ko_compresse": 63, "ko": 181, "version": 1793734972}, {"nom": "halo_donut", "categorie": "chapeaux", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/chapeaux/halo_donut/halo_donut.bbmodel", "fichier": "halo_donut.bbmodel", "gif": "cosmetiques/chapeaux/halo_donut/apercu/animations.gif", "planche": "cosmetiques/chapeaux/halo_donut/apercu/planche.png", "vignette": "cosmetiques/chapeaux/halo_donut/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/halo_donut/halo_donut.png", "calque": "cosmetiques/chapeaux/halo_donut/halo_donut_e.png", "lueur": true, "reglages": [], "cubes": 60, "groupes": 3, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "particules": [], "ko_compresse": 38, "ko": 117, "version": 1793728651}, {"nom": "haut_de_forme_mecanique", "categorie": "chapeaux", "ensemble": "Steampunk", "theme": "Mécanique", "bbmodel": "cosmetiques/chapeaux/haut_de_forme_mecanique/haut_de_forme_mecanique.bbmodel", "fichier": "haut_de_forme_mecanique.bbmodel", "gif": "cosmetiques/chapeaux/haut_de_forme_mecanique/apercu/animations.gif", "planche": "cosmetiques/chapeaux/haut_de_forme_mecanique/apercu/planche.png", "vignette": "cosmetiques/chapeaux/haut_de_forme_mecanique/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/chapeaux/haut_de_forme_mecanique/apercu/nuit.png", "texture": "cosmetiques/chapeaux/haut_de_forme_mecanique/haut_de_forme_mecanique.png", "calque": "cosmetiques/chapeaux/haut_de_forme_mecanique/haut_de_forme_mecanique_e.png", "lueur": true, "reglages": [{"particule": "vapeur (modélisée)", "role": "Fumée de la petite cheminée.", "reglages": {"Quand": "Toujours", "Nombre": "0,5 par seconde", "Durée": "2 s", "Mouvement": "Monte", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "15°", "Élan": "40 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "64"}}], "cubes": 137, "groupes": 21, "etats": ["idle", "walk", "run", "sneak", "fall", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fall", "attack", "hurt"], "particules": ["vapeur"], "ko_compresse": 84, "ko": 290, "version": 1793751741}, {"nom": "masque_abyssal", "categorie": "chapeaux", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal.bbmodel", "fichier": "masque_abyssal.bbmodel", "gif": "cosmetiques/chapeaux/masque_abyssal/apercu/animations.gif", "planche": "cosmetiques/chapeaux/masque_abyssal/apercu/planche.png", "vignette": "cosmetiques/chapeaux/masque_abyssal/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal.png", "calque": "cosmetiques/chapeaux/masque_abyssal/masque_abyssal_e.png", "lueur": true, "reglages": [], "cubes": 130, "groupes": 13, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "attack", "hurt"], "particules": [], "ko_compresse": 44, "ko": 142, "version": 1793735261}, {"nom": "oreilles_lapin_nuage", "categorie": "chapeaux", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/chapeaux/oreilles_lapin_nuage/oreilles_lapin_nuage.bbmodel", "fichier": "oreilles_lapin_nuage.bbmodel", "gif": "cosmetiques/chapeaux/oreilles_lapin_nuage/apercu/animations.gif", "planche": "cosmetiques/chapeaux/oreilles_lapin_nuage/apercu/planche.png", "vignette": "cosmetiques/chapeaux/oreilles_lapin_nuage/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/chapeaux/oreilles_lapin_nuage/oreilles_lapin_nuage.png", "calque": "cosmetiques/chapeaux/oreilles_lapin_nuage/oreilles_lapin_nuage_e.png", "lueur": true, "reglages": [], "cubes": 73, "groupes": 10, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "hurt"], "particules": [], "ko_compresse": 145, "ko": 282, "version": 1793728651}, {"nom": "epaulettes_guimauve", "categorie": "epaules", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/epaules/epaulettes_guimauve/epaulettes_guimauve.bbmodel", "fichier": "epaulettes_guimauve.bbmodel", "gif": "cosmetiques/epaules/epaulettes_guimauve/apercu/animations.gif", "planche": "cosmetiques/epaules/epaulettes_guimauve/apercu/planche.png", "vignette": "cosmetiques/epaules/epaulettes_guimauve/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/epaules/epaulettes_guimauve/epaulettes_guimauve.png", "calque": "cosmetiques/epaules/epaulettes_guimauve/epaulettes_guimauve_e.png", "lueur": true, "reglages": [], "cubes": 112, "groupes": 8, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "attack", "hurt"], "particules": [], "ko_compresse": 63, "ko": 233, "version": 1793728651}, {"nom": "epaulieres_abyssales", "categorie": "epaules", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales.bbmodel", "fichier": "epaulieres_abyssales.bbmodel", "gif": "cosmetiques/epaules/epaulieres_abyssales/apercu/animations.gif", "planche": "cosmetiques/epaules/epaulieres_abyssales/apercu/planche.png", "vignette": "cosmetiques/epaules/epaulieres_abyssales/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales.png", "calque": "cosmetiques/epaules/epaulieres_abyssales/epaulieres_abyssales_e.png", "lueur": true, "reglages": [], "cubes": 148, "groupes": 26, "etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "attack", "hurt"], "particules": [], "ko_compresse": 60, "ko": 278, "version": 1793735560}, {"nom": "epaulieres_mecaniques", "categorie": "epaules", "ensemble": "Steampunk", "theme": "Mécanique", "bbmodel": "cosmetiques/epaules/epaulieres_mecaniques/epaulieres_mecaniques.bbmodel", "fichier": "epaulieres_mecaniques.bbmodel", "gif": "cosmetiques/epaules/epaulieres_mecaniques/apercu/animations.gif", "planche": "cosmetiques/epaules/epaulieres_mecaniques/apercu/planche.png", "vignette": "cosmetiques/epaules/epaulieres_mecaniques/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/epaules/epaulieres_mecaniques/apercu/nuit.png", "texture": "cosmetiques/epaules/epaulieres_mecaniques/epaulieres_mecaniques.png", "calque": "cosmetiques/epaules/epaulieres_mecaniques/epaulieres_mecaniques_e.png", "lueur": true, "reglages": [{"particule": "vapeur (modélisée)", "role": "Échappement des deux cheminées de l'épaulière droite.", "reglages": {"Quand": "Toujours", "Nombre": "1 par seconde", "Durée": "2 s", "Mouvement": "Monte", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Moyen", "Dispersion": "15°", "Élan": "40 %", "Variation": "Forte", "Rafale": "À l'attaque", "Limite": "64"}}], "cubes": 163, "groupes": 39, "etats": ["idle", "walk", "run", "sneak", "fall", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fall", "attack", "hurt"], "particules": ["vapeur"], "ko_compresse": 80, "ko": 289, "version": 1793752292}, {"nom": "familier_chat_lanterne", "categorie": "familiers", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/familiers/familier_chat_lanterne/familier_chat_lanterne.bbmodel", "fichier": "familier_chat_lanterne.bbmodel", "gif": "cosmetiques/familiers/familier_chat_lanterne/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_chat_lanterne/apercu/planche.png", "vignette": "cosmetiques/familiers/familier_chat_lanterne/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/familiers/familier_chat_lanterne/familier_chat_lanterne.png", "calque": "cosmetiques/familiers/familier_chat_lanterne/familier_chat_lanterne_e.png", "lueur": true, "reglages": [], "cubes": 88, "groupes": 13, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "sleep", "mount", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "sleep", "mount", "attack", "hurt"], "particules": [], "ko_compresse": 166, "ko": 360, "version": 1793728651}, {"nom": "familier_crane", "categorie": "familiers", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/familiers/familier_crane/familier_crane.bbmodel", "fichier": "familier_crane.bbmodel", "gif": "cosmetiques/familiers/familier_crane/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_crane/apercu/planche.png", "vignette": "cosmetiques/familiers/familier_crane/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/familiers/familier_crane/familier_crane.png", "calque": "cosmetiques/familiers/familier_crane/familier_crane_e.png", "lueur": true, "reglages": [], "cubes": 102, "groupes": 12, "etats": ["idle", "walk", "run", "fly", "glide", "sneak", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "fly", "glide", "sneak", "attack", "hurt"], "particules": [], "ko_compresse": 114, "ko": 261, "version": 1793735739}, {"nom": "familier_hibou_mecanique", "categorie": "familiers", "ensemble": "Steampunk", "theme": "Mécanique", "bbmodel": "cosmetiques/familiers/familier_hibou_mecanique/familier_hibou_mecanique.bbmodel", "fichier": "familier_hibou_mecanique.bbmodel", "gif": "cosmetiques/familiers/familier_hibou_mecanique/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_hibou_mecanique/apercu/planche.png", "vignette": "cosmetiques/familiers/familier_hibou_mecanique/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/familiers/familier_hibou_mecanique/apercu/nuit.png", "texture": "cosmetiques/familiers/familier_hibou_mecanique/familier_hibou_mecanique.png", "calque": "cosmetiques/familiers/familier_hibou_mecanique/familier_hibou_mecanique_e.png", "lueur": true, "reglages": [{"particule": "souffle (modélisée)", "role": "Air poussé vers le bas par l'hélice. Élan 100 % pour qu'il suive le hibou.", "reglages": {"Quand": "Toujours", "Nombre": "3 par seconde", "Durée": "1 s", "Mouvement": "Lourde", "Au sol": "Disparaît", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Rapide", "Dispersion": "15°", "Élan": "100 %", "Variation": "Légère", "Rafale": "Aucune", "Limite": "64"}}, {"particule": "vapeur (modélisée)", "role": "Bouffée de la soupape sur la tête.", "reglages": {"Quand": "À l'arrêt", "Nombre": "0,5 par seconde", "Durée": "2 s", "Mouvement": "Monte", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "15°", "Élan": "40 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "64"}}], "cubes": 137, "groupes": 49, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "swim", "fall", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 176, "ko": 649, "version": 1793751607}, {"nom": "familier_nuage_mochi", "categorie": "familiers", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/familiers/familier_nuage_mochi/familier_nuage_mochi.bbmodel", "fichier": "familier_nuage_mochi.bbmodel", "gif": "cosmetiques/familiers/familier_nuage_mochi/apercu/animations.gif", "planche": "cosmetiques/familiers/familier_nuage_mochi/apercu/planche.png", "vignette": "cosmetiques/familiers/familier_nuage_mochi/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/familiers/familier_nuage_mochi/familier_nuage_mochi.png", "calque": "cosmetiques/familiers/familier_nuage_mochi/familier_nuage_mochi_e.png", "lueur": true, "reglages": [], "cubes": 95, "groupes": 11, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 118, "ko": 270, "version": 1793728651}, {"nom": "queue_abyssale", "categorie": "queues", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/queues/queue_abyssale/queue_abyssale.bbmodel", "fichier": "queue_abyssale.bbmodel", "gif": "cosmetiques/queues/queue_abyssale/apercu/animations.gif", "planche": "cosmetiques/queues/queue_abyssale/apercu/planche.png", "vignette": "cosmetiques/queues/queue_abyssale/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/queues/queue_abyssale/queue_abyssale.png", "calque": "cosmetiques/queues/queue_abyssale/queue_abyssale_e.png", "lueur": true, "reglages": [], "cubes": 128, "groupes": 13, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 43, "ko": 218, "version": 1793735382}, {"nom": "queue_abyssale_v2", "categorie": "queues", "ensemble": "Abyssal", "theme": "Démoniaque", "bbmodel": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2.bbmodel", "fichier": "queue_abyssale_v2.bbmodel", "gif": "cosmetiques/queues/queue_abyssale_v2/apercu/animations.gif", "planche": "cosmetiques/queues/queue_abyssale_v2/apercu/planche.png", "vignette": "cosmetiques/queues/queue_abyssale_v2/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2.png", "calque": "cosmetiques/queues/queue_abyssale_v2/queue_abyssale_v2_e.png", "lueur": true, "reglages": [], "cubes": 77, "groupes": 13, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 42, "ko": 203, "version": 1793735465}, {"nom": "queue_mecanique", "categorie": "queues", "ensemble": "Steampunk", "theme": "Mécanique", "bbmodel": "cosmetiques/queues/queue_mecanique/queue_mecanique.bbmodel", "fichier": "queue_mecanique.bbmodel", "gif": "cosmetiques/queues/queue_mecanique/apercu/animations.gif", "planche": "cosmetiques/queues/queue_mecanique/apercu/planche.png", "vignette": "cosmetiques/queues/queue_mecanique/apercu/vignette.png", "anims_etat": {}, "nuit": "cosmetiques/queues/queue_mecanique/apercu/nuit.png", "texture": "cosmetiques/queues/queue_mecanique/queue_mecanique.png", "calque": "cosmetiques/queues/queue_mecanique/queue_mecanique_e.png", "lueur": true, "reglages": [{"particule": "vapeur (modélisée)", "role": "Vapeur de la soupape au bout de la queue.", "reglages": {"Quand": "Toujours", "Nombre": "0,5 par seconde", "Durée": "2 s", "Mouvement": "Monte", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "15°", "Élan": "40 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "64"}}], "cubes": 86, "groupes": 28, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": ["vapeur"], "ko_compresse": 96, "ko": 659, "version": 1793751863}, {"nom": "queue_pompon_nuage", "categorie": "queues", "ensemble": "Kawaii", "theme": "Mignon", "bbmodel": "cosmetiques/queues/queue_pompon_nuage/queue_pompon_nuage.bbmodel", "fichier": "queue_pompon_nuage.bbmodel", "gif": "cosmetiques/queues/queue_pompon_nuage/apercu/animations.gif", "planche": "cosmetiques/queues/queue_pompon_nuage/apercu/planche.png", "vignette": "cosmetiques/queues/queue_pompon_nuage/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/queues/queue_pompon_nuage/queue_pompon_nuage.png", "calque": "cosmetiques/queues/queue_pompon_nuage/queue_pompon_nuage_e.png", "lueur": true, "reglages": [], "cubes": 56, "groupes": 11, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "swim", "mount", "sleep", "attack", "hurt"], "particules": [], "ko_compresse": 43, "ko": 183, "version": 1793728651}, {"nom": "sac_cupcake", "categorie": "sacs", "ensemble": "Pâtisserie", "theme": "Mignon", "bbmodel": "cosmetiques/sacs/sac_cupcake/sac_cupcake.bbmodel", "fichier": "sac_cupcake.bbmodel", "gif": "cosmetiques/sacs/sac_cupcake/apercu/animations.gif", "planche": "cosmetiques/sacs/sac_cupcake/apercu/planche.png", "vignette": "cosmetiques/sacs/sac_cupcake/apercu/vignette.png", "anims_etat": {}, "nuit": null, "texture": "cosmetiques/sacs/sac_cupcake/sac_cupcake.png", "calque": "cosmetiques/sacs/sac_cupcake/sac_cupcake_e.png", "lueur": true, "reglages": [], "cubes": 107, "groupes": 5, "etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "sleep", "hurt"], "apercu_etats": ["idle", "walk", "run", "sneak", "fly", "glide", "fall", "sleep", "hurt"], "particules": [], "ko_compresse": 52, "ko": 150, "version": 1793728651}], "labels": {"ailes": "Ailes", "chapeaux": "Tête", "queues": "Queues", "epaules": "Épaules", "armes": "Armes", "auras": "Auras", "familiers": "Familiers", "sacs": "Sacs", "outils": "Outils", "blocs": "Blocs"}, "teintes": {"Abyssal": "#9fe04e", "Tentacule": "#c4506e", "Céleste": "#e6c675", "Givre": "#7fd3ef", "Kawaii": "#f7d27a", "Pâtisserie": "#e88a9a", "Steampunk": "#d69a62", "Autres": "#b9a7e8"}, "themes": ["Démoniaque", "Divin", "Éléments", "Mignon", "Mécanique", "Autres"], "ordre_ensembles": ["Abyssal", "Tentacule", "Céleste", "Givre", "Kawaii", "Pâtisserie", "Steampunk", "Autres"], "signature": "aile_tentacule_demoniaque:1793728650|ailes_abyssales:1793728650|ailes_givre:1793728650|ailes_mecaniques:1793754771|ailes_nuage_guimauve:1793728650|ailes_papillon_bonbon:1793728650|aurelion_wings:1793728650|baguette_sucre_orge:1793736047|lames_abyssales:1793735629|pistolet_mecanique:1793752023|aura_abyssale:1793735918|aura_brasier:1793752095|aura_bulle_chewing_gum:1793736146|aura_celeste:1793734837|aura_coeurs_nuage:1793736356|bandeau_abyssal:1793735053|chapeau_abyssal:1793735171|chapeau_macaron:1793728651|diademe_celeste:1793734972|halo_donut:1793728651|haut_de_forme_mecanique:1793751741|masque_abyssal:1793735261|oreilles_lapin_nuage:1793728651|epaulettes_guimauve:1793728651|epaulieres_abyssales:1793735560|epaulieres_mecaniques:1793752292|familier_chat_lanterne:1793728651|familier_crane:1793735739|familier_hibou_mecanique:1793751607|familier_nuage_mochi:1793728651|queue_abyssale:1793735382|queue_abyssale_v2:1793735465|queue_mecanique:1793751863|queue_pompon_nuage:1793728651|sac_cupcake:1793728651"};
 const NOMS_ETATS = {idle:"Repos",walk:"Marche",run:"Course",sneak:"Accroupi",fly:"Vol",glide:"Élytres",fall:"En l'air",swim:"Nage",mount:"Monture",sleep:"Sommeil",attack:"Attaque",hurt:"Blessé"};
 const el = (t, p = {}, ...c) => { const e = document.createElement(t); Object.assign(e, p); e.append(...c); return e; };
 const joli = n => n.replace(/_/g, " ").replace(/^./, c => c.toUpperCase());
@@ -744,12 +1030,30 @@ function carte(f) {
   let fen;
   if (vign) {
     fen = el("div", { className: "fen" }, el("img", { src: vign, alt: "", loading: "lazy", className: "vignette" }));
-    if (gif) {
-      // Survol : l'animation de repos, première case du GIF.
-      const img = fen.firstChild;
-      art.addEventListener("pointerenter", () => { fen.replaceChildren(cadre(gif, 4, 0, 0).firstChild); if (neufs.has(f.nom)) fen.append(etiquetteNeuf()); });
-      art.addEventListener("pointerleave", () => { fen.replaceChildren(img); if (neufs.has(f.nom)) fen.append(etiquetteNeuf()); });
-    }
+    // Survol : le modèle 3D qui joue son animation de repos (serveur local et WebGL 2), sinon la première case du GIF.
+    const img = fen.firstChild;
+    let jeton = null, vue = null;
+    const gifRepos = () => { if (gif) { fen.replaceChildren(cadre(gif, 4, 0, 0).firstChild); if (neufs.has(f.nom)) fen.append(etiquetteNeuf()); } };
+    art.addEventListener("pointerenter", async () => {
+      const j = jeton = {};
+      if (location.protocol === "file:" || !window.Visionneuse) return gifRepos();
+      let m; try { m = await chargerModele(f); } catch (e) { m = null; }
+      if (jeton !== j) return;
+      const anims = ((m && m.animations) || []).filter(a => !a.name.startsWith("particle_"));
+      const repos = anims.find(a => a.name.split(".").pop() === "idle") || anims.find(a => a.loop === "loop") || anims[0];
+      const c = el("canvas", { className: "survol3d" }); c.setAttribute("aria-hidden", "true");
+      fen.append(c);
+      const v = m && Visionneuse.creer(c);
+      if (!v) { c.remove(); return gifRepos(); }
+      await v.charger(m, repos ? repos.name : null);
+      if (jeton !== j) { v.detruire(); c.remove(); return; }
+      vue = { v, c };
+    });
+    art.addEventListener("pointerleave", () => {
+      jeton = null;
+      if (vue) { vue.v.detruire(); vue = null; }
+      fen.replaceChildren(img); if (neufs.has(f.nom)) fen.append(etiquetteNeuf());
+    });
   } else if (planche) fen = cadre(planche, 8, 0, 0);
   else if (gif) fen = cadre(gif, 4, 0, 0);
   else fen = el("div", { className: "fen" }, el("div", { className: "vide", textContent: "Pas encore d'aperçu" }));
@@ -761,13 +1065,17 @@ function carte(f) {
   if (f.particules.length) badges.append(badge("particules", "Particules"));
   art.append(el("div", { className: "corps-carte" },
     el("h3", { className: "carte__titre" }, el("button", { type: "button", className: "carte__lien", textContent: joli(f.nom), onclick: () => ouvrir(f.nom) })),
-    el("p", { className: "meta", textContent: `${tri === "ensemble" ? lib(f.categorie) : f.ensemble} · ${f.cubes} cubes` }), badges), fen);
+    el("p", { className: "meta" }, el("b", { textContent: tri === "ensemble" ? lib(f.categorie) : f.ensemble }), ` · ${f.cubes} cubes`), badges), fen);
   return art;
 }
 function etiquetteNeuf() { return el("span", { className: "neuf", textContent: "Nouveau" }); }
-function barreEnsembles() {
+let plies;
+try { plies = new Set(JSON.parse(localStorage.getItem("vestiaire-plies") || "[]")); } catch (e) { plies = new Set(); }
+const CHEVRON = "M6 9l6 6 6-6";
+/* Panneau : par ensemble, les thèmes et leurs ensembles ; par catégorie, les catégories et leurs ensembles. Chaque groupe se replie. */
+function barreNav(focusCle) {
   const box = document.getElementById("ensembles"); box.replaceChildren();
-  const compte = p => D.fiches.filter(f => p(f) && (!cat || f.categorie === cat)).length;
+  const compte = p => D.fiches.filter(p).length;
   const pieces = n => `${n} ${n > 1 ? "pièces" : "pièce"}`;
   const entree = (classe, libelle, n, actif, clic, couleur) => {
     const b = el("button", { type: "button", className: classe, onclick: clic });
@@ -776,47 +1084,112 @@ function barreEnsembles() {
     b.append(el("span", { className: "nav__texte", textContent: libelle }), c, el("span", { className: "masque", textContent: `, ${pieces(n)}` }));
     b.setAttribute("aria-pressed", String(actif)); return b;
   };
+  const filtre = (t, e, c) => () => { th = t; ens = e; cat = c; tout(); if (tiroirOuvert()) tiroir(false); };
+  let k = 0;
+  const groupe = (cle, titre, n, actif, clic, items) => {
+    const ul = el("ul", { id: "nav-g" + (k++) }); items.forEach(i => ul.append(el("li", {}, i)));
+    const deplie = !plies.has(cle); ul.hidden = !deplie;
+    const pl = el("button", { type: "button", className: "nav__plier" }, icone(CHEVRON), el("span", { className: "masque", textContent: (deplie ? "Replier " : "Déplier ") + titre }));
+    pl.dataset.cle = cle; pl.setAttribute("aria-expanded", String(deplie)); pl.setAttribute("aria-controls", ul.id);
+    pl.onclick = () => { plies.has(cle) ? plies.delete(cle) : plies.add(cle); memo(); barreNav(cle); };
+    return el("div", { className: "nav__groupe" }, el("div", { className: "nav__tete" }, pl, entree("nav__titre", titre, n, actif, clic)), ul);
+  };
+  // Tout replier / tout déplier : agit sur les groupes du rangement courant, mémorisé comme un repli à la main.
+  const cles = tri === "ensemble" ? ordreThemes().map(t => "theme:" + t) : ordreCat().map(c => "categorie:" + c);
+  const memo = () => { try { localStorage.setItem("vestiaire-plies", JSON.stringify([...plies])); } catch (e) {} };
+  const tous = (plier, quoi) => { const b = el("button", { type: "button", textContent: quoi, onclick: () => {
+    cles.forEach(c => plier ? plies.add(c) : plies.delete(c)); memo(); barreNav(); box.querySelector(".nav__outils button:not(:disabled)")?.focus(); } });
+    b.disabled = cles.every(c => plies.has(c) === plier); return b; };
+  box.append(el("div", { className: "nav__outils" }, tous(true, "Tout replier"), tous(false, "Tout déplier")));
   // Premier groupe sans titre : tout le vestiaire.
   box.append(el("div", { className: "nav__groupe" }, el("ul", {}, el("li", {},
-    entree("nav__lien", "Tout le vestiaire", compte(() => true), !th && !ens, () => { th = null; ens = null; tout(); })))));
+    entree("nav__lien", "Tout le vestiaire", D.fiches.length, !th && !ens && !cat, filtre(null, null, null))))));
   const ensembles = ordreEns();
-  ordreThemes().forEach(t => {
-    const ul = el("ul");
-    ensembles.filter(e => D.fiches.some(f => f.ensemble === e && f.theme === t)).forEach(e =>
-      ul.append(el("li", {}, entree("nav__lien", e, compte(f => f.ensemble === e), ens === e, () => { th = t; ens = e; tout(); }, teinte(e)))));
-    // Le titre du groupe filtre tout le thème.
-    box.append(el("div", { className: "nav__groupe" }, entree("nav__titre", t, compte(f => f.theme === t), th === t && !ens, () => { th = t; ens = null; tout(); }), ul));
+  if (tri === "ensemble") ordreThemes().forEach(t => {
+    const items = ensembles.filter(e => D.fiches.some(f => f.ensemble === e && f.theme === t))
+      .map(e => entree("nav__lien", e, compte(f => f.ensemble === e), ens === e, filtre(t, e, null), teinte(e)));
+    box.append(groupe("theme:" + t, t, compte(f => f.theme === t), th === t && !ens, filtre(t, null, null), items));
   });
+  else ordreCat().forEach(c => {
+    const items = ensembles.filter(e => D.fiches.some(f => f.ensemble === e && f.categorie === c))
+      .map(e => entree("nav__lien", e, compte(f => f.ensemble === e && f.categorie === c), cat === c && ens === e, filtre(null, e, c), teinte(e)));
+    box.append(groupe("categorie:" + c, lib(c), compte(f => f.categorie === c), cat === c && !ens, filtre(null, null, c), items));
+  });
+  if (focusCle) { const b = [...box.querySelectorAll(".nav__plier")].find(x => x.dataset.cle === focusCle); if (b) b.focus(); }
 }
-function barreCats() {
-  const box = document.getElementById("cats"); box.replaceChildren();
-  [[null, "Toutes"], ...ordreCat().map(c => [c, lib(c)])].forEach(([v, l]) => {
-    const n = D.fiches.filter(f => (!v || f.categorie === v) && garde(f)).length;
-    const b = el("button", { textContent: `${l} ${n}`, onclick: () => { cat = v; tout(); } }); b.setAttribute("aria-pressed", String(v === cat)); box.append(b);
-  });
+function barreTri() {
   const t = document.getElementById("tri"); t.replaceChildren();
   [["ensemble", "Par ensemble"], ["categorie", "Par catégorie"]].forEach(([v, l]) => {
-    const b = el("button", { textContent: l, onclick: () => { tri = v; try { localStorage.setItem("vestiaire-tri", v); } catch (e) {} tout(); } }); b.setAttribute("aria-pressed", String(v === tri)); t.append(b);
+    const b = el("button", { type: "button", textContent: l, onclick: () => {
+      if (tri === v) return;
+      tri = v; th = ens = cat = null; try { localStorage.setItem("vestiaire-tri", v); } catch (e) {} tout(); } });
+    b.setAttribute("aria-pressed", String(v === tri)); t.append(b);
   });
 }
 function liste() {
   const q = document.getElementById("recherche").value.trim().toLowerCase();
   const vis = D.fiches.filter(f => (!cat || f.categorie === cat) && garde(f) && (!q || [joli(f.nom), f.nom, lib(f.categorie), f.ensemble, f.theme || ""].some(s => s.toLowerCase().includes(q))));
   const m = document.getElementById("liste"); m.replaceChildren(); visibles = [];
-  if (!vis.length) { m.append(el("p", { className: "rien", textContent: D.fiches.length ? "Aucun cosmétique ne correspond. Effacez la recherche ou changez de filtre." : "L'armoire est vide : les cosmétiques livrés apparaîtront ici." })); return; }
+  entete(vis, q);
+  if (!vis.length) {
+    const r = el("div", { className: "rien" }, el("p", { style: "margin:0", textContent: D.fiches.length ? "Aucun cosmétique ne correspond à ces critères." : "L'armoire est vide : les cosmétiques livrés apparaîtront ici." }));
+    if (D.fiches.length) r.append(el("button", { type: "button", textContent: "Effacer la recherche et les filtres", onclick: effacerTout }));
+    m.append(r); return;
+  }
   const parEns = tri === "ensemble", groupes = parEns ? ordreEns() : ordreCat(), oc = ordreCat();
   groupes.forEach(g => {
     const items = vis.filter(f => (parEns ? f.ensemble : f.categorie) === g); if (!items.length) return;
-    const tete = el("div", { className: "section" }, el("h2", { textContent: parEns ? `${(items[0].theme && items[0].theme !== g) ? items[0].theme + " · " : ""}${g}` : lib(g) }), el("span", { textContent: items.length + (items.length > 1 ? " pièces" : " pièce") }));
-    tete.style.setProperty("--c", parEns ? teinte(g) : "#eeebf4"); m.append(tete);
+    const theme = parEns && items[0].theme && items[0].theme !== g ? items[0].theme : parEns ? "" : "Catégorie";
+    const sec = el("section", { className: "section" });
+    sec.setAttribute("aria-label", parEns ? g : lib(g));
+    sec.style.setProperty("--c", parEns ? teinte(g) : "#eeebf4");
+    sec.append(el("header", { className: "section__tete" }, el("div", {}, theme ? el("p", { className: "section__theme", textContent: theme }) : "", el("h2", { textContent: parEns ? g : lib(g) })),
+      el("span", { className: "section__n", textContent: items.length + (items.length > 1 ? " pièces" : " pièce") })));
     const gr = el("div", { className: "grille" });
     items.sort((a, b) => oc.indexOf(a.categorie) - oc.indexOf(b.categorie) || a.nom.localeCompare(b.nom)).forEach(f => { visibles.push(f.nom); gr.append(carte(f)); });
-    m.append(gr);
+    sec.append(gr); m.append(sec);
   });
+}
+/* En-tête : titre du filtre courant, nombre de pièces, filtre actif effaçable ; sur mobile, rangée d'accès rapide. */
+function effacerTout() { th = ens = cat = null; document.getElementById("recherche").value = ""; tout(); }
+function entete(vis, q) {
+  const titre = ens || (cat ? lib(cat) : th) || "Tout le vestiaire";
+  const h = document.getElementById("titre-liste"); h.textContent = titre;
+  h.style.setProperty("--teinte", ens ? teinte(ens) : "var(--texte)");
+  document.getElementById("sur-titre").textContent = ens ? [th, cat && lib(cat)].filter(Boolean).join(" · ") || "Ensemble" : cat ? "Catégorie" : th ? "Thème" : "Cosmétiques Phynaria";
+  const nEns = new Set(vis.map(f => f.ensemble)).size, tot = D.fiches.length;
+  const r = document.getElementById("resume");
+  r.replaceChildren(el("b", { textContent: vis.length }), vis.length === tot ? ` pièce${tot > 1 ? "s" : ""}` : ` sur ${tot}`,
+    el("span", { className: "ens-resume", textContent: ` · ${nEns} ensemble${nEns > 1 ? "s" : ""}` }));
+  const box = document.getElementById("filtre-actif"); box.replaceChildren();
+  const croix = (texte, couleur, clic, quoi) => {
+    const p = el("span", { className: "filtre" });
+    if (couleur) { p.style.setProperty("--c", couleur); p.append(el("span", { className: "pastille" })); }
+    p.append(el("span", { textContent: texte }), el("button", { type: "button", onclick: clic }, icone("M6 6l12 12M18 6 6 18"), el("span", { className: "masque", textContent: "Retirer " + quoi })));
+    return p;
+  };
+  if (th && !ens) box.append(croix("Thème : " + th, null, () => { th = null; tout(); }, "le thème " + th));
+  if (cat) box.append(croix(lib(cat), null, () => { cat = null; if (tri === "categorie") ens = null; tout(); }, "la catégorie " + lib(cat)));
+  if (ens) box.append(croix(ens, teinte(ens), () => { ens = null; if (tri === "ensemble") th = null; tout(); }, "l'ensemble " + ens));
+  if (q) box.append(croix(`« ${document.getElementById("recherche").value.trim()} »`, null, () => { document.getElementById("recherche").value = ""; liste(); document.getElementById("recherche").focus(); }, "la recherche"));
+  const n = box.children.length;
+  if (n) box.append(el("button", { type: "button", className: "effacer", id: "effacer-filtre", textContent: "Tout effacer", onclick: () => { effacerTout(); document.getElementById("recherche").focus(); } }));
+  document.getElementById("n-filtre").textContent = (th || ens || cat) ? "1" : "";
+  // Accès rapide (mobile) : tout, puis chaque ensemble (ou chaque catégorie).
+  const rap = document.getElementById("rapides"); rap.replaceChildren();
+  const puce = (texte, actif, clic, couleur) => { const b = el("button", { type: "button", className: "puce", onclick: clic });
+    if (couleur) { b.style.setProperty("--c", couleur); b.append(el("span", { className: "pastille" })); }
+    b.append(texte); b.setAttribute("aria-pressed", String(actif)); if (couleur && actif) b.style.setProperty("--teinte", couleur); return b; };
+  rap.append(puce("Tout", !th && !ens && !cat, () => { th = ens = cat = null; tout(); }));
+  if (tri === "ensemble") ordreEns().forEach(e => rap.append(puce(e, ens === e, () => { ens = e; th = (D.fiches.find(f => f.ensemble === e) || {}).theme || null; cat = null; tout(); }, teinte(e))));
+  else ordreCat().forEach(c => rap.append(puce(lib(c), cat === c && !ens, () => { cat = c; ens = th = null; tout(); })));
+  const actif = rap.querySelector("[aria-pressed=true]"); if (actif && actif !== rap.firstChild) actif.scrollIntoView({ block: "nearest", inline: "center" });
 }
 function jauge(nom, val, max, unite) {
   const j = el("div", { className: "jauge" }, el("div", {}, el("span", { textContent: nom }), el("b", { textContent: `${val} / ${max} ${unite}` })), el("div", { className: "rail" }));
-  const i = el("i"); i.style.width = Math.min(100, Math.max(1.5, 100 * val / max)) + "%"; j.lastChild.append(i); return j;
+  const i = el("i"); i.style.width = Math.min(100, Math.max(1.5, 100 * val / max)) + "%"; j.lastChild.append(i);
+  j.lastChild.setAttribute("role", "meter"); j.lastChild.setAttribute("aria-valuemin", "0"); j.lastChild.setAttribute("aria-valuemax", String(max)); j.lastChild.setAttribute("aria-valuenow", String(val)); j.lastChild.setAttribute("aria-label", nom);
+  if (val / max > 0.75) j.classList.add("haute"); return j;
 }
 let ongletCourant = null, etatCourant = null;
 const ONGLETS_SLUG = o => ["3D", "Animation", "4 vues", "États", "De nuit", "Texture", "Calque"].find(t => slug(t) === o);
@@ -828,6 +1201,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
   const sous = document.getElementById("sous"); sous.replaceChildren(el("b", { textContent: f.ensemble }), ` · ${f.theme && f.theme !== f.ensemble ? f.theme + " · " : ""}${lib(f.categorie)}`);
   const i = visibles.indexOf(nom);
   document.getElementById("prec").disabled = i <= 0; document.getElementById("suiv").disabled = i < 0 || i >= visibles.length - 1;
+  document.getElementById("position").textContent = i >= 0 ? `${i + 1} / ${visibles.length}` : "";
 
   const vues = document.getElementById("vues"), vue = document.getElementById("vue"), etatsScene = document.getElementById("etats-scene"), cote = document.getElementById("cote");
   const gif = suffixe(f.gif, f), planche = suffixe(f.planche, f), anims = f.anims_etat || {};
@@ -842,7 +1216,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     z.addEventListener("click", ev => { viser(ev); basculer(!z.classList.contains("actif")); });
     z.addEventListener("pointermove", ev => { if (z.classList.contains("actif")) viser(ev); });
     z.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); contenu.style.transformOrigin = "50% 50%"; basculer(!z.classList.contains("actif")); } });
-    return el("div", { style: "width:100%" }, z, el("p", { className: "aide-zoom" }, el("span", { textContent: "Cliquer pour zoomer, déplacer pour explorer" }),
+    return el("div", { className: "cadre-img" }, z, el("p", { className: "aide-zoom" }, el("span", { textContent: "Cliquer pour zoomer, déplacer pour explorer" }),
       urlGrand ? el("a", { href: urlGrand, target: "_blank", rel: "noopener", textContent: "Ouvrir en grand" }) : ""));
   };
   // Une case de la planche : 4 états par rangée, chaque case = les 4 vues d'un état.
@@ -851,7 +1225,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     const img = el("img", { src: planche, alt: `4 vues, ${nomEtat(f.apercu_etats[k])}, de ${joli(f.nom)}` });
     const rangs = Math.ceil(f.apercu_etats.length / 4) || 1;
     img.style.width = "400%"; img.style.left = -(k % 4) * 100 + "%"; img.style.top = -Math.floor(k / 4) * 100 + "%";
-    img.addEventListener("load", () => { box.style.aspectRatio = `${img.naturalWidth / 4} / ${img.naturalHeight / rangs}`; });
+    img.addEventListener("load", () => { box.style.setProperty("--r", (img.naturalWidth / 4) / (img.naturalHeight / rangs)); });
     box.append(img); return box;
   };
   let mode = "anim";
@@ -878,8 +1252,9 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     canvas.title = "Glisser pour tourner, molette pour zoomer, double-clic pour recadrer";
     vue3d.mouv.title = "Mouvement des particules : réglé par le staff en jeu (ici 2 par seconde, 6 s)";
     vue.replaceChildren(el("div", { className: "v3d" }, canvas,
+      el("p", { className: "v3d__aide", textContent: "Glisser pour tourner · molette pour zoomer · double-clic pour recadrer" }),
       el("div", { className: "v3d__options" }, vue3d.nuit, vue3d.calque, vue3d.parts, vue3d.mouv),
-      el("div", { className: "v3d__barre" }, vue3d.lire, vue3d.curseur, vue3d.temps, vue3d.fusee, recadrer)));
+      el("div", { className: "v3d__barre verre" }, vue3d.lire, vue3d.curseur, vue3d.temps, vue3d.fusee, recadrer)));
     let modele;
     try { modele = await chargerModele(f); } catch (e) { modele = null; }
     if (ficheJeton !== jeton || mode !== "3d") return;
@@ -890,7 +1265,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     }
     visionneuse = v;
     nomsAnim = {};
-    (modele.animations || []).forEach(a => { const e = a.name.split(".").pop(); if (!a.name.startsWith("particle_") && !(e in nomsAnim)) nomsAnim[e] = a.name; });
+    (modele.animations || []).forEach(a => { const e = a.name.split(".").pop(); if (!/^(particle_|overlay_|event_)/.test(e) && !(e in nomsAnim)) nomsAnim[e] = a.name; });
     const dispo = f.etats.filter(e => nomsAnim[e]);
     const dep = dispo.includes(etatCourant) ? etatCourant : dispo.includes("idle") ? "idle" : dispo[0];
     await v.charger(modele, nomsAnim[dep]);
@@ -911,7 +1286,28 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     const avecParts = v.aParticules(); vue3d.parts.hidden = !avecParts; vue3d.mouv.hidden = !avecParts;
     basculeur(vue3d.parts, on => { v.particules(on); vue3d.mouv.disabled = !on; });
     vue3d.mouv.onchange = () => v.mouvement(vue3d.mouv.value);
+    // Réglages des particules donnés au staff (reglages.json) : mouvement, durée et cadence de chaque sorte, comme en jeu
+    const MVT = { "légère": "legere", "normale": "normale", "lourde": "lourde", "flotte": "flotte", "monte": "monte" };
+    const nombre = t => { const m = /([\d]+(?:[,.][\d]+)?)/.exec(String(t || "")); return m ? Number(m[1].replace(",", ".")) : undefined; };
+    const regl = {};
+    (f.reglages || []).forEach(r => { const g = r.reglages || {}; regl[String(r.particule).split(/[\s(]/)[0]] = { mouvement: MVT[String(g.Mouvement || "").toLowerCase()], vie: nombre(g["Durée"]), nombre: nombre(g.Nombre) }; });
+    v.reglages(regl);
+    if (Object.keys(regl).length) vue3d.mouv.hidden = true;     // le mouvement vient des réglages de la pièce
+    // Événements (guide 6.4) : un bouton par animation event_…, jouée une fois par-dessus l'état
+    const NOMS_EVT = { equip: "Équiper", jump: "Saut", land: "Atterrissage" };
+    const evts = v.evenements();
     pastilles(dispo);
+    if (evts.length) {
+      const boite = el("div", { className: "etats evts", role: "group" }, el("span", { className: "evts__titre", textContent: "Événements" })); boite.setAttribute("aria-label", "Événements");
+      evts.forEach(n => {
+        const cle = n.split(".").pop().slice(6);
+        const lib = NOMS_EVT[cle] || (cle.startsWith("enter_") ? "Entrée : " + nomEtat(cle.slice(6)) : cle.startsWith("exit_") ? "Sortie : " + nomEtat(cle.slice(5)) : cle);
+        const b = el("button", { type: "button", textContent: "▶ " + lib });
+        b.onclick = () => { b.setAttribute("aria-pressed", "true"); v.evenement(n, () => b.setAttribute("aria-pressed", "false")); };
+        boite.append(b);
+      });
+      etatsScene.append(boite);
+    }
   }
   const montrerEtat = e => {
     etatCourant = e;
@@ -935,7 +1331,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
       const b = el("button", { type: "button", textContent: nomEtat(e), disabled: !liste_etats.includes(e), onclick: () => montrerEtat(e) });
       b.dataset.etat = e; b.setAttribute("aria-pressed", "false"); box.append(b);
     });
-    etatsScene.replaceChildren(box);
+    etatsScene.replaceChildren(box); etatsScene.scrollLeft = 0;
     montrerEtat(liste_etats.includes(etatCourant) ? etatCourant : liste_etats.includes("idle") ? "idle" : liste_etats[0]);
   };
   const panneaux = [];
@@ -980,19 +1376,43 @@ function ouvrir(nom, ongletDemande, etatDemande) {
       el("span", { className: "nom-avec", textContent: joli(x.nom) }), el("span", { className: "cat-avec", textContent: lib(x.categorie) }))));
   });
   const dl = el("a", { className: "dl", href: f.bbmodel, download: f.fichier }, icone(ICONES.telecharger), el("span", { textContent: "Télécharger le .bbmodel" }));
+  // Demande où enregistrer (Chrome, Edge) ; ailleurs, téléchargement classique selon les réglages du navigateur.
+  if (window.showSaveFilePicker) dl.onclick = async ev => {
+    ev.preventDefault();
+    try {
+      const poignee = await showSaveFilePicker({ suggestedName: f.fichier, types: [{ description: "Modèle Blockbench", accept: { "application/json": [".bbmodel"] } }] });
+      const r = await fetch(f.bbmodel + "?v=" + f.version, { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      const sortie = await poignee.createWritable();
+      await sortie.write(await r.blob()); await sortie.close();
+      annoncer("Enregistré : " + poignee.name);
+    } catch (e) { if (e.name !== "AbortError") annoncer("Échec de l'enregistrement : " + e.message); }
+  };
   const chemin = decodeURIComponent(f.bbmodel);
   const copier = el("button", { type: "button", className: "secondaire" }, icone(ICONES.copier), el("span", { textContent: "Copier le chemin du fichier" }));
   copier.onclick = async () => { try { await navigator.clipboard.writeText(chemin); annoncer("Chemin copié"); } catch (e) { annoncer(chemin); } };
-  const lueur = f.lueur ? "Calque lumineux embarqué." : f.calque ? "Calque lumineux peint, non embarqué." : "Pas de calque lumineux.";
+  const lueur = f.lueur ? "Calque lumineux embarqué" : f.calque ? "Calque lumineux peint, non embarqué" : "Pas de calque lumineux";
   const chiffre = (t, v) => el("div", {}, el("dt", { textContent: t }), el("dd", { textContent: v }));
+  const propriete = (cle, texte, oui) => el("li", { className: oui ? "" : "non" }, icone(ICONES[cle]), el("span", { textContent: texte }));
+  const nAnims = f.etats.length;
   cote.replaceChildren(
     el("div", { className: "actions" }, dl, copier),
-    el("dl", { className: "chiffres" }, chiffre("Cubes", f.cubes), chiffre("Groupes", f.groupes), chiffre("Envoi", f.ko_compresse + " Ko")),
-    el("div", {}, el("p", { className: "rubrique", textContent: "Limites du mod" }),
-      el("div", { style: "display:grid;gap:9px" }, jauge("Cubes", f.cubes, 8192, ""), jauge("Groupes", f.groupes, 2048, ""), jauge("Envoi compressé", f.ko_compresse, 1000, "Ko"))),
-    el("p", { className: "note", textContent: lueur + (f.particules.length ? ` Particules : ${f.particules.join(", ")}.` : "") + ` ${f.etats.length} animation${f.etats.length > 1 ? "s" : ""}.` }),
-    avec.children.length ? el("div", {}, el("p", { className: "rubrique", textContent: "Du même ensemble" }), avec, el("p", { className: "note", style: "margin-top:8px", textContent: "Le mod permet d'en porter 3 à la fois." })) : "",
+    el("section", {}, el("h4", { className: "rubrique", textContent: "En bref" }),
+      el("dl", { className: "chiffres" }, chiffre("Cubes", f.cubes), chiffre("Groupes", f.groupes), chiffre("Animations", nAnims), chiffre("Envoi", f.ko_compresse + " Ko"))),
+    el("section", {}, el("h4", { className: "rubrique", textContent: "Contenu" }),
+      el("ul", { className: "proprietes" },
+        propriete("anims", nAnims ? `${nAnims} animation${nAnims > 1 ? "s" : ""} : ${f.etats.map(nomEtat).join(", ")}` : "Pas d'animation", nAnims > 0),
+        propriete("lueur", lueur, !!f.lueur),
+        propriete("particules", f.particules.length ? `Particules : ${f.particules.join(", ")}` : "Pas de particules", f.particules.length > 0))),
+    el("section", {}, el("h4", { className: "rubrique", textContent: "Limites du mod" }),
+      el("div", { className: "jauges" }, jauge("Cubes", f.cubes, 8192, ""), jauge("Groupes", f.groupes, 2048, ""), jauge("Envoi compressé", f.ko_compresse, 1000, "Ko"))),
+    (f.reglages || []).length ? (() => { const d = el("details", { className: "reglages-boite", open: true },
+      el("summary", {}, icone(CHEVRON), el("span", { className: "rubrique", textContent: "Réglages des particules (staff)" })),
+      el("ul", { className: "reglages" }, ...f.reglages.map(r => el("li", {}, el("b", { textContent: r.particule }), el("p", { className: "role", textContent: r.role || "" }),
+        el("dl", {}, ...Object.entries(r.reglages || {}).flatMap(([k, v]) => [el("dt", { textContent: k }), el("dd", { textContent: v })])))))); return d; })() : "",
+    avec.children.length ? el("section", {}, el("h4", { className: "rubrique", textContent: "Du même ensemble" }), avec, el("p", { className: "note", style: "margin-top:8px", textContent: "Le mod permet d'en porter 3 à la fois." })) : "",
     el("div", { className: "chemin", textContent: chemin }));
+  cote.scrollTop = 0; document.querySelector(".fiche").scrollTop = 0;
   if (!dlg.open) { declencheur = document.activeElement; dlg.showModal(); }
 }
 let declencheur = null, visionneuse = null, ficheJeton = null;
@@ -1004,14 +1424,15 @@ async function chargerModele(f) {
 }
 function fermerVisionneuse() { if (visionneuse) { visionneuse.detruire(); visionneuse = null; } }
 function voisin(d) { const i = visibles.indexOf(ouvert); const n = visibles[i + d]; if (n) ouvrir(n); }
-function tout() { barreEnsembles(); barreCats(); liste(); }
+function tout() { barreTri(); barreNav(); liste(); }
 document.getElementById("recherche").addEventListener("input", liste);
 document.getElementById("fermer").onclick = () => document.getElementById("dlg").close();
 document.getElementById("prec").onclick = () => voisin(-1);
 document.getElementById("suiv").onclick = () => voisin(1);
 document.getElementById("dlg").addEventListener("click", e => { if (e.target.id === "dlg") e.target.close(); });
 document.getElementById("dlg").addEventListener("keydown", e => {
-  if (e.target.getAttribute("role") === "tab") return;   // les flèches servent aux onglets
+  // Les flèches servent aux onglets, au curseur de temps, aux listes et à la vue 3D (qui les capte elle-même).
+  if (e.target.getAttribute("role") === "tab" || /^(INPUT|SELECT|TEXTAREA|CANVAS)$/.test(e.target.tagName) || e.altKey || e.ctrlKey || e.metaKey) return;
   if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); voisin(1); }
   if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); voisin(-1); }
 });
@@ -1024,7 +1445,10 @@ document.getElementById("dlg").addEventListener("close", () => {
 const direct = document.getElementById("direct"), txt = document.getElementById("direct-txt");
 function statut(actif, message) { direct.classList.toggle("actif", actif); txt.textContent = message; }
 let toastT;
-function annoncer(m) { const t = document.getElementById("toast"); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 6000); }
+function annoncer(m) { const t = document.getElementById("toast"), dlg = document.getElementById("dlg");
+  // La fiche est dans la couche du dessus : le toast doit y être pour rester visible.
+  (dlg.open ? dlg : document.body).append(t);
+  t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 6000); }
 async function suivre() {
   try {
     const r = await fetch("api/cosmetiques?s=" + encodeURIComponent(D.signature), { cache: "no-store" });
@@ -1039,10 +1463,28 @@ async function suivre() {
     if (ouvert && modifs.some(f => f.nom === ouvert)) ouvrir(ouvert, ongletCourant, etatCourant);
   } catch (e) { statut(false, "Serveur arrêté : relancez ouvrir_vestiaire.bat pour retrouver la mise à jour automatique."); }
 }
+/* Tiroir des filtres (mobile) : bouton « Filtres », voile, Échap, fermeture au choix d'un filtre ; focus rendu au bouton. */
+const petit = matchMedia("(max-width:860px)"), page = document.getElementById("page"), aside = document.getElementById("panneau-filtres"), voile = document.getElementById("voile"), btnFiltres = document.getElementById("ouvrir-filtres");
+function tiroirOuvert() { return page.classList.contains("tiroir"); }
+function tiroir(on) {
+  page.classList.toggle("tiroir", on); voile.hidden = !on; btnFiltres.setAttribute("aria-expanded", String(on));
+  aside.inert = petit.matches && !on;
+  if (petit.matches) aside.setAttribute("role", "dialog"), aside.setAttribute("aria-modal", String(on)); else aside.removeAttribute("role"), aside.removeAttribute("aria-modal");
+  document.body.style.overflow = on ? "hidden" : "";
+  if (on) (aside.querySelector(".nav__lien[aria-pressed=true]") || document.getElementById("fermer-filtres")).focus();
+  else if (petit.matches && aside.contains(document.activeElement)) btnFiltres.focus();
+}
+btnFiltres.onclick = () => tiroir(true);
+document.getElementById("fermer-filtres").onclick = () => tiroir(false);
+voile.onclick = () => tiroir(false);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && tiroirOuvert()) { e.preventDefault(); tiroir(false); } });
+petit.addEventListener("change", () => tiroir(false));
+tiroir(false);
 tout();
 // Lien direct : #nom, #nom/onglet ou #nom/onglet/état (ex. #halo_donut/4-vues, #ailes_abyssales/3d/swim).
 const slug = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
 if (location.hash.length > 1) { const [n, o, e] = decodeURIComponent(location.hash.slice(1)).split("/"); ouvrir(n, o ? ONGLETS_SLUG(o) : undefined, e); }
+addEventListener("hashchange", () => { const [n, o, e] = decodeURIComponent(location.hash.slice(1)).split("/"); if (n && n !== ouvert) ouvrir(n, o ? ONGLETS_SLUG(o) : undefined, e); });
 if (location.protocol === "file:") statut(false, "Liste figée à la dernière génération. Ouvrez ouvrir_vestiaire.bat pour la mise à jour automatique.");
 else { statut(true, "Mise à jour automatique active"); setInterval(suivre, 2500); }
 document.addEventListener("keydown", e => { if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); document.getElementById("recherche").focus(); } });
