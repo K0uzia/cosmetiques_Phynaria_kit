@@ -21,6 +21,8 @@ pour pouvoir itérer, vérifier et optimiser de façon reproductible.
 - `.claude/skills/` : procédures invocables (`/bbmodel-cosmetic`, `/bbmodel-animate`, `/bbmodel-verify`, `/bbmodel-calibrate`, `/bbmodel-retour-jeu`, `/bbmodel-serie`).
 - `docs/` : guide officiel du mod (`guide-cosmetiques.md`, prime sur nos règles, ne pas le modifier), demandes au développeur (`dev/`), exemples (`exemples/`).
 - `.claude/rules/retours-en-jeu.md` : ce que l'utilisateur a validé ou refusé et les recettes qui marchent, à lire en premier.
+- `.claude/styles/<ensemble>.md` : fiches de style documentées (palette, matières, mouvement, idées, sources), à lire avant toute pièce de l'ensemble. En créer une pour chaque nouvel ensemble.
+- `.claude/rules/fonctions-avancees.md` : groupes spéciaux (`add_`, `trans_`, `cam_`, `phys_`, `ctrl_`), reflets, particules Minecraft, couches, sons : résumé du guide et pièges.
 - `ouvrir_vestiaire.bat` : catalogue local, mis à jour automatiquement. L'ensemble d'une pièce se déduit de son nom, et chaque ensemble appartient à un thème (`ENSEMBLES` dans `tools/gen_index.py`).
 - `cosmetiques/<categorie>/<nom>/` : **un dossier par cosmétique**, avec tous ses `.bbmodel`. Catégories : `ailes`, `chapeaux` (tout ce qui se porte sur la tête ou le visage : chapeau, cornes, masque…), `queues`, `epaules`, `familiers`, `sacs`, `auras`, `armes`, `outils`, `blocs`.
 - Contenu du dossier d'un cosmétique (`<nom>` en minuscules, sans espace ni accent) :
@@ -43,14 +45,15 @@ pour pouvoir itérer, vérifier et optimiser de façon reproductible.
 | Rotation d'une face | multiple de 90° |
 | Inflate | ±8 |
 | Nom d'un groupe | 64 caractères (coupé au-delà) |
-| Texture | 1 principale (+ 1 calque `_e` facultatif), PNG ≤ 512×512, embarquée, sans semi-transparence |
+| Texture | 1 principale (+ 1 `_e`, 1 `_r` de même taille, 1 `_m` ≤ 256²), PNG ≤ 512×512, embarquée ; semi-transparence seulement dans les groupes `trans_` ; images empilées pour une texture animée |
 | Résolution UV | 4 096 max |
 | Animations / keyframes | 16 / 32 768 |
 | Durée / nom d'une animation | 600 s (10 min) / 64 caractères |
-| Molang | 256 caractères, complexité limitée |
+| Molang | 512 caractères, 16 instructions par clé, 64 variables |
 | Canaux d'animation | rotation, position, scale |
 | Émissif | calque `<texture>_e.png` embarqué, jamais assigné aux faces, ou option « Lumineux » du staff. **Calque réactivé le 2026-11-03 (correctif du clignotement annoncé côté mod), non encore vérifié en jeu** |
-| Particules | 4 sortes, 32 points `emit_`, 64 par joueur (`docs/guide-cosmetiques.md`, section 5 ter) |
+| Particules | 4 sortes modélisées + 4 de Minecraft (`emit_mc_`), 32 points `emit_`, 64 à 256 par joueur (`docs/guide-cosmetiques.md`, section 5 ter) |
+| Sons | 32 par animation, noms de sons Minecraft |
 
 ## Workflow standard
 

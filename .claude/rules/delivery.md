@@ -7,12 +7,12 @@ Dans ces commandes, `D=cosmetiques/<categorie>/<nom>`. Le livrable `$D/<nom>.bbm
 1. `python $D/gen_<nom>.py` — doit imprimer cubes / groupes / profondeur / anims / keyframes.
 2. `python tools/optimize_bbmodel.py $D/.build/<nom>_brut.bbmodel $D/.build/<nom>_opt.bbmodel`
 3. `python tools/verify_bbmodel.py $D/.build/<nom>_opt.bbmodel` — **tout doit passer** :
-   - JSON valide, format free ou modded_entity, 1 texture PNG embarquée ≤ 512² (+ 1 calque `_e`), sans semi-transparence, résolution = PNG, résolution UV ≤ 4096
+   - JSON valide, format free ou modded_entity, 1 texture PNG embarquée ≤ 512² (+ `_e`, `_r`, `_m`), semi-transparence seulement avec des groupes `trans_`, résolution = PNG, résolution UV ≤ 4096 ; `ctrl_` connus, `emit_mc_` sans chiffre final, sons ≤ 32 par animation
    - cubes ≤ 8192, groupes ≤ 2048, profondeur ≤ 64, anims ≤ 16, keyframes ≤ 32768
    - rotations de base des cubes et groupes ≤ ±360°, rotations de face multiples de 90°, inflate ≤ ±8
    - noms de groupes et d'animations ≤ 64 caractères, noms de groupes uniques
    - aucune épaisseur nulle, aucun élément strictement superposé
-   - canaux `rotation`/`position`/`scale` uniquement, durée ≤ 600 s, expressions Molang ≤ 256 caractères (complexité non mesurable, à tester en jeu)
+   - canaux `rotation`/`position`/`scale` uniquement, durée ≤ 600 s, expressions Molang ≤ 512 caractères (complexité non mesurable, à tester en jeu)
    - boucles fermées (écart début/fin < 0,05 px) pour toutes les anims `loop`
    - extension max < 64 px par axe sur toutes les anims (alerte si > 60)
    - poids brut et compressé (zlib) affichés ; brut ≤ 16 Mo (alerte si > 8 Mo : la taille nettoyée par le serveur n'est pas mesurable ici) ; compressé < 1 000 Ko (estimation : le mod compresse le fichier nettoyé)
@@ -20,6 +20,8 @@ Dans ces commandes, `D=cosmetiques/<categorie>/<nom>`. Le livrable `$D/<nom>.bbm
    `MODCONV=1 ANIM=idle T=1.0 python tools/render_bbmodel.py $D/.build/<nom>_opt.bbmodel idle.png 1.5`
    idem pour `fly` (T=0.6), `run` (T=0.3), `sneak` (T=0.5), `glide` (T=0.9). Assembler en planche. **Regarder la planche** avant d'envoyer.
 5. Livrer : `python tools/livrer.py $D`. Il revérifie avec et sans fusée, crée `apercu/planche.png`, `apercu/animations.gif` et `apercu/etats.json`, met à jour `<nom>.bbmodel` et `index.html`. Si la vérification échoue, le livrable reste intact. Regarder la planche.
+
+6. Particules : écrire `$D/reglages.json` (`{"particules": [{"particule", "role", "reglages": {Quand, Nombre, Départ, Dispersion, Rafale, Limite… }}]}`), affiché dans la fiche du Vestiaire (« Réglages des particules (staff) »). Les particules Minecraft n'ont que Quand, Nombre, Départ, Dispersion, Rafale et Limite.
 
 ## Dans le message de livraison
 

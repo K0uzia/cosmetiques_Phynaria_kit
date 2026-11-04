@@ -11,11 +11,12 @@ Le joueur regarde −Z, sa droite est +X. Valeurs de keyframe :
 
 Pour une aile : écrire une seule fois l'intention dans une fonction, et centraliser le signe dans `mirror()`. Modèle : `cosmetiques/ailes/aurelion_wings/gen_aurelion_wings.py`.
 
-Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et `hurt` en `once`, avec les seuls groupes concernés ; les keyframes n'ont pas la limite de ±360°.
+Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et `hurt` en `once`, avec les seuls groupes concernés ; les keyframes n'ont pas la limite de ±360°. Superposition (overlay, `event_*`) : rotations et positions s'ajoutent, échelles se multiplient (`fonctions-avancees.md`).
 
 ## Molang
 
-- Pas d'accélération ni de variable mémorisée : un effet « à la fusée » s'approche par un seuil de vitesse (`q.ground_speed`, `q.vertical_speed`), qui exclut les piqués.
+- Variables mémorisées (`v.x = …;`, 16 instructions par clé, 512 caractères) et nouvelles requêtes (`q.is_boosting`, `q.yaw_speed`, `q.head_*`, `q.instance_seed`, `q.delta_time`…) : guide 6.3. Le battement à la fusée validé en jeu utilise un seuil de vitesse (exclut les piqués) ; `q.is_boosting` est l'alternative directe, à essayer avec `/cosmetique apercu`.
+- Le renderer ne simule pas les variables mémorisées : une expression qui en dépend se juge en jeu.
 - Simuler dans le renderer : `MOLANG_QUERY="ground_speed=33,vertical_speed=0"`, puis vérifier aussi l'extension dans cet état.
 - `math.sin` et `math.cos` sont en degrés. Période fermée : `q.anim_time * 360 * k / durée`.
 
@@ -32,7 +33,7 @@ Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et
 - Toute animation `loop` doit avoir **la même pose à t=0 et t=length**. Le vérificateur le mesure (< 0,05 px).
 - Construire les courbes avec des fonctions périodiques de période = durée (sin/cos), ou des impulsions `bump()` qui reviennent à 0 avant la fin.
 - Pour l'interpolation `catmullrom`, **ne pas mettre de keyframe à t=length** : la boucle se referme sur t=0. Pour `linear`, en mettre un identique au premier.
-- Une pièce qui tourne en continu fait exactement 360°·k par boucle, sinon elle saute. Chaque état ayant sa phase, le fondu de 0,2 s entre états peut faire un petit tourbillon (supposé) ; piste : piloter la rotation par `q.life_time` en Molang.
+- Une pièce qui tourne en continu va dans une animation `overlay_<nom>` (guide 6.4) : jouée en permanence par-dessus l'état, elle ne saute plus au changement d'état. Elle fait exactement 360°·k par boucle.
 - Pas de `uuid` dans les keyframes : l'optimiseur les retire, Blockbench les régénère.
 
 ## États du mod et animations attendues

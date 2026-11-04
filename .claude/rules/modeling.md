@@ -39,9 +39,12 @@ Vue par la tranche, une aile en plaques découpées se lit comme un tas de feuil
 
 ## Anatomie d'aile (base pour tout être ailé)
 
+Fiche documentée, à lire avant toute pièce ailée : `.claude/styles/ailes-anatomie.md` (attache dans le haut du dos derrière l'épaule du bras, pli en Z, types d'aile, langage des ailes, apparition par `event_equip`). **Taille** : envergure déployée de 1,6 à 2,2 fois la taille du joueur (52 à 70 px), pointes repliées entre mollets et chevilles (demande de l'utilisateur, 2026-11-04).
+
+
 - Humérus court qui monte en arrière, avant-bras long, main courte qui porte les primaires.
 - Primaires sur la main (éventail radial), secondaires perpendiculaires au bord de fuite sur l'avant-bras, tertiaires près du corps, 2–3 rangs de couvertures côté dorsal, scapulaires qui couvrent la racine.
-- Les ailes **sortent du dos** : pas de plaque/sac à dos. Racine basse et proche de la colonne (x ≈ ±3, y ≈ 23), couverte par des scapulaires.
+- Les ailes **sortent du dos** : pas de plaque ni de sac à dos permanents. Racine basse et proche de la colonne (x ≈ ±3, y ≈ 23), couverte par des scapulaires. Un boîtier dorsal n'est permis que pendant l'apparition (`event_equip`), caché le reste du temps par `ctrl_alpha`.
 - Pas de petits cubes volants portés par le modèle : illisibles. Utiliser des particules, ou des éclats de 3 px au moins.
 
 ## Budget
