@@ -1,0 +1,43 @@
+{
+ "particules": [
+  {
+   "particule": "souffle (modélisée)",
+   "role": "Air poussé vers le bas par l'hélice. Élan 100 % pour qu'il suive le hibou.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "3 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Lourde",
+    "Au sol": "Disparaît",
+    "Rendu": "Translucide",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Rapide",
+    "Dispersion": "15°",
+    "Élan": "100 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  },
+  {
+   "particule": "vapeur (modélisée)",
+   "role": "Bouffée de la soupape sur la tête.",
+   "reglages": {
+    "Quand": "À l'arrêt",
+    "Nombre": "0,5 par seconde",
+    "Durée": "2 s",
+    "Mouvement": "Monte",
+    "Rendu": "Translucide",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Élan": "40 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

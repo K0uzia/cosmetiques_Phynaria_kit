@@ -467,6 +467,11 @@ model = {"meta": {"format_version": "4.10", "model_format": "free", "box_uv": Fa
          "elements": elements, "outliner": outliner, "textures": textures, "animations": ANIMS}
 os.makedirs(".build", exist_ok=True)
 OUT = f".build/{NOM}_brut.bbmodel"
+# Particules qui tombent et se posent : réservées aux ailes (.claude/rules/retours-en-jeu.md).
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))
+from particules import retirer_particules
+retirer_particules(model)
 with open(OUT, "w") as fh:
     json.dump(model, fh, separators=(",", ":"))
 

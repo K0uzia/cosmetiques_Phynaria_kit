@@ -1,0 +1,23 @@
+{
+ "particules": [
+  {
+   "particule": "etincelle (modélisée)",
+   "role": "Étincelles qui montent autour du joueur.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 à 3 par seconde",
+    "Durée": "2 à 3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Élan": "0 %",
+    "Variation": "Légère",
+    "Rafale": "À l'attaque",
+    "Limite": "64"
+   }
+  }
+ ]
+}
