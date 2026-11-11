@@ -1,0 +1,24 @@
+{
+ "particules": [
+  {
+   "particule": "braise (modélisée)",
+   "role": "Éclat anguleux vert acide qui se détache du bout des doigts et du bord de la membrane (8 points emit_braise) et tournoie en tombant. Ailes seulement.",
+   "reglages": {
+    "Quand": "En vol",
+    "Nombre": "1 par seconde",
+    "Durée": "4 s",
+    "Mouvement": "Légère",
+    "Au sol": "Se pose",
+    "Rendu": "Opaque",
+    "Sens": "Libre",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Poussée",
+    "Dispersion": "20°",
+    "Élan": "40 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

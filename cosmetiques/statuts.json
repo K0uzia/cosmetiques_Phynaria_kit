@@ -1,0 +1,110 @@
+{
+  "skin_lance_orage": {
+    "statut": "valide",
+    "avis": "Prise en main, étapes et rendu avec et sans shader validés en jeu"
+  },
+  "skin_arbalete_steampunk": {
+    "statut": "valide",
+    "avis": "Sens corrigé (arc en haut à gauche comme la vanilla) : repos, chargement et visée validés en jeu, 1re et 3e personne"
+  },
+  "skin_epee_givre": {
+    "statut": "valide",
+    "avis": "Forme, rendu (avec et sans shader) et longueur après allongement validés en jeu"
+  },
+  "ailes_abyssales": {
+    "statut": "valide",
+    "avis": "« Juste incroyable », 3D et textures : référence os et membrane"
+  },
+  "cornes_abyssales": {
+    "statut": "a_tester",
+    "avis": "Refonte du 2026-11-08 de bandeau_abyssal (« incroyable », cornes « niquel », puis « bandeau à revoir », « fixette sur des couronnes et bandeaux ») : bandeau retiré, mêmes cornes, racines d'os sur le crâne et demi-masque d'os fendu au regard vert ; pas encore vu en jeu"
+  },
+  "masque_abyssal": {
+    "statut": "valide",
+    "avis": "« Sympa », base réutilisable (hors esprit chasseur de démons)"
+  },
+  "ailes_berenice": {
+    "statut": "valide",
+    "avis": "Forme et rondeur validées ; plume-particule « ok »"
+  },
+  "ailes_steampunk": {
+    "statut": "valide",
+    "avis": "Taille « parfaite », clipping disparu (2026-11-04)"
+  },
+  "aura_brasier": {
+    "statut": "valide",
+    "avis": "v3 : « une fois équipée, ok » (sans shader)"
+  },
+  "masque_cuir": {
+    "statut": "refuse",
+    "avis": "Écarté par l'utilisateur (v1 « trop Zorro »)"
+  },
+  "ailes_cuir": {
+    "statut": "refuse",
+    "avis": "Écartées par l'utilisateur"
+  },
+  "ailes_givre": {
+    "statut": "valide",
+    "avis": "Ensemble Givre « très [bien] », transparence « bien même si légère » (2026-11-04)"
+  },
+  "ramure_givre": {
+    "statut": "a_tester",
+    "avis": "Refonte du 2026-11-08 de couronne_givre (ensemble Givre validé en jeu le 2026-11-04 ; puis « fixette sur des couronnes et bandeau ») : couronne remplacée par deux bois de cerf en glace taillée (même glace trans_ alpha 150–220, âmes cyan) ; pas encore vu en jeu"
+  },
+  "epaulieres_givre": {
+    "statut": "valide",
+    "avis": "Ensemble Givre validé, transparence ok (2026-11-04)"
+  },
+  "lame_givre": {
+    "statut": "valide",
+    "avis": "Ensemble Givre validé, transparence ok (2026-11-04)"
+  },
+  "aura_givre": {
+    "statut": "valide",
+    "avis": "Ensemble Givre validé, transparence ok (2026-11-04)"
+  },
+  "effet_admin": {
+    "statut": "a_tester",
+    "avis": "v7 (2026-11-07) « Ciel d'alvéoles » : dôme de panneaux « ALERTE SYSTÈME » validé en jeu (inchangé) ; sang v5 refusé (plaques, côtes), v6 vue en jeu : « ballon de baudruche, effet plastique » (œuf parfait saumon, grand reflet mat du matcap, filets en tiges) ; v7 : reflets _r/_m coupés, sang presque noir et brins rouge profond, petits reflets nets, poche en oignon irrégulier couverte de brins, gouttes pendantes, filets ondulés qui se cassent en gouttes ; à voir en jeu"
+  },
+  "familier_givre": {
+    "statut": "a_tester",
+    "avis": "v10 (2026-11-06) : la v4 aimée, même apparence, passée en familier vivant (suit comme un loup) ; v9 en facettes refusée"
+  },
+  "effet_admin_neant": {
+    "statut": "a_tester",
+    "avis": "v7 (2026-11-07) jugée « bien mieux » en jeu : fissures courbes continues, animation fluide ; v7 (2026-11-07) : v6 vue en jeu de nuit (« pas trop mal » ; fissures en traits droits, animations par à-coups, micro-pause du bras) ; fissures lisses et continues qui poussent en continu, trou qui s'ouvre sans paliers, bras d'un seul élan ; pas encore vu en jeu"
+  },
+  "effet_vortex": {
+    "statut": "valide",
+    "avis": "v1 en jeu (2026-11-07) : « le vortex est excellent », sauf le départ où la copie grossissait (le mod n'applique pas l'échelle à la copie du départ, elle montait d'un bloc). v2 : la copie reste au centre, tremble et disparaît dans l'implosion ; à revoir en jeu"
+  },
+  "effet_etincelles": {
+    "statut": "valide",
+    "avis": "v2 validée en jeu (2026-11-07, « j'aime bien le tout, je valide ») ; v1 vue en jeu (« à améliorer » : fin anneau doré seul, étincelles effacées par les mipmaps, copie à côté de l'anneau) ; v2 : porte fixe de 3 blocs, tube opaque + _e, 5 couronnes d'étincelles en poutres pleines, gerbes tangentes et rebonds au sol en Molang, tracé en spirale, passage sous un éclair"
+  },
+  "effet_portail": {
+    "statut": "valide",
+    "avis": "v2 validée en jeu (2026-11-07, « j'aime bien le tout, je valide ») ; v1 vue en jeu (« à améliorer » : aplat bleu opaque, copie à côté du portail) ; v2 : fond translucide en profondeur (tourbillons à 3 vitesses, tunnel qui défile), bord vibrant à flammèches et filaments, runes en traits nets, déchirure qui s'étire, la copie entre dans le plan, fermeture en anneaux ; pas encore vu en jeu"
+  },
+  "effet_stellaire_rayon": {
+    "statut": "valide",
+    "avis": "v2 validée en jeu (2026-11-07) avec les sons v2 (whoomp, nappe grésillante, zip descendant synthétisés d'après mesures) : « validé »"
+  },
+  "effet_stellaire_anneaux": {
+    "statut": "valide",
+    "avis": "Validé en jeu de jour et de nuit (2026-11-07, « ils me plaisent bien ») ; arrivée retestée : c'est bon ; sons v2 à écouter (2026-11-07, demande « plus proches de la série » : ronronnement de machine, chouif + chlonk grave à chaque anneau, sifflement puis houle et scintillement à l'éclair, fouiii au retour ; v1 dans sons/v1/) ; couleurs v2 à voir en jeu (retour « pas comme ça dans la série » : acier sombre presque neutre, nervure médiane, plots alternés à rivet, lumières blanc bleuté ; v1 or ambré)"
+  },
+  "effet_stellaire_porte": {
+    "statut": "a_tester",
+    "avis": "v1 en jeu (2026-11-07) : « le temps de tp est de 3 s, donc c'est trop long ; il n'y a pas de son pour l'activation des chevrons ». v2 livrée : charge composée en 3 s (porte levée en 0,5 s, 8 crans de 0,78 à 2,8 s), clac à chaque cran + grondement de l'anneau, départ raccourci à 3,6 s (dernier cran puis jaillissement tout de suite) ; à revoir en jeu ; v2 en jeu (2026-11-07) : « c'est mieux, mais j'aimerais avoir des sons plus proches d'une vraie Stargate ». v3 (sons seuls, synthèse originale d'après mesures, recette dans porte-etoiles.md) : rotation = roulement grave + cliquetis + sifflement harmonique (≈ 2 kHz), cran = « ka-chunk » (frappe métallique puis choc grave + souffle hydraulique) en 3 hauteurs + un dernier cran plus lourd, jaillissement = boum, rugissement d'eau, retour de la gerbe, surface qui ronronne, coupure = aspiration inversée calée sur l'image (clé avancée de 0,26 s) puis pierre qui redescend ; v2 gardée dans sons/v2/ ; à écouter en jeu"
+  },
+  "beret_patisserie": {
+    "statut": "a_tester",
+    "avis": "Refonte du 2026-11-08 de chapeau_patisserie (« les trucs kawaii sont tous bof », « revois les têtes ») : béret-tartelette aux fraises porté de travers (pâte cannelée, crème vanille, rosace de demi-fraises nappées, fraise entière en cabillou) ; pas encore vu en jeu"
+  },
+  "capuche_kawaii": {
+    "statut": "a_tester",
+    "avis": "Refonte du 2026-11-08 de oreilles_kawaii (« les trucs kawaii sont tous bof », « revois les têtes ») : capuche de peluche lilas bordée de nuage, oreilles de lapin expressives (vie, pluie, sauts), cœur de sucre, pompons ; pas encore vue en jeu"
+  }
+}

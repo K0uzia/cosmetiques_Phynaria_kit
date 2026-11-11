@@ -1,0 +1,23 @@
+{
+ "particules": [
+  {
+   "particule": "étincelle (modélisée)",
+   "role": "Petite étoile électrique (0,5 px) qui monte des quatre plus hautes pointes, seulement au moment d'un arc (ctrl_emit −1, +7 pendant la décharge). Rien ne tombe ni ne se pose.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "5 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Monte",
+    "Rendu": "Translucide",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

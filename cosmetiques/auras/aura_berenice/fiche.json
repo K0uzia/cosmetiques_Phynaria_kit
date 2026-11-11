@@ -1,0 +1,12 @@
+{
+  "nom": "Aura de Bérénice",
+  "description": "Une lumière sacrée, blanche et dorée, qui enveloppe le joueur et s'élève : halo doux derrière la silhouette, gloire de rayons fins derrière la nuque, poussière d'étoiles qui monte lentement.",
+  "lore": "C'est la grâce de la constellation, rendue visible : une lumière qui ne chauffe ni n'aveugle, qui monte comme une prière. Les blessés disent qu'à côté d'elle la douleur se tait un instant.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

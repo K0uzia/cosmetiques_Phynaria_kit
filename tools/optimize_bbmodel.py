@@ -1,5 +1,6 @@
 """Optimise le poids d'un .bbmodel : simplification des courbes de keyframes (Ramer-Douglas-Peucker par canal),
 arrondis, suppression des champs facultatifs, PNG optimisé, JSON compact."""
+import re
 import json, sys, base64, io, uuid
 from PIL import Image
 
@@ -16,7 +17,9 @@ def rdp(points, eps):
     if best <= eps: return [points[0], points[-1]]
     return rdp(points[:idx + 1], eps)[:-1] + rdp(points[idx:], eps)
 
-def simplify(keyframes, eps_rot=0.3, eps_pos=0.05, eps_scale=0.01):
+def simplify(keyframes, eps_rot=0.3, eps_pos=0.05, eps_scale=0.002):
+    # échelle : 0,002 et 4 décimales (une échelle de 0,16 arrondie à 0,01 déplaçait de 0,8 px une main à 160 px du pivot,
+    # effet_admin_neant v5)
     out = []
     for ch in ("rotation", "position", "scale"):
         kfs = sorted([k for k in keyframes if k["channel"] == ch], key=lambda k: k["time"])
@@ -39,15 +42,46 @@ def simplify(keyframes, eps_rot=0.3, eps_pos=0.05, eps_scale=0.01):
             kept = kept[:1]
         interp = kfs[0].get("interpolation", "linear")
         for t, v in kept:
-            k = {"channel": ch, "data_points": [{"x": str(round(v[0], 2)), "y": str(round(v[1], 2)), "z": str(round(v[2], 2))}], "time": round(t, 3)}
+            nd = 4 if ch == "scale" else 2
+            k = {"channel": ch, "data_points": [{"x": str(round(v[0], nd)), "y": str(round(v[1], nd)), "z": str(round(v[2], nd))}], "time": round(t, 3)}
             if interp != "linear": k["interpolation"] = interp
             out.append(k)
     # autres canaux (clés de son de la piste Effets, guide 6.5) : conservés tels quels
     out += [k for k in keyframes if k["channel"] not in ("rotation", "position", "scale")]
     return out
 
+def signes_molang(expr):
+    """`a--b` -> `a+b`, `a+-b` -> `a-b`, `a-+b` -> `a-b` : le second signe est unaire, le calcul ne change pas.
+    Le parseur du mod n'a jamais été vu sur ces doubles signes, et `--` cassait la visionneuse (décrémentation JS)."""
+    prev = None
+    while prev != expr:
+        prev = expr
+        expr = re.sub(r"--", "+", expr)
+        expr = re.sub(r"\+-|-\+", "-", expr)
+        expr = re.sub(r"\+\+", "+", expr)
+    return expr
+
+
+def nettoyer_molang(m):
+    n = 0
+    for a in m.get("animations", []):
+        for a2 in a.get("animators", {}).values():
+            for k in a2.get("keyframes", []):
+                for dp in k.get("data_points", []):
+                    for ax in ("x", "y", "z"):
+                        v = dp.get(ax)
+                        if isinstance(v, str):
+                            w = signes_molang(v)
+                            if w != v:
+                                dp[ax] = w; n += 1
+    return n
+
+
 def optimize(path_in, path_out):
     m = json.load(open(path_in))
+    # les champs non traités ici passent tels quels, dont unhandled_root_fields.phynaria (réglages des particules,
+    # tools/particules.py) : ne jamais reconstruire le modèle clé par clé
+    nettoyer_molang(m)
     # keyframes
     before = sum(len(a2["keyframes"]) for a in m["animations"] for a2 in a["animators"].values())
     for a in m["animations"]:

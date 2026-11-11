@@ -1,0 +1,36 @@
+{
+ "particules": [
+  {
+   "particule": "sucre",
+   "role": "Grains de sucre glace qui montent quand le coup touche (event_hit : ctrl_emit de −1 à +7 pendant 0,25 s sur les 3 points emit_sucre de la cage). Coupés le reste du temps (ctrl_emit −1 dans item_idle).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Au sol": "Disparaît",
+    "Rendu": "Opaque",
+    "Sens": "Libre",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Moyen",
+    "Dispersion": "45°",
+    "Élan": "40 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  },
+  {
+   "particule": "poof (Minecraft)",
+   "role": "Bouffée blanche de farine au point d'impact quand le coup touche (event_hit : ctrl_emit +7 pendant 0,12 s). Coupée le reste du temps.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

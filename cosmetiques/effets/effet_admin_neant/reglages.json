@@ -1,0 +1,94 @@
+{
+ "particules": [
+  {
+   "particule": "éclat de ciel (modélisé)",
+   "groupe": "emit_eclat",
+   "role": "Petit éclat bleu ciel (2,2 px, lisible à 170 px de haut) arraché au bord du trou par 4 points : gerbe pendant les trois paliers d'ouverture, qui retombe en tournant. Coupé le reste du temps.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Lourde",
+    "Au sol": "Disparaît",
+    "Rendu": "Opaque",
+    "Sens": "Libre",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "poussière noire (modélisée)",
+   "groupe": "emit_poussiere",
+   "role": "Poussière noire (1,4 px) qui s'échappe des fissures par 8 points, du bord du trou jusqu'au milieu des fissures pendant qu'elles avancent par à-coups, et quand elles s'effacent.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Légère",
+    "Au sol": "Disparaît",
+    "Rendu": "Opaque",
+    "Sens": "Libre",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Lent",
+    "Dispersion": "180°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "reverse_portal (Minecraft, emit_mc_reverse_portal)",
+   "role": "Poussière violette aspirée par le vide, 2 points dans le trou, tant qu'il est ouvert.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Départ": "Moyen",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "ash (Minecraft, emit_mc_ash)",
+   "role": "Cendre fine sur le pourtour du trou (4 points) : légère pendant la charge, plus dense tant que le trou est ouvert.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "smoke (Minecraft, emit_mc_smoke)",
+   "role": "Poussière soulevée au sol par 6 points en couronne : quand la main serre la copie (départ) et quand elle dépose le joueur (arrivée).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "squid_ink (Minecraft, emit_mc_squid_ink)",
+   "role": "Encre noire qui goutte du bord bas du trou (170 px de haut : elle tombe sur le joueur) (2 points) pendant que la main agit, et filaments noirs qui s'échappent du bras d'os (4 points : humérus et avant-bras) tant qu'il est sorti.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  }
+ ]
+}

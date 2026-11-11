@@ -1,0 +1,13 @@
+{
+  "nom": "Fouet de cuir",
+  "description": "Fouet de dompteur tenu dans la main droite : manche tressé noir brillant à reflets nets, lanière souple qui ondule et claque à l'attaque.",
+  "lore": "Il n'a jamais servi à dompter qui que ce soit : son claquement suffit. La Maison du cuir verni le tresse à la main, d'un seul tenant, et refuse de dire combien de temps cela prend.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": false,
+  "note_vente": "Réservé au grade admin (serveur privé), hors boutique."
+}

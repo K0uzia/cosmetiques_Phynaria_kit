@@ -1,0 +1,12 @@
+{
+  "nom": "Lame du tonnerre",
+  "description": "Skin d'épée : une vraie lame d'acier d'orage, biseautée et amincie vers la pointe, à dents d'éclair, gorge creusée où dort un éclair, garde en ailes de faucon. L'éclair grésille dans la gorge ; prise en main, la foudre frappe la pointe ; à chaque coup qui touche, elle revient sur les fils.",
+  "lore": "Les Dompteurs d'orage forgent leurs lames au sommet des pics, fil tourné vers le ciel. La première foudre qui les frappe ouvre la gorge et y reste prisonnière. Leurs gardes ont la forme d'ailes repliées : on dit que la lame se souvient de l'oiseau du tonnerre, et qu'elle ne rend l'éclair qu'à la pointe, jamais au hasard.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

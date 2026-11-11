@@ -1,0 +1,12 @@
+{
+  "nom": "Arbalète de l'orage",
+  "description": "Skin d'arbalète : tes arbalètes deviennent un faucon d'acier d'orage qui plonge, ailes biseautées déployées, foudre couchée dans la rainure. Au chargement, les ailes se balaient et la corde se charge ; chargée, la pointe du carreau chauffe à blanc ; au tir, il part dans une décharge.",
+  "lore": "Les Dompteurs d'orage disent que l'oiseau du tonnerre ne tire jamais deux fois du même nuage. Leurs arbalétriers forgent l'arc en ailes ouvertes et couchent un fil de foudre au fond de la rainure : la noix d'or retient l'éclair comme la corde. Quand la pointe blanchit, le carreau n'attend plus qu'un doigt sur la détente.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

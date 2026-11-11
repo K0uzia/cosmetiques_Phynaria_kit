@@ -1,0 +1,12 @@
+{
+  "nom": "Pique-Cœur",
+  "description": "Skin de lance : une feuille de sucre lilas à bout rond, sertie de dragées-cœurs lumineuses, sur un cœur framboise à deux petites ailes, au bout d'une hampe de guimauve torsadée. Les ailes battent pendant la charge ; au coup qui touche, une bouffée de petits cœurs s'envole.",
+  "lore": "À Nuage Guimauve, les lances ne chassent rien : elles vont chercher les gens tristes, si loin soient-ils. Celle-ci a poussé deux ailes de sucre le jour où son cœur de framboise a voulu voler plus vite que son porteur. Quand on charge avec elle, on l'entend battre ; ceux qu'elle touche repartent avec un cœur de plus.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

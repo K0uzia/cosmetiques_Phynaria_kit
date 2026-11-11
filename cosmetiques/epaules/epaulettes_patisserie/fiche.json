@@ -1,0 +1,12 @@
+{
+  "nom": "Épaulettes fraise chantilly",
+  "description": "Paire d'épaulettes pâtissières : nappage fraise brillant qui coule en gouttes sur des tuiles de pâte sablée, chantilly pochée, fraise et cerise, tenues par des rubans de chocolat noués. La chantilly s'écrase et rebondit à chaque pas et à l'atterrissage.",
+  "lore": "Au fond de la Vitrine enchantée, le pâtissier garde les gâteaux qui ont trop bien levé. Ceux-là ne tiennent plus sur une assiette : il les noue d'un ruban de chocolat et les pose sur les épaules de ceux qui reviennent le plus souvent. La chantilly reste ferme tant qu'on a le sourire.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

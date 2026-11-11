@@ -1,0 +1,13 @@
+{
+  "nom": "Fouet de cuir verni",
+  "description": "Skin de canne à pêche : un fouet tressé noir brillant à pommeau chromé. La lanière ondule en main, claque net au bout quand tu frappes ou lances, puis la ligne part de sa pointe ; ramenée, elle retombe en souplesse.",
+  "lore": "La Maison du cuir verni le tresse d'un seul tenant, du manche à la mèche, et refuse de dire combien de temps cela prend. Il n'a jamais dompté personne : son claquement suffit. Ceux qui le portent jurent qu'il pêche mieux qu'une canne, sans que personne ose leur demander comment.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": false,
+  "note_vente": "Réservé au grade admin (serveur privé), hors boutique."
+}

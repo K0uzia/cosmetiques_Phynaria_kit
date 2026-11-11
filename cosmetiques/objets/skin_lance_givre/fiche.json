@@ -1,0 +1,12 @@
+{
+  "nom": "Lance de givre",
+  "description": "Skin de lance : toutes tes lances deviennent un long cristal de glace taillé en losange, au cœur cyan lumineux, sur une hampe d'argent gainée de cuir clouté. Levée pour charger, un collier de givre pousse autour du fer ; au coup qui touche, des aiguilles de givre jaillissent de la pointe.",
+  "lore": "Les sentinelles du Cœur d'Hiver montent la garde aux cols où le vent ne tombe jamais. Leur lance naît d'un collet d'argent planté dans la neige au pied d'un cristal : au matin, la glace y a poussé en un long fer à quatre faces, flanqué de deux oreilles de cristal. On dit que sa pointe ne s'émousse pas ; elle repousse.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

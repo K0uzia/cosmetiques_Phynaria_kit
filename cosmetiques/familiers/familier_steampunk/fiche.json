@@ -1,0 +1,12 @@
+{
+  "nom": "Hibou Steampunk",
+  "description": "Hibou automate de laiton perché sur l'épaule gauche, qui tourne la tête par crans, cligne de ses yeux de verre ambre et décolle sur un rotor de tête quand le joueur quitte le sol. Vivant et curieux, il observe tout ce qui bouge.",
+  "lore": "Le plus vieil horloger de l'Atelier de laiton l'a construit pour ne plus travailler seul la nuit. Le hibou n'a jamais appris à parler, mais il sait exactement quand il faut remonter une montre. Il se pose pour économiser sa vapeur, et ne vole que quand ça en vaut la peine.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

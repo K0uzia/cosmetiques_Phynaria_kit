@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "white_smoke (Minecraft)",
+   "role": "Vapeur qui monte de la soupape de la chaudière : à chaque décharge de pression au repos (deux par boucle de 24 s) et à chaque motte arrachée (event_break). Coupée le reste du temps (ctrl_emit −1).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

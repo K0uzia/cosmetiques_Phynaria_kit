@@ -12,7 +12,7 @@ NODE = r"""
 const V = require(process.argv[1]); const fs = require("fs");
 const [chemin, cas] = [process.argv[2], JSON.parse(process.argv[3])];
 const P = V.Noyau.preparer(JSON.parse(fs.readFileSync(chemin, "utf8")));
-console.log(JSON.stringify(cas.map(([a, t]) => { const r = V.Noyau.image(P, a, t); return { cosm: r.cosm, mann: r.mann }; })));
+console.log(JSON.stringify(cas.map(([a, t, fam]) => { const r = V.Noyau.image(P, a, t, { familier: fam || null }); return { cosm: r.cosm, mann: r.mann }; })));
 """
 
 
@@ -22,8 +22,11 @@ def cas_de(m):
         if a["name"].startswith("particle_"):
             continue
         L = float(a["length"])
-        out += [(a["name"], round(L * f, 4)) for f in (0.13, 0.61)]
-    return out
+        out += [(a["name"], round(L * f, 4), None) for f in ((0.13, 0.61, 1.0) if a.get("loop") != "loop" else (0.13, 0.61))]   # once : aussi la dernière image
+        if rb.familier_de(m):
+            # familier vivant (guide 6.6) : aussi posé à côté du joueur, requêtes de son état ; et vu dans le menu
+            out += [(a["name"], round(L * 0.37, 4), "vivant"), (a["name"], round(L * 0.37, 4), "menu")]
+    return out or [("", 0.0, None)]      # pièce sans animation (skin d'objet) : pose de repos, joueur debout
 
 
 def tester(chemin):
@@ -32,14 +35,14 @@ def tester(chemin):
     r = subprocess.run(["node", "-e", NODE, os.path.join(ICI, "visionneuse.js"), chemin, json.dumps(cas)], capture_output=True, text=True, check=True)
     js = json.loads(r.stdout)
     pire = 0.0
-    for (a, t), j in zip(cas, js):
-        an = next(x for x in m["animations"] if x["name"] == a)
-        tl = t % float(an["length"]) if an.get("loop") == "loop" else t
-        pz = rb.pose_joueur(rb.etat_de(a), tl, float(an["length"]))
+    for (a, t, fam), j in zip(cas, js):
+        # effet de téléportation (guide 15) : posé au sol, mannequin sur le groupe joueur ; sinon la pose de l'état
+        pz, pm = rb.poses_scene(m, a, t)
+        os.environ["FAMILIER"] = fam or ""
         q, _ = rb.load_model(chemin, anim_time=t, anim_name=a, pose=pz)
-        mq = rb.mannequin(pz)
+        mq = rb.mannequin(pm)
         if len(q) != len(j["cosm"]) or len(mq) != len(j["mann"]):
-            print(f"  ÉCHEC {a} t={t} : {len(q)}/{len(j['cosm'])} faces, mannequin {len(mq)}/{len(j['mann'])}")
+            print(f"  ÉCHEC {a} t={t} {fam or ''} : {len(q)}/{len(j['cosm'])} faces, mannequin {len(mq)}/{len(j['mann'])}")
             return False
         for (pts, _, _), jq in zip(q + mq, j["cosm"] + j["mann"]):
             for p, jp in zip(pts, jq):

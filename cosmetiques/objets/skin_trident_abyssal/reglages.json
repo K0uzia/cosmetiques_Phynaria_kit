@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "dust_82d335_8 (Minecraft)",
+   "role": "Poussière vert acide qui jaillit de la pointe centrale quand le trident part (rafale au tir ; l'animation event_release l'appuie par ctrl_emit +8 pendant 0,2 s). Coupée le reste du temps (ctrl_emit −1 en main, dans l'inventaire et pendant que le trident est levé).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  }
+ ]
+}

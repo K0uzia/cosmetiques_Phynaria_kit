@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes de givre",
+  "description": "Longs cristaux de glace taillés, bleu nuit, cyan et blanc givré, portés par un squelette d'os de givre clair ; la glace est translucide et garde sa lumière bleue intérieure. Animées dans les douze états ; des flocons tombent des ailes.",
+  "lore": "Elles ont poussé sur le dos d'une gardienne qui s'était endormie dans le Cœur d'Hiver, cristal après cristal, sans qu'elle le sente. Elles ne fondent pas au soleil. Quand elles battent, l'air se fige un instant et l'on entend la glace chanter.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

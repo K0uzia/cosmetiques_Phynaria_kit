@@ -1,0 +1,44 @@
+{
+ "particules": [
+  {
+   "particule": "eclat (modélisée)",
+   "role": "Éclats de givre qui jaillissent des tranchants à chaque coup (rafale), puis disparaissent sans se poser.",
+   "reglages": {
+    "Quand": "Jamais (seulement la rafale)",
+    "Nombre": "0,5 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Légère",
+    "Au sol": "Disparaît",
+    "Rendu": "Opaque",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Poussée",
+    "Dispersion": "180°",
+    "Élan": "40 %",
+    "Variation": "Forte",
+    "Rafale": "À l'attaque",
+    "Limite": "64"
+   }
+  },
+  {
+   "particule": "brume (modélisée)",
+   "role": "Brume froide légère qui flotte sous la lame à l'arrêt.",
+   "reglages": {
+    "Quand": "À l'arrêt",
+    "Nombre": "0,5 par seconde",
+    "Durée": "2 s",
+    "Mouvement": "Flotte",
+    "Au sol": "Disparaît",
+    "Rendu": "Translucide",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Poussée",
+    "Dispersion": "45°",
+    "Élan": "0 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

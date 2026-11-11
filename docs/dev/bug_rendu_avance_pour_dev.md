@@ -1,5 +1,7 @@
 # Bugs à corriger : rendus avancés des cosmétiques (shaders, reflets, menu Apparence)
 
+> **État au 2026-11-04, fin de journée** : les quatre points ci-dessous sont annoncés corrigés dans le guide (« rapport quatre bugs de rendu »), à vérifier en jeu avec les modèles de `tests_rendu/`. **Version détaillée, avec un modèle de test par bug : `bugs_rendu_detail.md`.**
+
 Tu travailles sur le mod Phynaria Utilities (Minecraft 26.1.2, NeoForge). Les fonctions de la section 4 bis et 5 quater du guide créateurs (`add_`, `trans_`, `cam_`/`camy_`, `ctrl_…`, calque `_r`) marchent sans shader, mais trois problèmes ont été constatés en jeu le 2026-11-03 (captures `2026-11-03_23.58.59`, `23.59.52`, `2026-11-04_00.00.55`, `00.02.53`, profil `ftb-evolution-2`).
 
 ## 1. Avec un pack de shaders, les rendus avancés disparaissent (bloquant)

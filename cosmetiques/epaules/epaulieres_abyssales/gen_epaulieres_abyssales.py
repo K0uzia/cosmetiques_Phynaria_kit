@@ -4,6 +4,18 @@
 Sur chaque épaule : deux rangs de plaques d'os en éventail (peau découpée + arête pleine), griffes octogonales qui partent vers l'extérieur
 puis remontent (plus grandes et plus nombreuses à gauche), lanières de cuir cousu sur l'avant et l'arrière du bras.
 Groupes de premier niveau right_arm (x > 0) et left_arm (x < 0) : le mod remplace leur pivot par l'épaule.
+
+Remise aux règles du 2026-11-05 (.claude/references/procedures/remise-aux-regles.md) ; plaques, griffes, lanières, palette et proportions inchangées.
+- Faces proches (mesuré par .build/mesure_noms.py, pose de base et poses) : griffes à torsion alternée de ±6° entre tronçons
+  (faces jamais parallèles quand elles plient), dernier tronçon tourné de 22,5° face à la pointe découpée ; arêtes des plaques
+  bout à bout, en losange calé sur la plaque ; octogones chanfreinés (culots à 0,12 px) ; lanières : sections bout à bout
+  (pivot sur la jointure), âme de cuir plus épaisse que la peau de 0,12 px par face, clou et boucle à 0,15 px des faces.
+- Tête et bras : sous-col écarté de la tête (bord intérieur à 4,65 px du centre, seconde couche du skin à 4,5) ; lanières
+  décollées de la seconde couche du bras (face intérieure à 2,37 px de l'axe, seconde couche à 2,25).
+- Texture HD : cartes peintes à 30 texels/px environ (18 avant), tuiles d'os et de cuir agrandies.
+- Lumière : calque _e baissé (tools/ambiance.py le multiplie par 2,4, plafond 225) pour un vert franc.
+- Apparition : event_equip (1,4 s) : les plaques poussent depuis l'épaule, puis les griffes sortent une à une ; pas de son.
+- overlay_ambiance ajoutée par tools/ambiance.py.
 """
 import base64, io, json, math, os, uuid as _uuid
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -17,6 +29,9 @@ TAU = 2 * math.pi
 
 C_AURA = np.array((22, 66, 40), np.float32)
 C_VEIN = np.array((96, 200, 44), np.float32)
+E_COL = (34, 88, 22)    # calque _e : x 2,4 par tools/ambiance.py (plafond 225) -> (82, 211, 53)
+STRAP_Z = 2.52          # centre des lanières : face intérieure à 2,37 (seconde couche du bras à 2,25)
+STRAP_CORE = 0.54       # âme de cuir : 0,12 px au-dessus de chaque face de la peau (0,3)
 OS = [(32, 27, 40), (66, 55, 86), (136, 100, 180), (9, 7, 13), (136, 100, 180)]
 CUIR = [(24, 12, 30), (60, 28, 72), (100, 56, 112), (8, 4, 11), (112, 92, 124)]
 
@@ -203,28 +218,29 @@ def paint_hook(W, H):
     out = np.dstack([rgb, al * 255]).astype(np.uint8)
     out[~al, :3] = (26, 22, 34)
     te = np.array(Image.fromarray((tt * 255).astype(np.uint8), "L").resize((W, H), Image.LANCZOS), np.float32)[..., None] / 255
-    ec = lerp(np.array((10, 34, 12), np.float32), np.array((156, 255, 84), np.float32), np.clip((te - 0.2) / 0.7, 0, 1))
+    ec = lerp(np.array((3, 10, 3), np.float32), np.array((40, 96, 24), np.float32), np.clip((te - 0.2) / 0.7, 0, 1))
     eo = np.dstack([ec, al * 255.0]).astype(np.uint8)
     eo[~al] = 0
     return out, eo
 
 
-def paint_bone(BW=96, BH_=16):
+def paint_bone(BW=480, BH_=24):
     a = np.zeros((BH_, BW, 4), np.float32)
     for yy in range(BH_):
         q = abs((yy + 0.5) / BH_ - 0.5) * 2
         for xx in range(BW):
             u = xx / (BW - 1)
             c_ = lerp(np.array((54, 48, 66.0)), np.array((26, 22, 34.0)), q ** 1.2)
-            c_ = lerp(c_, np.array((132, 98, 176.0)), max(0.0, 1 - q * 2.2) * (0.55 + 0.3 * math.sin(u * 15)))
-            a[yy, xx, :3] = c_ * (0.9 + 0.2 * math.sin(u * 40 + yy * 0.6))
+            c_ = lerp(c_, np.array((132, 98, 176.0)), max(0.0, 1 - q * 2.2) * (0.55 + 0.3 * math.sin(u * 75)))
+            a[yy, xx, :3] = c_ * (0.9 + 0.2 * math.sin(u * 200 + yy * 0.4))
     a[..., 3] = 255
     return a.astype(np.uint8)
 
 
-def paint_cuir(S=16):
+def paint_cuir(S=96):
     r = np.random.default_rng(7)
-    c = lerp(np.array(CUIR[0], np.float32), np.array(CUIR[1], np.float32), r.random((S, S, 1), np.float32) * 0.7)
+    n = np.array(Image.fromarray((r.random((12, 12)) * 255).astype(np.uint8), "L").resize((S, S), Image.BICUBIC), np.float32)[..., None] / 255
+    c = lerp(np.array(CUIR[0], np.float32), np.array(CUIR[1], np.float32), n * 0.7 + r.random((S, S, 1), np.float32) * 0.12)
     return np.dstack([c, np.full((S, S), 255.0, np.float32)]).astype(np.uint8)
 
 
@@ -270,7 +286,7 @@ def atlas():
             shelf = max(shelf, h)
         return uv
 
-    dens = 18.0
+    dens = 34.0
     while (uv := pack(dens)) is None:
         dens -= 0.1
     UV.update(uv)
@@ -295,7 +311,7 @@ def atlas():
         tex[v0:v1, u0:u1, :3] = np.clip(cc, 0, 255).astype(np.uint8)
         tex[v0:v1, u0:u1, 3] = al * 255
         vm = (ct.Vc[iy, ix].reshape(H, ss, W, ss).mean(axis=(1, 3)) > 0.34) & al
-        tex_e[v0:v1, u0:u1, :3] = np.array((132, 255, 72), np.uint8) * vm[..., None]
+        tex_e[v0:v1, u0:u1, :3] = np.array(E_COL, np.uint8) * vm[..., None]
         tex_e[v0:v1, u0:u1, 3] = vm * 255
     assert tex[TEX - 3, TEX - 3, 3] == 0
     tex[..., :3] &= 0xFC
@@ -361,14 +377,17 @@ def plate(g, name, c, X, Y, w, h, tile, th=0.3):
          {"south": [u0, v0, u1, v1], "north": [u1, v0, u0, v1], "east": CLEAR, "west": CLEAR, "up": CLEAR, "down": CLEAR})
 
 
-def bar(g, name, p, q, r, u0=0.0, u1=1.0, octo=True, ov=0.1):
-    """Tronçon d'os : section octogonale (deux cubes à 45°) ou losange seul."""
+def bar(g, name, p, q, r, u0=0.0, u1=1.0, octo=True, ov=0.1, turn=0.0, up=None, caps=(True, True)):
+    """Tronçon d'os : section octogonale (deux cubes à 45°) ou losange seul. turn : torsion autour de l'axe (degrés) ;
+    up : direction de référence de la section (sinon la verticale) ; caps : culots de départ et de bout visibles."""
     p, q = np.asarray(p, float), np.asarray(q, float)
     L = np.linalg.norm(q - p)
     X = unit(q - p)
-    ref = V(0, 1, 0) if abs(X[1]) < 0.9 else V(1, 0, 0)
+    ref = np.asarray(up, float) if up is not None else (V(0, 1, 0) if abs(X[1]) < 0.9 else V(1, 0, 0))
     Y = unit(ref - (ref @ X) * X)
     Z_ = np.cross(X, Y)
+    ct, st = math.cos(math.radians(turn)), math.sin(math.radians(turn))
+    Y, Z_ = ct * Y + st * Z_, -st * Y + ct * Z_
     c, s = math.cos(math.pi / 4), math.sin(math.pi / 4)
     R0 = np.column_stack([X, Y, Z_])
     R45 = np.column_stack([X, c * Y + s * Z_, -s * Y + c * Z_])
@@ -377,19 +396,22 @@ def bar(g, name, p, q, r, u0=0.0, u1=1.0, octo=True, ov=0.1):
     ub = max(lerp(bu0, bu1, u1), ua + 2)
     lg = [ua, bv0, ub, bv1]
     end = [ua, bv0 + 3, ua + 2, bv1 - 3]
-    faces = {"south": lg, "north": lg, "up": lg, "down": lg, "east": end, "west": end}
+    faces = {"south": lg, "north": lg, "up": lg, "down": lg, "east": end if caps[1] else CLEAR, "west": end if caps[0] else CLEAR}
     if octo:
         cube(g, name, p + (-ov, -r, -r), p + (L + ov, r, r), p, euler(R0), faces)
-        cube(g, name + "o", p + (-ov + 0.03, -r * 0.97, -r * 0.97), p + (L + ov - 0.03, r * 0.97, r * 0.97), p, euler(R45), faces)
+        ch = 0.12                                    # chanfrein : culots des deux pavés à 0,12 px l'un de l'autre
+        cube(g, name + "o", p + (-ov + ch, -r * 0.97, -r * 0.97), p + (L + ov - ch, r * 0.97, r * 0.97), p, euler(R45), faces)
     else:
         cube(g, name, p + (-ov, -r, -r), p + (L + ov, r, r), p, euler(R45), faces)
 
 
-def chain(g, name, pts, r0, r1, u0=0.0, u1=1.0, octo=True):
+def chain(g, name, pts, r0, r1, u0=0.0, u1=1.0, octo=True, up=None):
+    """Arête droite : tronçons bout à bout, culots intérieurs transparents."""
     n = len(pts) - 1
     for i in range(n):
         t0, t1 = i / n, (i + 1) / n
-        bar(g, f"{name}{i}", pts[i], pts[i + 1], lerp(r0, r1, (t0 + t1) / 2), lerp(u0, u1, t0), lerp(u0, u1, t1), octo=octo)
+        bar(g, f"{name}{i}", pts[i], pts[i + 1], lerp(r0, r1, (t0 + t1) / 2), lerp(u0, u1, t0), lerp(u0, u1, t1), octo=octo, ov=0.0, up=up,
+            caps=(i == 0, i == n - 1))
 
 
 def hook(g, name, p, X, Y, L):
@@ -403,17 +425,21 @@ def hook(g, name, p, X, Y, L):
     plate(g, name, c, X, Y, 1.02 * L, (hi - lo) * L, "hook")
     center, hw = hook_shape(L, CURVE)
     a, b = center(0.0), center(0.6)
-    bar(g, f"{name}c", p + X * a[0] + Y * a[1], p + X * b[0] + Y * b[1], max(0.16, hw(0.3) * 0.62), 0.6, 0.9, octo=False, ov=0.06)
+    # âme en losange calée sur la plaque : ses faces à 45° de la peau
+    bar(g, f"{name}c", p + X * a[0] + Y * a[1], p + X * b[0] + Y * b[1], max(0.16, hw(0.3) * 0.62), 0.6, 0.9, octo=False, ov=0.06, up=n)
     return p + X * center(1)[0] + Y * center(1)[1]
 
 
-def box(g, name, c, X, Y, w, h, th, tile="cuir"):
-    """Âme de cuir : vrai volume, texturé sur 6 faces."""
+def box(g, name, c, X, Y, w, h, th, tile="cuir", bouts=(True, True)):
+    """Âme de cuir : vrai volume, texturé sur 6 faces ; bouts : faces up et down visibles (transparentes aux jointures)."""
     X, Y = unit(np.asarray(X, float)), unit(np.asarray(Y, float))
     R_ = np.column_stack([X, Y, np.cross(X, Y)])
     u0, v0, u1, v1 = UV[tile]
     c = np.asarray(c, float)
-    cube(g, name, c - (w / 2, h / 2, th / 2), c + (w / 2, h / 2, th / 2), c, euler(R_), {f: [u0, v0, u1, v1] for f in ("north", "south", "east", "west", "up", "down")})
+    fc = {f: [u0, v0, u1, v1] for f in ("north", "south", "east", "west")}
+    fc["up"] = [u0, v0, u1, v1] if bouts[0] else CLEAR
+    fc["down"] = [u0, v0, u1, v1] if bouts[1] else CLEAR
+    cube(g, name, c - (w / 2, h / 2, th / 2), c + (w / 2, h / 2, th / 2), c, euler(R_), fc)
 
 
 def lame(g, name, root, d, nhint, L, W, tile, ofs=0.0):
@@ -424,7 +450,7 @@ def lame(g, name, root, d, nhint, L, W, tile, ofs=0.0):
     root = np.asarray(root, float) + N * ofs
     sL, sW = L / LL, W / LW
     plate(g, name, root + X * (L / 2), X, Y, (LL + 2 * M_) * sL, (LW + 2 * M_) * sW, tile)
-    chain(g, name + "a", [root + X * L * 0.14, root + X * L * 0.45, root + X * L * 0.78], 0.46 * sW, 0.2 * sW, 0.1, 0.5, octo=False)
+    chain(g, name + "a", [root + X * L * 0.14, root + X * L * 0.45, root + X * L * 0.78], 0.46 * sW, 0.2 * sW, 0.1, 0.5, octo=False, up=N)
 
 
 # Un côté : s = -1 gauche, +1 droit. Tous les x s'écrivent en valeur absolue et sont multipliés par s.
@@ -449,9 +475,12 @@ def griffe(arm, s, tag, k, base, L, a0, a1, zf, n, r0, emits=False):
     g1 = group(f"griffe{k}_bout_{tag}", pts[-2], parent=g0)
     r_ = lambda i: lerp(r0, r0 * 0.42, (i + 0.5) / n)
     for i in range(n):
-        bar(g1 if i == n - 1 else g0, f"griffe{k}_{i}_{tag}", pts[i], pts[i + 1], r_(i), 0.05 + i * 0.14, 0.05 + (i + 1) * 0.14, octo=True, ov=0.08)
+        # torsion alternée de ±6° (faces des tronçons voisins jamais parallèles au pli) ; le dernier à 22,5° de la pointe découpée
+        tw = 22.5 if i == n - 1 else (6.0 if i % 2 == 0 else -6.0)
+        bar(g1 if i == n - 1 else g0, f"griffe{k}_{i}_{tag}", pts[i], pts[i + 1], r_(i), 0.05 + i * 0.14, 0.05 + (i + 1) * 0.14, octo=True, ov=0.08,
+            turn=tw, caps=(i > 0, True))     # le départ est caché dans la bague
     d0 = unit(pts[1] - pts[0])
-    bar(g0, f"griffe{k}_bague_{tag}", pts[0] - d0 * 0.45, pts[0] + d0 * 0.2, r0 + 0.17, 0.42, 0.48, octo=True, ov=0.0)
+    bar(g0, f"griffe{k}_bague_{tag}", pts[0] - d0 * 0.45, pts[0] + d0 * 0.2, r0 + 0.17, 0.42, 0.48, octo=True, ov=0.0, turn=30)
     d1 = unit(pts[-1] - pts[-2])
     tip = hook(g1, f"griffe{k}_pointe_{tag}", pts[-1] - d1 * 0.12, d1, dirs(a1 + 90), L * 0.34)
     CLAWS.append((g0, g1, s, k))
@@ -462,38 +491,47 @@ def griffe(arm, s, tag, k, base, L, a0, a1, zf, n, r0, emits=False):
 
 def laniere(arm, armure, s, tag, zs, nom, x_top, x_bot, y_top, y_band, k_tail):
     """Lanière : section haute en biais sur le bras, boucle d'os, deux sections libres en dessous. zs = -1 avant, +1 arrière."""
-    z = zs * 2.26
+    z = zs * STRAP_Z
     X_ = V(s * -zs, 0, 0)       # X x Y doit sortir du bras
+    x_top = max(x_top, 5.55)    # bord intérieur de la section haute à 4,7 px au moins de l'axe : hors de la seconde couche de la tête
     top, bot = V(s * x_top, y_top, z), V(s * x_bot, y_band, z)
     Y_h = unit(top - bot)
     X_h = unit(X_ - (X_ @ Y_h) * Y_h)
     Hh = np.linalg.norm(top - bot)
     mid = (top + bot) / 2
-    plate(armure, f"lan_h_{nom}_{tag}", mid, X_h, Y_h, SW + 0.2, Hh + 0.2, "lan_h")
-    box(armure, f"lan_ha_{nom}_{tag}", mid - V(0, 0, zs * 0.02), X_h, Y_h, SW * 0.58, Hh, 0.42)
+    # peau (marges transparentes de 0,1 px autour de la carte) et âme bout à bout avec la section suivante, sur la jointure bot
+    # la section haute s'arrête 0,15 px au-dessus de la jointure, la suivante 0,15 px au-dessous : la boucle (rayon 0,3) cache l'écart
+    Hc = Hh - 0.15
+    mid = top - Y_h * (Hc / 2)
+    plate(armure, f"lan_h_{nom}_{tag}", mid, X_h, Y_h, SW + 0.2, Hc + 0.2, "lan_h")
+    box(armure, f"lan_ha_{nom}_{tag}", mid, X_h, Y_h, SW * 0.58, Hc, STRAP_CORE, bouts=(True, False))
     cl = top - Y_h * 0.75
-    bar(armure, f"clou_{nom}_{tag}", cl + V(0, 0, zs * 0.14), cl + V(0, 0, zs * 0.5), 0.3, 0.2, 0.3, octo=False, ov=0.0)
+    bar(armure, f"clou_{nom}_{tag}", cl, cl + V(0, 0, zs * 0.5), 0.3, 0.2, 0.3, octo=False, ov=0.0)
     # boucle d'os à la jointure, à peine plus large que la lanière : une barre de bras à bras ferait une croix
-    bar(armure, f"boucle_{nom}_{tag}", bot + V(-0.8, 0, zs * 0.22), bot + V(0.8, 0, zs * 0.22), 0.3, 0.15, 0.3, octo=True, ov=0.0)
+    bar(armure, f"boucle_{nom}_{tag}", bot + V(-0.8, 0, zs * 0.30), bot + V(0.8, 0, zs * 0.30), 0.3, 0.15, 0.3, octo=True, ov=0.0, turn=30)
     y = y_band
     cx = s * x_bot
     parent = armure
     for j, (tile, H) in enumerate((("lan_m", 3.4 * k_tail), ("lan_b", 3.5 * k_tail))):
-        zj = z + zs * 0.05 * (j + 1)
+        zj = z                                   # sections bout à bout, pivot sur la jointure
         g = group(f"laniere{j}_{nom}_{tag}", [cx, y, zj], parent=parent)
-        plate(g, f"lan{j}_{nom}_{tag}", V(cx, y - H / 2 - 0.0, zj), X_, V(0, 1, 0), SW + 0.2, H + 0.2, tile)
-        h_core = H * (1 if j == 0 else 0.5)
-        box(g, f"lan{j}a_{nom}_{tag}", V(cx, y - h_core / 2 - 0.02, zj - zs * 0.02), X_, V(0, 1, 0), SW * 0.58, h_core, 0.42)
+        # chaque section pivote de ±5° autour de la verticale : les faces de deux sections voisines ne sont jamais parallèles
+        Xj = unit(X_ + V(0, 0, (1 if j == 0 else -1) * math.tan(math.radians(5))))
+        y0 = y - (0.15 if j == 0 else 0.0)       # sous la boucle
+        Hj = H - (0.15 if j == 0 else 0.0)
+        plate(g, f"lan{j}_{nom}_{tag}", V(cx, y0 - Hj / 2, zj), Xj, V(0, 1, 0), SW + 0.2, Hj + 0.2, tile)
+        h_core = Hj * (1 if j == 0 else 0.5)
+        box(g, f"lan{j}a_{nom}_{tag}", V(cx, y0 - h_core / 2, zj), Xj, V(0, 1, 0), SW * 0.58, h_core, STRAP_CORE, bouts=(j == 0, j == 1))
         STRAPS.append((g, s, zs, j))
         parent = g
-        y -= H - 0.1
+        y -= H
 
 
 def epauliere(s, tag, azA, azB, sc, griffes, emit_k, x_lan, y_band, k_tail):
     arm = group("left_arm" if s < 0 else "right_arm", V(s * 5, 22, 0))
     armure = group(f"armure_{tag}", V(s * 5, 22, 0), parent=arm)
     # sous-col : couvre le dessus de l'épaule, jamais au-delà de x = 4,1 (tête et cou)
-    plate(armure, f"col_{tag}", V(s * 5.75, 24.36, 0), V(s, 0, 0), V(0, 0, -s), 3.3, 5.6, "col")
+    plate(armure, f"col_{tag}", V(s * 6.05, 24.36, 0), V(s, 0, 0), V(0, 0, -s), 2.8, 5.6, "col")   # bord intérieur à 4,65 : hors de la tête
     # rang bas : descend sur le flanc du bras, en éventail vu de profil. Sous le rang haut.
     hb = V(s * 8.5, 24.55, 0)
     tiles = ["lame_b", "lame_a", "lame_c", "lame_b"]
@@ -637,8 +675,31 @@ for g, s, zs, j in STRAPS:
 attack = anim("attack", 0.8, tr_a, n_kf=16, loop="once")
 hurt = anim("hurt", 0.8, tr_h, n_kf=16, loop="once")
 
+def equip_anim():
+    """event_equip (1,4 s, jouée par-dessus l'état) : les plaques poussent depuis l'épaule, puis les griffes sortent une à une
+    (échelle depuis leur bague, léger dépassement) ; les lanières retombent en se balançant. Dernière image : zéro."""
+    LE = 1.4
+    times = [j * LE / 28 for j in range(29)]
+    A = {}
+
+    def sc_keys(f):
+        return [{"channel": "scale", "data_points": [{"x": str(round(f(t), 3)), "y": str(round(f(t), 3)), "z": str(round(f(t), 3))}],
+                 "time": round(t, 3), "interpolation": "linear"} for t in times]
+    for tag in ("l", "r"):
+        g = f"armure_{tag}"
+        A[groups[g]["uuid"]] = {"name": g, "type": "bone", "keyframes": sc_keys(lambda t: 0.2 + 0.8 * sm(t, 0.0, 0.45))}
+    for g0, g1, s, k in CLAWS:
+        d = 0.35 + 0.12 * k + (0.05 if s > 0 else 0)
+        f = lambda t, d=d: sm(t, d, d + 0.35) * (1 + 0.1 * bump(t, d + 0.25, d + 0.35, d + 0.4, d + 0.6))
+        A[groups[g0]["uuid"]] = {"name": g0, "type": "bone", "keyframes": sc_keys(f)}
+    for g, s, zs, j in STRAPS:
+        sw = lambda t, j=j: 22 * (1 - sm(t, 0.2, 1.3)) * math.cos(TAU * 1.6 * (t - 0.1 * j))
+        A[groups[g]["uuid"]] = {"name": g, "type": "bone", "keyframes": [kf(t, *lan_rot(s, zs, max(0.0, sw(t)), 0)) for t in times]}
+    return {"uuid": nuid(), "name": "event_equip", "loop": "once", "override": False, "length": LE, "snapping": 24, "selected": False, "animators": A}
+
+
 PF, PR = 3.0, 6.0
-ANIMS = [idle, walk, run, sneak, attack, hurt,
+ANIMS = [idle, walk, run, sneak, attack, hurt, equip_anim(),
          anim("particle_braise_fall", PF, {PG: lambda t: (24 * math.sin(TAU * t / PF), 360 * t / PF, 18 * math.cos(2 * TAU * t / PF))}, n_kf=24),
          anim("particle_braise_rest", PR, {PG: lambda t: (0, 0, 1.2 * math.sin(TAU * t / PR))}, n_kf=12)]
 
@@ -655,7 +716,14 @@ out = f".build/{NOM}_brut.bbmodel"
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))
 from particules import retirer_particules
+from sons import limiter_sons
+from ambiance import ajouter_ambiance
 retirer_particules(model)
+limiter_sons(model)
+from reactions import retirer_reactions
+retirer_reactions(model)
+ajouter_ambiance(model)
+assert len(model["animations"]) <= 16
 with open(out, "w") as fh:
     json.dump(model, fh, separators=(",", ":"))
 

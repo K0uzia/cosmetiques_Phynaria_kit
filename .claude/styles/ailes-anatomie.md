@@ -1,6 +1,6 @@
 # Style — Anatomie des ailes (toute pièce ailée : ailes, familiers, chapeaux à ailerons…)
 
-Fiche de référence documentée (2026-11-04). Elle complète la section « Anatomie d'aile » de `.claude/rules/modeling.md`, qui reste la règle courte.
+Fiche de référence documentée (2026-11-04). Elle complète la section « Anatomie d'aile » de `.claude/rules/categories/ailes.md`, qui reste la règle courte.
 
 ## Où l'aile s'attache
 
@@ -52,7 +52,7 @@ Choisir le type avant de dessiner : il fixe la longueur des primaires, la largeu
 
 ## Apparition (`event_equip`)
 
-Quand on équipe des ailes, elles n'apparaissent pas d'un coup : elles **se déploient** (guide 6.4, `event_equip`). Recette (ailes mécaniques) : un boîtier dorsal visible seulement pendant l'apparition (`ctrl_alpha`), qui s'ouvre ; les ailes en sortent à petite échelle et repliées, grandissent, se déplient de l'épaule vers les primaires, puis le boîtier se referme et disparaît. Pour des ailes organiques : un dos qui se gonfle, des ailes qui sortent pliées et s'ouvrent d'un coup, comme un étirement.
+Quand on équipe des ailes, elles n'apparaissent pas d'un coup : elles **se déploient** (guide 6.4, `event_equip`). Recette (ailes mécaniques) : un boîtier dorsal visible seulement pendant l'apparition (`ctrl_alpha`), qui s'ouvre ; les ailes en sortent à petite échelle et repliées, grandissent, se déplient de l'épaule vers les primaires, puis le boîtier se referme et disparaît. Au retrait (`event_unequip`, 5 s au plus) : la même séquence à l'envers, la vapeur gardant son sens (décharge en premier). Pour des ailes organiques : un dos qui se gonfle, des ailes qui sortent pliées et s'ouvrent d'un coup, comme un étirement.
 
 ## Sources
 

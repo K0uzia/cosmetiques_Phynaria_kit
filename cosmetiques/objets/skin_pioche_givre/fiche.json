@@ -1,0 +1,12 @@
+{
+  "nom": "Piolet de givre",
+  "description": "Skin de pioche : toutes tes pioches deviennent un piolet de cristal, pic denté d'un côté, panne évasée de l'autre, œil d'argent froid frappé d'un flocon. La glace scintille au repos ; à chaque bloc cassé, des éclats de givre jaillissent de la pointe.",
+  "lore": "Les gardiens du Cœur d'Hiver ne creusent pas la glace : ils lui demandent passage. Leur piolet est né d'un œil d'argent laissé une nuit dans une crevasse ; au matin, le pic et la panne y avaient poussé. Ses dents mordent la paroi sans la briser, et ce qu'il arrache à la roche retombe en givre.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

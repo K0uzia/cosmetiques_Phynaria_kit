@@ -81,4 +81,4 @@ def ajouter_ambiance(model, lumiere=0.3, nuit=0.5, pluie_lumiere=0.3, mouille=(0
         A[g["uuid"]] = {"name": g["name"], "type": "bone", "keyframes": [k]}
     model["animations"].append({"uuid": str(uuid.uuid4()), "name": "overlay_ambiance", "loop": "loop", "override": False,
                                 "length": 1.0, "snapping": 24, "selected": False, "animators": A})
-    assert len(model["animations"]) <= 16, "16 animations au plus"
+    assert len(model["animations"]) <= 32, "32 animations au plus (guide 7, 2026-11-06 soir)"

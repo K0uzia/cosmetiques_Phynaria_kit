@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes de Bérénice",
+  "description": "Grandes ailes de plumes rondes ivoire à pointe dorée, au mouvement lent et ample d'oiseau ; elles se déploient depuis le dos à l'équipement, battent à la fusée en élytres, et laissent tomber de temps en temps une plume qui se pose au sol.",
+  "lore": "On raconte que chaque plume est un cheveu que la reine a confié au ciel, devenu lumière puis plume. Elles ne se salissent jamais et ne pèsent rien. Quand l'une tombe, il ne faut pas la ramasser : elle retourne aux étoiles avant l'aube.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

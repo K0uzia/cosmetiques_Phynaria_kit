@@ -1,0 +1,12 @@
+{
+  "nom": "Pic Câlin",
+  "description": "Skin de pioche : un fer en croissant de sucre lilas aux bouts tout ronds, serti de dragées-cœurs lumineuses, qui sort d'un gros cœur framboise, sur un manche de guimauve torsadée. Le cœur bat doucement et soupire parfois une bouffée de petits cœurs.",
+  "lore": "À Nuage Guimauve, les mineurs ne creusent pas la roche : ils la chatouillent. Ce pic a été tiré au sucre lilas autour du même cœur de framboise que les lames du village, et il garde ses pointes rondes pour ne blesser personne. Quand il travaille trop longtemps, il pousse un petit soupir sucré et quelques cœurs s'envolent.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

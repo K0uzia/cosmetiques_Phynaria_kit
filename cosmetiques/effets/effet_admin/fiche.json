@@ -1,0 +1,12 @@
+{
+  "nom": "Ciel d'alvéoles",
+  "description": "Des panneaux « ALERTE SYSTÈME » s'allument un à un et pavent le ciel ; du sang suinte des jointures, coule en filets et se rassemble en une poche lisse et luisante qui se vide en pluie de filets : le joueur en sort géant, puis redescend.",
+  "lore": "Quand le monde doit écouter, le ciel se couvre d'alvéoles écarlates, chacune marquée du sceau de ceux qui l'ont bâti. Ce qui coule alors des jointures n'est pas de la pluie : c'est la volonté du monde qui se condense. On raconte que celui qui en sort a été un instant aussi grand que le ciel.",
+  "rarete": "mythique",
+  "prix": {
+    "pv": 0,
+    "phynarium": 0
+  },
+  "prix_manuel": true,
+  "en_vente": false
+}

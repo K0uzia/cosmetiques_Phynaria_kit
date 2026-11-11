@@ -1,0 +1,23 @@
+{
+ "particules": [
+  {
+   "particule": "paillette (modélisée)",
+   "role": "Petite étoile de sucre rose et blanche (0,6 px, une face) qui part de l'apex et du bord de chaque aile antérieure et du bout des queues (6 points emit_paillette), tourne sur elle-même et monte en se dissipant. Rien ne tombe.",
+   "reglages": {
+    "Quand": "En vol",
+    "Nombre": "1 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Opaque",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Poussée",
+    "Dispersion": "45°",
+    "Élan": "100 %",
+    "Variation": "Légère",
+    "Rafale": "Au saut",
+    "Limite": "64"
+   }
+  }
+ ]
+}

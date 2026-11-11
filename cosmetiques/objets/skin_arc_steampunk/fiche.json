@@ -1,0 +1,12 @@
+{
+  "nom": "Pistolet à vapeur",
+  "description": "Skin d'arc : tous tes arcs deviennent un pistolet à vapeur de laiton et de cuivre, chaudière, manomètre ambre et pavillon évasé. Quand tu bandes, le chien s'arme cran par cran, l'aiguille grimpe jusqu'au rouge et la lentille s'allume ; au tir, le canon recule et un jet de vapeur monte du pavillon.",
+  "lore": "À l'Atelier de laiton, on dit qu'une flèche lancée à la main est une flèche perdue. Ce pistolet la loge dans son canon et la chasse d'un coup de pression : on arme le chien, on attend que l'aiguille touche le rouge, et la lentille dit le reste. Le sifflement qui suit le tir s'entend jusqu'aux ateliers voisins.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

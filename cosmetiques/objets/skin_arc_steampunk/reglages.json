@@ -1,0 +1,28 @@
+{
+ "particules": [
+  {
+   "particule": "poof (Minecraft)",
+   "role": "Bouffée sèche à la bouche du pavillon quand la flèche part (rafale au tir ; l'animation event_release l'appuie par ctrl_emit).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "15°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  },
+  {
+   "particule": "white_smoke (Minecraft)",
+   "role": "Vapeur qui monte : fuite de la soupape pendant que l'arc se bande (ctrl_emit = 3 × avancée − 1), puis vapeur qui sort du pavillon juste après le tir. Coupée hors de ces moments (ctrl_emit −1).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

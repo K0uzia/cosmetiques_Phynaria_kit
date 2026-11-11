@@ -1,0 +1,12 @@
+{
+  "nom": "Épaulières de givre",
+  "description": "Paire asymétrique d'écailles de glace translucide qui couvrent l'épaule et le haut du bras, d'où jaillit une grappe de cristaux hexagonaux à cœur cyan lumineux ; une rosace de givre scelle chaque coque. La glace pousse quand on les équipe.",
+  "lore": "Les gardiens du Cœur d'Hiver ne portent pas d'armure : ils laissent la glace pousser là où les coups tombent. L'épaule gauche, celle qui pare, se couvre d'une grappe plus haute ; les cristaux brisés se reforment en une nuit, autour de la même rosace.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

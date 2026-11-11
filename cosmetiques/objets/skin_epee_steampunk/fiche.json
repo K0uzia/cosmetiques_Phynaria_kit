@@ -1,0 +1,12 @@
+{
+  "nom": "Lame de pression",
+  "description": "Skin d'épée : toutes tes épées deviennent une lame d'acier bruni à tube de niveau ambré, garde en roue dentée de laiton à manomètre et pommeau-chaudière. Au repos, la pression monte cran par cran puis s'échappe ; au coup qui touche, la buse de la garde crache un jet de vapeur.",
+  "lore": "Un chaudronnier de l'Atelier de laiton jugeait qu'une lame devait savoir ce qu'elle a dans le ventre. Il a logé une chaudière dans le pommeau, couru un tuyau de cuivre le long de la main et serti un tube de niveau dans la gouttière : quand l'ambre monte, la lame est prête. Chaque coup qui porte vide un peu la pression, et la garde siffle.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

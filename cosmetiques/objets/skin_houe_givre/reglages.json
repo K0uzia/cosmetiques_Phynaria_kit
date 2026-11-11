@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "snowflake (Minecraft)",
+   "role": "Gerbe de flocons au milieu du fil quand un bloc est cassé à la houe (event_break : ctrl_emit +7 pendant 0,2 s), coupée le reste du temps (ctrl_emit −1 dans item_idle, item_gui et event_break). Animations des skins coupées par le joueur : cadence du staff, 4 par seconde ; la mettre à Jamais si elle se voit trop.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

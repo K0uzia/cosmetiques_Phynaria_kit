@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "heart (Minecraft)",
+   "role": "Petits cœurs qui montent du cœur-œil au coup qui touche (event_hit) et quand un bloc casse (event_break), par ctrl_emit +5. Coupés le reste du temps (ctrl_emit −1 dans item_idle et item_swing).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

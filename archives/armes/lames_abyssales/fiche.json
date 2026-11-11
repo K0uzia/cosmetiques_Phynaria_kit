@@ -1,0 +1,12 @@
+{
+  "nom": "Lames abyssales",
+  "description": "Paire de longues lames courbes à un seul tranchant, une dans chaque main, au fil vert acide et aux gardes en griffes recourbées. Elles suivent les gestes du joueur et frappent ensemble à l'attaque.",
+  "lore": "Forgées dans l'os d'un démon et trempées dans la lueur de l'Abysse, elles ne s'émoussent jamais tout à fait. Un chasseur ne les nomme pas : il dit qu'elles ont déjà un nom, et qu'elles ne le lui ont pas encore dit.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

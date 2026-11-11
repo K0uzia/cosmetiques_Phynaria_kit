@@ -1,0 +1,12 @@
+{
+  "nom": "Arbalète de givre",
+  "description": "Skin d'arbalète : un arc court de glace taillée sur un fût d'argent froid, crosse au flocon lumineux. Quand elle est chargée, le carreau de cristal se couvre de givre ; au tir, un nuage de flocons jaillit devant l'arc.",
+  "lore": "Les gardiens du Cœur d'Hiver ont scellé un fût d'argent dans la glace d'un lac gelé, et l'arc y a poussé en une nuit, court et dur comme un éclat. La corde est un fil de givre ; le carreau, un cristal que le froid habille dès qu'il est posé. Quand il part, l'air qu'il traverse se change en neige.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

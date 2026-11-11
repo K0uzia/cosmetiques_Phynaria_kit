@@ -1,0 +1,12 @@
+{
+  "nom": "Casque d'orage",
+  "description": "Casque de métal d'orage à couvre-nuque de lames laquées, ailerons-paratonnerres aux tempes et cimier en éclair coiffé de cristal ; la foudre saute du cimier aux ailerons, au hasard, et un éclair le forge sur la tête à l'équipement.",
+  "lore": "Les Dompteurs d'orage ne portent pas de couronne : ils portent le paratonnerre. Ce casque est battu sur l'enclume du plus haut pic, puis laissé dehors une nuit d'orage ; au matin, le cimier a pris la forme de l'éclair qui l'a frappé, et le cristal de sa pointe garde un peu de sa lumière.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

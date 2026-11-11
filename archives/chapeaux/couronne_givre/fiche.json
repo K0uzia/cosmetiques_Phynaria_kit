@@ -1,0 +1,12 @@
+{
+  "nom": "Couronne de givre",
+  "description": "Fin cercle d'argent froid d'où montent des prismes de glace hexagonaux pointus, le plus haut au milieu du front ; dentelle de givre, cœur cyan lumineux dans chaque prisme et flocon à six branches au front.",
+  "lore": "Elle n'a pas été forgée mais cultivée, prisme par prisme, sur le front de la première gardienne. Elle ne se transmet pas : elle repousse, un peu différente, sur la tête de celle ou celui qu'elle a choisi.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

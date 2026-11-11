@@ -1,0 +1,12 @@
+{
+  "nom": "Lance de la tempête",
+  "description": "Skin de lance : remplace l'apparence de toutes tes lances, du bois à la netherite, par une hampe de métal d'orage gainée de cuir bleu nuit et d'or, à l'anneau de tambour orné de trois virgules d'or et au fer de cristal d'orage translucide. Levée pour frapper, le cristal s'éclaircit et une étincelle naît à la pointe ; lancée, elle file chargée, le fer presque blanc et parcouru d'éclairs.",
+  "lore": "Les Dompteurs d'orage ne gardent pas l'éclair dans une seule arme : ils l'apprennent à la hampe. Une lance ordinaire passée une nuit d'orage dans le tambour d'un forgeron en ressort vêtue de métal sombre, et son fer devient cristal. Elle garde la charge sans bruit, et ne la rend qu'au moment où on la lève.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

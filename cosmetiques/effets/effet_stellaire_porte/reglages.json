@@ -1,0 +1,36 @@
+{
+ "particules": [
+  {
+   "particule": "goutte (modélisée)",
+   "role": "Goutte d'eau bleu pâle projetée par la tête du jaillissement et par le bord de la surface ; aussi quand la copie entre dans l'eau (départ) ou en sort (arrivée). Retombe.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Durée": "1 s", "Mouvement": "Lourde", "Au sol": "Disparaît",
+                "Rendu": "Lumineux", "Sens": "Face caméra", "Fin de vie": "Rétrécit", "Départ": "Rapide", "Dispersion": "45°",
+                "Élan": "0 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "256"}
+  },
+  {
+   "particule": "eclat (modélisée)",
+   "role": "Éclat de lumière bleue qui monte doucement des deux faces de la surface d'eau tant qu'elle est ouverte ; bouffée à la coupure.",
+   "reglages": {"Quand": "Toujours", "Nombre": "4 par seconde", "Durée": "3 s", "Mouvement": "Monte", "Rendu": "Lumineux",
+                "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "45°", "Élan": "0 %",
+                "Variation": "Légère", "Rafale": "Aucune", "Limite": "128"}
+  },
+  {
+   "particule": "mc_splash (Minecraft)",
+   "role": "Éclaboussures au pied de la surface pendant le jaillissement et au passage du joueur.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Départ": "Moyen", "Dispersion": "45°", "Rafale": "Aucune", "Limite": "256"},
+   "groupe": "emit_mc_splash"
+  },
+  {
+   "particule": "mc_glow (Minecraft)",
+   "role": "Lueurs cyan qui flottent devant les deux faces de l'eau tant que la porte est ouverte.",
+   "reglages": {"Quand": "Toujours", "Nombre": "4 par seconde", "Départ": "Lent", "Dispersion": "180°", "Rafale": "Aucune", "Limite": "128"},
+   "groupe": "emit_mc_glow"
+  },
+  {
+   "particule": "mc_poof (Minecraft)",
+   "role": "Poussière au pied de la porte quand elle sort du sol et quand elle y redescend.",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Départ": "Moyen", "Dispersion": "45°", "Rafale": "Aucune", "Limite": "128"},
+   "groupe": "emit_mc_poof"
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Binette à pression",
+  "description": "Skin de houe : toutes tes houes deviennent une lame d'acier bruni au col de cygne, sertie dans une roue dentée de laiton à manomètre ambre, avec une chaudière de cuivre sous la tête. Au repos, la pression monte cran par cran puis la soupape siffle ; à chaque motte, la lame mord et tire.",
+  "lore": "Les jardiniers de la ville basse cultivent les serres chaudes de l'Atelier de laiton, là où la vapeur des machines garde la terre tiède en hiver. Un chaudronnier leur a forgé cette binette : la chaudière du manche chauffe la lame pour qu'elle ne colle jamais à la terre gelée, et le manomètre dit quand elle est prête. Quand l'aiguille touche le rouge, la soupape siffle, et le sillon s'ouvre tout seul.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

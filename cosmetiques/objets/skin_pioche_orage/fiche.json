@@ -1,0 +1,12 @@
+{
+  "nom": "Pic de l'orage",
+  "description": "Skin de pioche : toutes tes pioches deviennent un pic de mineur en acier d'orage martelé, bec de faucon d'un côté, tranchant en biseau de l'autre, œil cerclé d'un tambour d'or. L'éclair grésille dans la fente du bec ; chaque bloc cassé, la pointe décharge la foudre dans la roche.",
+  "lore": "Les Dompteurs d'orage creusent leurs forges au cœur des pics que frappe la foudre. Leurs mineurs ne craignent pas la roche la plus dure : leur pic garde un éclair dans le bec, et le lâche dans la pierre à l'instant où elle cède. On dit que les galeries des Dompteurs sentent l'orage, et que le tonnerre y gronde sans nuage.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

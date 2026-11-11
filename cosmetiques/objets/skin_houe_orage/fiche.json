@@ -1,0 +1,12 @@
+{
+  "nom": "Houe de l'orage",
+  "description": "Skin de houe : toutes tes houes deviennent une houe d'acier d'orage martelé, col de cygne fendu d'un éclair, lame au fil trempé, œil cerclé d'un tambour d'or sous une pointe de cristal. Chaque motte arrachée, la lame mord, tire la terre et y décharge la foudre.",
+  "lore": "Sur les plateaux battus par la foudre, les Dompteurs d'orage cultivent des champs que nul autre n'ose semer. Leurs houes portent un paratonnerre au bout de l'œil : l'éclair y tombe, court dans le col et se couche dans le sillon. On dit que ce qui pousse dans ces sillons a le goût de la pluie d'orage.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

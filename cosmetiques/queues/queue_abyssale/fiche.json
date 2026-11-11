@@ -1,0 +1,12 @@
+{
+  "nom": "Queue abyssale",
+  "description": "Queue-fouet lisse et effilée, parcourue d'une veine vert acide, cerclée d'anneaux de cuir à clous d'os et terminée par une fine lame en cœur. Elle ondule dans tous les états, du repos à la nage.",
+  "lore": "Elle est arrivée la deuxième année, comme les cornes, et le chasseur a appris à s'en servir comme d'une seconde arme. Sa lame en cœur est la seule chose douce que l'Abysse lui ait jamais donnée.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

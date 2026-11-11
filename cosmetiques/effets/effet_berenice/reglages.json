@@ -1,0 +1,94 @@
+{
+ "particules": [
+  {
+   "particule": "plume (modélisée)",
+   "role": "Plume ivoire à pointe dorée (recette validée des ailes de Bérénice) qui tombe en tournoyant : bouts des ailes de lumière quand elles s'ouvrent (départ) et quand elles se dissipent à l'atterrissage, gerbe du cocon qui éclate (cadence +7 pendant 0,4 s). Elles restent quelques secondes après l'effet : le signe du passage.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Durée": "6 s",
+    "Mouvement": "Légère",
+    "Au sol": "Se pose",
+    "Rendu": "Opaque",
+    "Sens": "Libre",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Moyen",
+    "Dispersion": "180°",
+    "Élan": "0 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "etoile (modélisée)",
+   "role": "Poussière d'or (0,6 px) qui monte des huit points du cercle : continue pendant la charge, plus dense quand les ailes s'ouvrent, à l'éclat et à l'atterrissage.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Élan": "0 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "etincelle (modélisée)",
+   "role": "Étincelle dorée (0,45 px) projetée dans toutes les directions : gerbe du cocon qui éclate au départ, gerbe au ras du sol quand le joueur se pose, brève anticipation au pied au tout début du départ.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Légère",
+    "Au sol": "Disparaît",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Rapide",
+    "Dispersion": "180°",
+    "Élan": "0 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "lueur (modélisée)",
+   "role": "Poussière de lumière (0,7 px) qui monte dans la colonne, depuis quatre points étagés : légère pendant la charge, dense quand la colonne s'élève (départ) ou descend (arrivée).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Élan": "0 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "mc_dust_ffd27a_10 (Minecraft)",
+   "role": "Poussière dorée de Minecraft (taille 1) : deux points sur le cercle (charge, ailes ouvertes, atterrissage) et un à la racine de chaque aile de lumière (montée du cocon, descente).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  }
+ ]
+}

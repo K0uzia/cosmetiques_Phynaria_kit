@@ -1,0 +1,12 @@
+{
+  "nom": "Tromblon Steampunk",
+  "description": "Tromblon à vapeur victorien tenu dans la main droite : crosse de bois sombre, petite chaudière de cuivre, manomètre à cadran ambre, canon de laiton à pavillon évasé qui recule sur son ressort à chaque tir, avec une bouffée de vapeur.",
+  "lore": "Il ne tire pas de balles, seulement de la pression, mais assez pour renverser un homme. Les maîtres de l'Atelier de laiton le gardent à la ceinture pour les jours où une chaudière refuse d'écouter. On reconnaît son tir au sifflement qui le suit.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

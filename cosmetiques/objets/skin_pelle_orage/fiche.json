@@ -1,0 +1,12 @@
+{
+  "nom": "Pelle de l'orage",
+  "description": "Skin de pelle : toutes tes pelles deviennent une pelle d'acier d'orage martelé, fer arrondi à l'avant trempé, poignée en D à pointe de cristal, tambour d'or à la base du fer. L'éclair grésille dans la nervure ; chaque bloc creusé, le fer se relève et la pointe décharge la foudre dans le sol.",
+  "lore": "Avant de battre le métal, les Dompteurs d'orage creusent : la tranchée qui mène la foudre du pic jusqu'à la forge. Leurs pelles portent un éclair couché dans la nervure, et le rendent à la terre à chaque pelletée. On dit qu'un sol retourné par elles sent l'orage pendant des jours.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

@@ -1,0 +1,24 @@
+{
+ "particules": [
+  {
+   "particule": "etincelle (modélisée)",
+   "role": "Paillettes de sucre qui montent des pointes de l'étoile : rares au repos, en gerbe à l'apparition et à chaque coup (ctrl_emit dans chaque point), puis disparaissent sans se poser.",
+   "reglages": {
+    "Quand": "À l'arrêt",
+    "Nombre": "0,5 par seconde",
+    "Durée": "1,5 s",
+    "Mouvement": "Monte",
+    "Au sol": "Disparaît",
+    "Rendu": "Opaque",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Poussée",
+    "Dispersion": "180°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "À l'attaque",
+    "Limite": "64"
+   }
+  }
+ ]
+}

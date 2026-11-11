@@ -1,0 +1,102 @@
+{
+ "particules": [
+  {
+   "particule": "etincelle (modélisée)",
+   "role": "Trait d'étincelle vif (0,6 × 2,6 px, plein en travers pour rester visible au loin) projeté le long du bord de la porte (douze points qui tournent avec la première couronne, axe +Y penché vers l'extérieur) : gerbes quand l'anneau se ferme, au passage du joueur et à la fermeture ; deux points aux mains pour le nœud et les sceaux.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Normale",
+    "Au sol": "Disparaît",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Rapide",
+    "Dispersion": "15°",
+    "Élan": "0 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "braise (modélisée)",
+   "role": "Braise orange de 1 px qui retombe du bord et se pose au sol quelques secondes : tant que la porte est ouverte, pluie dense quand le joueur sort de la porte d'arrivée, gerbe à la fermeture.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Lourde",
+    "Au sol": "Se pose",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Moyen",
+    "Dispersion": "45°",
+    "Élan": "0 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "glyphe (modélisée)",
+   "role": "Rune de lumière de 1,6 px qui monte des mains pendant que le sceau tient (charge), et au tout début du départ.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Élan": "0 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "mc_wax_on (Minecraft)",
+   "role": "Éclats orange de Minecraft sur quatre points du bord qui tourne, plus nombreux au passage et pendant la sortie du joueur.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Départ": "Moyen",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   },
+   "groupe": "emit_mc_wax_on"
+  },
+  {
+   "particule": "mc_small_flame (Minecraft)",
+   "role": "Petites flammes au bas de la porte (deux points), tant qu'elle est grande ouverte.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_small_flame"
+  },
+  {
+   "particule": "mc_electric_spark (Minecraft)",
+   "role": "Crépitement blanc aux mains quand un sceau commence à se tracer (charge) et quand le nœud prend dans la main droite (départ).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_electric_spark"
+  }
+ ]
+}

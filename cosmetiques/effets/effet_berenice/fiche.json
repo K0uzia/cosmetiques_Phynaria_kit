@@ -1,0 +1,12 @@
+{
+  "nom": "Ascension de Bérénice",
+  "description": "Un cercle d'étoiles s'allume sous vos pieds ; au départ, des ailes de lumière se referment sur vous en cocon, qui s'élève et éclate en gerbe de plumes. À l'arrivée, le ciel s'ouvre et vous descendez ailes déployées, qui se dissipent en plumes quand vous vous posez.",
+  "lore": "On dit que la reine, chaque soir, montait regarder sa chevelure devenue constellation. Ceux que Bérénice protège ne voyagent pas : ils sont rappelés au ciel un instant, puis rendus à la terre un peu plus loin. Les plumes qui restent derrière eux sont le seul signe qu'ils sont passés.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

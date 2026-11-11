@@ -1,0 +1,12 @@
+{
+  "nom": "Béret tartelette",
+  "description": "Béret porté de travers dont la galette est une tartelette aux fraises : pâte sablée cannelée, crème vanille et rosace de fraises nappées, une fraise entière en guise de queue. Les fraises tremblent comme de la gelée au pas et se couchent au vent.",
+  "lore": "Le pâtissier de la Vitrine enchantée n'a jamais su rater une tartelette, sauf une fois : la pâte avait trop levé et s'était bombée comme un béret. Il l'a garnie quand même et l'a posée de travers sur sa tête pour servir. Depuis, chaque matin, une fraise de plus y pousse toute nappée.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

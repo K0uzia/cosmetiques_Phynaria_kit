@@ -1,17 +1,36 @@
-"""Ailes de givre — ailes de longs cristaux de glace (bleu nuit, cyan, blanc givré), sur un squelette d'os de givre clair. Design original.
-Écrit ailes_givre.png, ailes_givre_e.png et .build/ailes_givre_brut.bbmodel à côté de ce script.
+"""Ailes de givre — ensemble Givre (thème Éléments) : longs cristaux de glace (bleu nuit, cyan, blanc givré) sur un squelette d'os de
+givre clair. Design original. Fiche de style : .claude/styles/givre.md. Écrit ailes_givre.png, ailes_givre_e.png et
+.build/ailes_givre_brut.bbmodel à côté de ce script.
 
-Structure et orientations reprises de gen_ailes_abyssales.py : humérus > avant-bras > poignet, éventail qui rayonne du poignet.
-Un cristal = peau + âme : un cube fin dont seules les faces nord et sud sont peintes (contour anguleux découpé par alpha 0/255,
-tranches transparentes) et, dedans, des tronçons pleins plus étroits, invisibles de face, qui remplissent l'épaisseur.
-Pas de semi-transparence : la translucidité est un motif de pixels pleins et vides sur les flancs, hors de l'âme ;
-les reflets internes sont peints (facettes en chevrons, éclats, fissures). La pose neutre (fold = 0) est l'aile ouverte.
+Structure reprise de gen_ailes_abyssales.py : humérus > avant-bras > poignet, éventail qui rayonne du poignet.
+Un cristal = peau + âme : un cube fin dont seules les faces nord et sud sont peintes (contour anguleux découpé par alpha,
+tranches transparentes) et, au milieu, des tronçons pleins plus étroits (âme opaque de 0,3 px), invisibles de face.
+La pose neutre (fold = 0) est l'aile ouverte.
+
+Mise aux règles du 2026-11-04 (design gardé) :
+- taille : chaque pièce réduite dans le plan de l'aile (K = 0,64 autour de x = ±3, y = 23 ; os KQ = 0,8), profondeur gardée :
+  envergure déployée 61–67 px (fly, glide, étirement de l'idle), repos replié pointes à y ≈ 4 (bas des mollets), extension < 46 px ;
+- couches : profondeur de chaque cristal choisie par repartir() (faces nord et sud à 0,12 px au moins des faces qu'il recouvre,
+  éventail ouvert comme fermé ; âmes écartées quand deux cristaux peuvent devenir parallèles), os légèrement courbes et à rayons
+  écartés, capuchons du second cube d'os en retrait, éventail qui garde 7° entre deux rémiges fermées ; contrôle par
+  .build/mesure.py et .build/poses.py ;
+- translucidité réelle : peaux des cristaux dans des groupes trans_<segment> (alpha 150–205 selon la facette, arête 230, liseré
+  de givre 240), âmes, os et flocon opaques ; trans_ est visible avec shader (vu en jeu sur d'autres pièces), add_ et _e non ;
+- event_equip (1,8 s, la glace pousse du dos en cascade jusqu'aux pointes, un carillon d'améthyste) et event_unequip (2,2 s, les
+  pointes rentrent d'abord, finit à l'échelle 0) : pas de sac ;
+- calque _e : sources nettes, arête de la moitié extérieure des cristaux (≈ 150–225) et filet au cœur des âmes ; pas de reflets _r ;
+- flocon-particule réduit à 0,8 px (fiche de style), une face up à 0,3 px au-dessus du pivot ; sons limités par tools/sons.py.
+Pas d'overlay_ : aucune pièce ne tourne en continu (et 16 animations au plus).
+Fonctions avancées : trans_, particle_givre + emit_givre (flocons qui tombent des ailes), calque _e, event_equip, event_unequip, son.
+À juger en jeu seulement (/cosmetique apercu) : translucidité et tri des faces trans_ (avec et sans shader), apparition et retrait
+(somme avec l'état, sens z du canal position), calque _e de nuit (avec shader : invisible à ce jour, bug du mod), flocons.
 """
 import base64, io, json, math, os, re, uuid as _uuid
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
+TRANS = True        # peaux des cristaux en groupes trans_ : vraie translucidité, visible avec shader (vu en jeu sur d'autres pièces)
 AVEC_E = True       # True : embarque ailes_givre_e.png en seconde texture. Réactivé le 2026-11-03 (correctif du mod annoncé, à vérifier en jeu).
 TEX = 512
 V0, DV = 26, 5      # battement à la fusée (glide) : constantes validées en jeu sur Aurelion et les ailes abyssales
@@ -36,7 +55,7 @@ MID = [(11, 18.5, 4.6), (-4, 16, 4.6), (-18, 21, 4.8), (-34, 17, 4.6), (-49, 21,
 SEC = [(0.92, -80, 25, 5.4), (0.72, -85, 21, 5.2), (0.52, -89, 27, 5.6), (0.30, -94, 22, 5.2), (0.10, -99, 25, 5.4)]
 # Tertiaires de l'humérus.
 TERT = [(0.92, -100, 18, 4.8), (0.58, -104, 13, 4.4)]
-FCLOSE = [lerp(52, -14, i / (len(PRIM) - 1)) for i in range(len(PRIM))]      # fermeture à fold = 1 (degrés)
+FCLOSE = [lerp(42, 0, i / (len(PRIM) - 1)) for i in range(len(PRIM))]         # fermeture à fold = 1 (degrés) : deux rémiges voisines gardent 7° au moins
 SCLOSE = [-10, -7, -4, -1, 2]
 
 
@@ -134,7 +153,17 @@ def paint_crystal(W, H, nseg, windows=True):
     px_u = (np.arange(W) + 0.5) / W
     px_b = 1 - 2 * (np.arange(H) + 0.5) / H
     PU, PB = np.meshgrid(px_u, px_b)
-    if windows:
+    if TRANS:
+        # vraie translucidité (groupes trans_) : corps 150-205 selon la facette, éclats et fissures plus denses,
+        # arête 230, liseré de givre 240 ; la base, sous l'ombre de recouvrement, plus opaque pour que les rangs se lisent
+        c = lambda m: np.asarray(m)[ss // 2::ss, ss // 2::ss]
+        fa = 150 + 45 * PU + 14 * (c(b) < c(ridge)) + 22 * (np.array(sh)[ss // 2::ss, ss // 2::ss] > 127) + 18 * c(bevel)
+        fa = fa + 36 * np.clip((0.18 - PU) / 0.18, 0, 1)
+        fa = np.where(np.array(cr)[ss // 2::ss, ss // 2::ss] > 127, 222, fa)
+        fa = np.where(c(ridge_line), 230, fa)
+        fa = np.where(rim, 240, fa)
+        alpha = np.clip(fa, 140, 245).astype(np.uint8) * al
+    elif windows:
         inside_core = np.zeros((H, W), bool)
         for u0, u1, bc, hw in core:
             inside_core |= (PU >= u0 - 0.01) & (PU <= u1 + 0.01) & (np.abs(PB - bc) < hw + 0.06)
@@ -146,12 +175,12 @@ def paint_crystal(W, H, nseg, windows=True):
 
     out = np.zeros((H, W, 4), np.uint8)
     out[..., :3] = np.clip(rgb, 0, 255).astype(np.uint8)
-    out[..., 3] = al * 255
+    out[..., 3] = alpha if TRANS else al * 255
     # calque lumineux : la seule arête centrale, très sombre à la base, vive à la pointe
     rl = ridge_line.reshape(H, ss, W, ss).mean(axis=(1, 3)) > 0.4
-    rl &= al
-    k = np.clip((PU - 0.25) / 0.7, 0, 1)[..., None]
-    ec = lerp(np.array((8, 34, 70), np.float32), np.array((150, 226, 255), np.float32), k)
+    rl &= al & (PU > 0.38)                  # source nette : l'arête de la moitié extérieure seulement, rien à la base
+    k = np.clip((PU - 0.38) / 0.55, 0, 1)[..., None]
+    ec = lerp(np.array((84, 160, 205), np.float32), np.array((168, 226, 246), np.float32), k)   # 150 à 225 environ
     oe = np.zeros((H, W, 4), np.uint8)
     oe[..., :3] = (ec * rl[..., None]).astype(np.uint8)
     oe[..., 3] = rl * 255
@@ -199,13 +228,13 @@ for _k in range(6):
     _a0 = math.radians(_k * 60 + 30)
     _dx, _dy = math.cos(_a0), math.sin(_a0)
     _end = (_o + _dx * _fs * 0.47, _o + _dy * _fs * 0.47)
-    _fd.line([(_o, _o), _end], fill=255, width=int(_fs * 0.058))
+    _fd.line([(_o, _o), _end], fill=255, width=int(_fs * 0.10))
     _fdc.line([(_o, _o), (_o + _dx * _fs * 0.3, _o + _dy * _fs * 0.3)], fill=255, width=int(_fs * 0.024))
     for _rr, _bl in ((0.17, 0.12), (0.31, 0.10)):
         _bx, _by = _o + _dx * _fs * _rr, _o + _dy * _fs * _rr
         for _sg in (-1, 1):
             _a1 = _a0 + _sg * math.radians(58)
-            _fd.line([(_bx, _by), (_bx + math.cos(_a1) * _fs * _bl, _by + math.sin(_a1) * _fs * _bl)], fill=255, width=int(_fs * 0.042))
+            _fd.line([(_bx, _by), (_bx + math.cos(_a1) * _fs * _bl, _by + math.sin(_a1) * _fs * _bl)], fill=255, width=int(_fs * 0.07))
 _fd.regular_polygon((_o, _o, _fs * 0.09), 6, fill=255)
 _fa = np.array(_fm.resize((PT, PT), Image.LANCZOS)) > 110
 _fci = np.array(_fc.resize((PT, PT), Image.LANCZOS)) > 90
@@ -238,10 +267,14 @@ _fv = UV["flake"]
 tex_e[_fv[1]:_fv[3], _fv[0]:_fv[2], :3] = np.array((110, 190, 230), np.uint8) * _fci[..., None]
 tex_e[_fv[1]:_fv[3], _fv[0]:_fv[2], 3] = _fci * 255
 
+# cœur des cristaux : un filet lumineux de 2 texels au milieu de l'âme (vu par la tranche et à travers la peau translucide)
+_cv = UV["corestrip"]
+tex_e[_cv[1] + 7:_cv[1] + 9, _cv[0] + 24:_cv[2], :3] = (120, 200, 236)
+tex_e[_cv[1] + 7:_cv[1] + 9, _cv[0] + 24:_cv[2], 3] = 255
 CLEAR = [TEX - 4, TEX - 4, TEX - 2, TEX - 2]
 assert tex[TEX - 3, TEX - 3, 3] == 0
 tex[..., :3] &= 0xFC
-assert set(np.unique(tex[..., 3])) <= {0, 255}, "semi-transparence"
+assert TRANS or set(np.unique(tex[..., 3])) <= {0, 255}, "semi-transparence hors trans_"
 assert set(np.unique(tex_e[..., 3])) <= {0, 255}, "semi-transparence _e"
 tex_img = Image.fromarray(tex, "RGBA")
 tex_img.save(f"{NOM}.png", optimize=True)
@@ -255,7 +288,20 @@ tex_e_img.save(_b, "PNG", optimize=True)
 tex_e_b64 = "data:image/png;base64," + base64.b64encode(_b.getvalue()).decode()
 
 # ------------------------------------------------------------------ géométrie
+# Taille (2026-11-04, .claude/styles/ailes-anatomie.md) : l'aile reste dessinée dans ses coordonnées d'origine, puis chaque pièce est
+# réduite DANS LE PLAN de l'aile (x, y) par K autour de la racine (x = ±3, y = 23). La profondeur (z : empilement des cristaux,
+# épaisseur des peaux et des âmes) garde ses valeurs : l'écart entre couches ne diminue pas. Les cristaux ne tournent qu'autour
+# de Z : la réduction est exacte. Les os (tronçons tournés de 45° en X) gardent une section carrée, réduite par KQ.
+K, KQ = 0.64, 0.80
+C0 = (3.0, 23.0)
+GAP = 0.12            # écart minimal entre deux faces parallèles qui se recouvrent (règle : 0,1 px, plus une marge d'arrondi)
 elements, groups = [], {}
+SIDE = [0]            # côté en cours de construction (0 : pièce centrale, pas de réduction)
+
+
+def Tu(p):
+    """Point du dessin (aile droite, x > 0) -> point réduit."""
+    return (C0[0] + K * (p[0] - C0[0]), C0[1] + K * (p[1] - C0[1]))
 
 
 def nuid():
@@ -272,42 +318,159 @@ def cube(name, frm, to, origin, rot=(0, 0, 0), faces=None):
     return e["uuid"]
 
 
-def group(name, origin, parent=None, rotation=(0, 0, 0)):
+def group(name, origin, parent=None, rotation=(0, 0, 0), raw=False):
+    """origin en coordonnées du dessin (x signé) ; réduit par K sur les ailes, sauf raw."""
     assert name not in groups
+    s = SIDE[0]
+    if s and not raw:
+        x, y = Tu((s * origin[0], origin[1]))
+        origin = (s * x, y, origin[2])
     groups[name] = {"origin": [round(v, 3) for v in origin], "uuid": nuid(), "ids": [], "parent": parent,
                     "rotation": [round(v, 2) for v in rotation]}
     return name
 
 
-USED_Z = []
+# --- répartition en profondeur : une couche par cristal, choisie près de sa profondeur dessinée, de sorte qu'aucune face nord ou sud
+# ne soit à moins de GAP d'une face parallèle d'un cristal (ou d'un os) qu'il recouvre dans le plan, éventail ouvert comme fermé.
+FS = [-0.1, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.15]      # ouvertures de l'éventail balayées (fold), attaque et apparition comprises
+SWEEP = {}            # famille de groupe -> (pivot, angle(fold) en degrés), dans le dessin
+PLATES = []           # (polygones par fold, faces z)
+ZCACHE = {}
+CONFLITS = []
+SEARCH = 1.6          # écart maximal à la profondeur dessinée (px)
+CORE = 0.3            # épaisseur de l'âme d'un cristal, au milieu de sa peau
+HUB = 1.2             # base d'un cristal de l'éventail, prise dans le nœud du poignet ou sous les couverts : ignorée
 
 
-def free_z(z, th):
-    """Profondeur libre : aucune face nord ou sud à moins de 0,03 px d'une autre, sur toute l'aile."""
-    while any(abs(z + d - q) < 0.03 for d in (-th / 2, th / 2) for q in USED_Z):
-        z += 0.012
-    USED_Z.extend((z - th / 2, z + th / 2))
+def _rect(p, ang, x0, x1, hw, m=0.35):
+    c, s_ = math.cos(math.radians(ang)), math.sin(math.radians(ang))
+    pts = [(x0 - m, -hw - m), (x1 + m, -hw - m), (x1 + m, hw + m), (x0 - m, hw + m)]
+    return [(p[0] + c * a - s_ * b, p[1] + s_ * a + c * b) for a, b in pts]
+
+
+def _rot_about(poly, piv, ang):
+    c, s_ = math.cos(math.radians(ang)), math.sin(math.radians(ang))
+    return [(piv[0] + c * (x - piv[0]) - s_ * (y - piv[1]), piv[1] + s_ * (x - piv[0]) + c * (y - piv[1])) for x, y in poly]
+
+
+def _sat(A, B):
+    for P in (A, B):
+        for i in range(4):
+            ex, ey = P[(i + 1) % 4][0] - P[i][0], P[(i + 1) % 4][1] - P[i][1]
+            nx, ny = -ey, ex
+            pa = [nx * x + ny * y for x, y in A]
+            pb = [nx * x + ny * y for x, y in B]
+            if max(pa) < min(pb) or max(pb) < min(pa):
+                return False
+    return True
+
+
+def _polys(gkey, poly):
+    sw = SWEEP.get(gkey)
+    if sw is None:
+        return [poly] * len(FS)
+    piv, f = sw
+    return [_rot_about(poly, piv, f(fo)) for fo in FS]
+
+
+def _angles(gkey, ang):
+    sw = SWEEP.get(gkey)
+    return [ang + (sw[1](fo) if sw else 0.0) for fo in FS]
+
+
+def _paralleles(A, B, lim=7.0):
+    return any(abs((a - b + 90) % 180 - 90) < lim for a, b in zip(A, B))
+
+
+PLAN = {}             # clé -> (polygones, angles, profondeur dessinée, épaisseur) ; os : clé "os:<nom>", profondeur fixe
+OPTI = [False]
+
+
+def place(key, gkey, poly, z, th, ang, cpoly=None):
+    """Premier passage : note la plaque (et le contour de son âme). Second passage : renvoie la profondeur choisie par repartir()."""
+    if OPTI[0]:
+        return ZCACHE[key]
+    if key not in PLAN:
+        PLAN[key] = (_polys(gkey, poly), _angles(gkey, ang), z, th, _polys(gkey, cpoly) if cpoly else None)
     return z
 
 
-ZCACHE = {}
+def repartir(passes=8):
+    """Choisit une profondeur par cristal, à SEARCH au plus de sa profondeur dessinée : faces nord et sud à GAP au moins des faces
+    des plaques et des os qu'il recouvre (éventail ouvert comme fermé) ; âme (épaisseur CORE) à GAP au moins des âmes des cristaux
+    qui peuvent lui devenir parallèles. Glouton dans l'ordre du dessin, puis passes de réparation ; un conflit avec un os compte double."""
+    keys = list(PLAN)
+    vois = {k: [] for k in keys}
+    for i, a in enumerate(keys):
+        for b in keys[i + 1:]:
+            Pa, Aa, _, _, Ca = PLAN[a]
+            Pb, Ab, _, _, Cb = PLAN[b]
+            if a.startswith("os:") and b.startswith("os:"):
+                continue
+            if any(_sat(x, y) for x, y in zip(Pa, Pb)):
+                par = Ca is not None and Cb is not None and _paralleles(Aa, Ab) and any(_sat(x, y) for x, y in zip(Ca, Cb))
+                vois[a].append((b, par))
+                vois[b].append((a, par))
+    Zs = {}
+
+    def cout(k, zz):
+        th = PLAN[k][3]
+        c = 0
+        for o, par in vois[k]:
+            if o not in Zs:
+                continue
+            zo, to = Zs[o], PLAN[o][3]
+            w = 2 if o.startswith("os:") else 1
+            c += w * sum(abs(x - y) < GAP for x in (zz - th / 2, zz + th / 2) for y in (zo - to / 2, zo + to / 2))
+            if par and abs(zz - zo) < CORE + GAP:
+                c += 1
+        return c
+
+    for k in keys:
+        if k.startswith("os:"):
+            Zs[k] = PLAN[k][2]
+    cand = sorted((i * 0.01 for i in range(-int(SEARCH * 100), int(SEARCH * 100) + 1)), key=abs)
+    for n in range(passes + 1):
+        for k in keys:
+            if k.startswith("os:"):
+                continue
+            z0 = PLAN[k][2]
+            Zs.pop(k, None)
+            Zs[k] = min((cout(k, z0 + d), abs(d), z0 + d) for d in cand)[2]
+    ZCACHE.update({k: v for k, v in Zs.items() if not k.startswith("os:")})
+    CONFLITS[:] = [(k, cout(k, Zs[k])) for k in keys if not k.startswith("os:") and cout(k, Zs[k])]
+    if os.environ.get("DBG"):
+        for k in keys:
+            if not k.startswith("os:"):
+                print(k, len(vois[k]), sum(p for _, p in vois[k]), [o for o, _ in vois[k]])
+
+
+def _gkey(g):
+    return re.sub(r"_[lr]$", "", g)
 
 
 def crystal(s, g, name, p, ang, L, wd, z, th, tile):
-    """Cristal le long de l'axe local X depuis p. Peau : faces nord et sud découpées. Âme : tronçons pleins, faces du dessus et du dessous seules."""
+    """Cristal le long de l'axe local X depuis p (dessin). Peau : faces nord et sud découpées, dans le groupe trans_ du segment.
+    Âme : tronçons pleins plus étroits, faces du dessus et du dessous seules, opaques."""
     key = name.rsplit("_", 1)[0]
-    if key not in ZCACHE:
-        ZCACHE[key] = free_z(z, th)                           # même profondeur sur les deux ailes
-    z = ZCACHE[key]
-    x0, y0 = p
+    co = TILES[tile]["core"]
+    chw = max(abs(bc) + hw for _, _, bc, hw in co) * wd / 2
+    z = place(key, _gkey(g), _rect(p, ang, HUB if _gkey(g) in SWEEP else 0, L, wd / 2), z, th, ang,
+              _rect(p, ang, co[0][0] * L, co[-1][1] * L, chw, m=0.12))       # même profondeur sur les deux ailes
+    x0, y0 = Tu(p)
+    L, wd = L * K, wd * K
     o = [s * x0, y0, z]
     rot = (0, 0, s * ang)
-    ids = groups[g]["ids"]
+    skin = g
+    if TRANS:
+        skin = f"trans_{g}"
+        if skin not in groups:
+            group(skin, groups[g]["origin"], parent=g, raw=True)
     u0, v0, u1, v1 = UV[tile]
     ua, ub = (u0, u1) if s > 0 else (u1, u0)
     a, b = (x0, x0 + L) if s > 0 else (-x0 - L, -x0)
     faces = {"south": [ua, v0, ub, v1], "north": [ub, v0, ua, v1], "east": CLEAR, "west": CLEAR, "up": CLEAR, "down": CLEAR}
-    ids.append(cube(name, [a, y0 - wd / 2, z - th / 2], [b, y0 + wd / 2, z + th / 2], o, rot=rot, faces=faces))
+    groups[skin]["ids"].append(cube(name, [a, y0 - wd / 2, z - th / 2], [b, y0 + wd / 2, z + th / 2], o, rot=rot, faces=faces))
     cu0, cv0, cu1, cv1 = UV["corestrip"]
     for i, (t0, t1, bc, hw) in enumerate(TILES[tile]["core"]):
         q0, q1 = lerp(cu0, cu1, t0), max(lerp(cu0, cu1, t1), lerp(cu0, cu1, t0) + 2)
@@ -316,11 +479,15 @@ def crystal(s, g, name, p, ang, L, wd, z, th, tile):
         yc = y0 + bc * wd / 2
         h = hw * wd / 2
         cf = {"up": lng, "down": lng}      # pas de capuchons : vus par la tranche, ils se lisent comme des blocs
-        ids.append(cube(f"{name}k{i}", [A, yc - h, z - th / 2 + 0.03], [B, yc + h, z + th / 2 - 0.03], o, rot=rot, faces=cf))
+        groups[g]["ids"].append(cube(f"{name}k{i}", [A, yc - h, z - CORE / 2], [B, yc + h, z + CORE / 2], o, rot=rot, faces=cf))
 
 
 def bar(s, g, name, x, y, z, L, q, phi, u0, u1, octo=True, ov=0.0):
-    """Tronçon d'os le long de l'axe local X : section octogonale (deux cubes à 45°), sinon losange seul."""
+    """Tronçon d'os le long de l'axe local X : section octogonale (deux cubes, l'un tourné de 45° en X), sinon losange seul.
+    Le second cube est plus court de 0,15 px à chaque bout : ses capuchons ne doublent plus ceux du premier."""
+    if SIDE[0] == -1:                               # obstacle pour la répartition des cristaux (faces nord et sud du premier cube)
+        PLAN.setdefault("os:" + name, (_polys(_gkey(g), _rect((x, y), phi, -ov, L + ov, q * KQ / K)), None, z, 2 * q * KQ, None))
+    (x, y), L, q = Tu((x, y)), L * K, q * KQ
     bu0, bv0, bu1, bv1 = UV["bone"]
     ua, ub = lerp(bu0, bu1, u0), max(lerp(bu0, bu1, u1), lerp(bu0, bu1, u0) + 2)
     long_ = [ua, bv0, ub, bv1]
@@ -331,9 +498,25 @@ def bar(s, g, name, x, y, z, L, q, phi, u0, u1, octo=True, ov=0.0):
     gid = groups[g]["ids"]
     if octo:
         gid.append(cube(name, [a, y - q, z - q], [b, y + q, z + q], o, rot=(0, 0, s * phi), faces=faces))
-        gid.append(cube(name + "o", [a + 0.03, y - q * 0.97, z - q * 0.97], [b - 0.03, y + q * 0.97, z + q * 0.97], o, rot=(45, 0, s * phi), faces=faces))
+        gid.append(cube(name + "o", [a + 0.15, y - q * 0.97, z - q * 0.97], [b - 0.15, y + q * 0.97, z + q * 0.97], o, rot=(45, 0, s * phi), faces=faces))
     else:
         gid.append(cube(name, [a, y - q, z - q], [b, y + q, z + q], o, rot=(45, 0, s * phi), faces=faces))
+
+
+def arc(a, b, n, bend):
+    """n tronçons de a à b sur un arc : deux tronçons voisins font un angle de `bend` degrés (jamais deux os coplanaires bout à bout)."""
+    L = math.dist(a, b)
+    if n == 1:
+        return [a, b]
+    th = math.radians(bend) * n                       # angle total sous-tendu
+    R = L / 2 / math.sin(th / 2)
+    base = math.atan2(b[1] - a[1], b[0] - a[0])
+    pts = []
+    for i in range(n + 1):
+        t = -th / 2 + th * i / n
+        u, v = R * math.sin(t) + L / 2, R * (math.cos(t) - math.cos(th / 2))      # courbe vers la gauche (vers le haut de l'aile)
+        pts.append((a[0] + u * math.cos(base) - v * math.sin(base), a[1] + u * math.sin(base) + v * math.cos(base)))
+    return pts
 
 
 def chain(s, g, name, pts, r0, r1, u0=0.0, u1=1.0, z=Z, z1=None):
@@ -355,9 +538,15 @@ def emit(parent, at, s):
 
 
 SEG = ["shoulder", "elbow", "wrist"]
+for _k in range(len(PRIM)):
+    SWEEP[f"c{_k + 1}"] = (W_, lambda f, k=_k: -FCLOSE[k] * f)
+for _k, (_u, *_r) in enumerate(SEC):
+    SWEEP[f"s{_k + 1}"] = (along(E_, W_, _u), lambda f, k=_k: -SCLOSE[k] * f)
+SWEEP["thumb"] = (W_, lambda f: 28 * max(0.0, f))
 
 
 def build(s):
+    SIDE[0] = s
     tag = "l" if s < 0 else "r"
     pv = [S_, E_, W_]
     segs = []
@@ -371,11 +560,11 @@ def build(s):
     crystal(s, rt, f"rc1_{tag}", (3.2, 22.3), 38, 5.0, 2.0, 4.9, 0.5, "S1")
     crystal(s, rt, f"rc2_{tag}", (3.0, 21.6), -24, 4.2, 1.9, 4.6, 0.5, "S2")
 
-    # os
-    chain(s, sh, f"hum_{tag}", [S_, along(S_, E_, 0.5), E_], 1.05, 0.95, 0.05, 0.3)
-    chain(s, el, f"avb_{tag}", [E_, along(E_, W_, 0.33), along(E_, W_, 0.66), W_], 1.05, 0.72, 0.3, 0.55)
-    bar(s, el, f"coude_{tag}", E_[0] - 0.7, E_[1] - 0.45, Z, 1.6, 1.15, 38, 0.2, 0.3)
-    bar(s, wr, f"nodw_{tag}", W_[0] - 0.8, W_[1] - 0.2, Z, 1.8, 0.98, 14, 0.5, 0.6)
+    # os : légèrement courbes, tronçons voisins jamais dans le prolongement l'un de l'autre
+    chain(s, sh, f"hum_{tag}", arc(S_, E_, 2, 9), 1.15, 0.83, 0.05, 0.3)       # rayons écartés de 0,16 : faces des tronçons voisins à plus de 0,1 px
+    chain(s, el, f"avb_{tag}", arc(E_, W_, 3, 8), 1.20, 0.72, 0.3, 0.55)
+    bar(s, el, f"coude_{tag}", E_[0] - 0.7, E_[1] - 0.45, Z, 1.6, 1.30, 38, 0.2, 0.3)
+    bar(s, wr, f"nodw_{tag}", W_[0] - 1.0, W_[1] - 0.25, Z, 2.4, 0.98, 14, 0.5, 0.6)
 
     # éperons : cristal du poignet, pièce maîtresse de la silhouette, et petit éclat du coude
     th = group(f"thumb_{tag}", [s * W_[0], W_[1], Z], parent=wr)
@@ -384,30 +573,30 @@ def build(s):
     crystal(s, th, f"spk1_{tag}", polar(W_, 62, 1.0), 104, 6.5, 2.2, Z - 0.5, 0.5, "S3")
     crystal(s, el, f"spur_{tag}", (E_[0] + 0.1, E_[1] + 0.2), 116, 5.2, 2.2, Z - 0.2, 0.5, "S1")
 
-    # éventail de la main : une rémige par groupe, escalier de profondeur, chaque rémige recouvre la suivante
-    for k, (a, L, wd) in enumerate(PRIM):
-        g = group(f"c{k + 1}_{tag}", [s * W_[0], W_[1], Z], parent=wr)
-        crystal(s, g, f"p{k}_{tag}", polar(W_, a, 0.4), a, L, wd, Z - 0.75 + 0.25 * k, 0.66, f"L{k % 7}")
-        if k < len(MID):
-            ma, mL, mw = MID[k]
-            crystal(s, g, f"q{k}_{tag}", polar(W_, ma, 0.4), ma, mL, mw, Z - 1.65 + 0.11 * k, 0.6, f"M{k % 4}")
-        # couverts dessus et dessous : petits cristaux qui cachent la racine
-        crystal(s, g, f"cb{k}_{tag}", polar(W_, a + 4, 1.4), a + 4, 11.0 - (k % 2) * 2.2, 3.8, Z + 1.55 + 0.09 * k, 0.5, f"S{k % 4}")
-        crystal(s, g, f"cf{k}_{tag}", polar(W_, a - 4, 1.4), a - 4, 10.0 - (k % 2) * 1.8, 3.6, Z - 2.35 - 0.09 * k, 0.5, f"S{(k + 2) % 4}")
-
     # secondaires
     for k, (u, a, L, wd) in enumerate(SEC):
         p = along(E_, W_, u)
         g = group(f"s{k + 1}_{tag}", [s * p[0], p[1], Z], parent=el)
-        crystal(s, g, f"sc{k}_{tag}", p, a, L, wd, Z - 0.58 - 0.17 * k + 0.68, 0.6, f"L{(k + 3) % 7}" if L > 23 else f"M{k % 4}")
-        crystal(s, g, f"sb{k}_{tag}", along(E_, W_, u - 0.04), a + 5, 9.5 - (k % 2) * 2, 3.6, Z + 1.45 - 0.08 * k, 0.5, f"S{(k + 1) % 4}")
-        crystal(s, g, f"sf{k}_{tag}", along(E_, W_, u + 0.04), a - 5, 8.5 - (k % 2) * 1.6, 3.4, Z - 1.5 - 0.08 * k, 0.5, f"S{(k + 3) % 4}")
+        crystal(s, g, f"sc{k}_{tag}", p, a, L, wd, Z - 0.58 - 0.17 * k + 0.68, 0.5, f"L{(k + 3) % 7}" if L > 23 else f"M{k % 4}")
+        crystal(s, g, f"sb{k}_{tag}", along(E_, W_, u - 0.04), a + 5, 9.5 - (k % 2) * 2, 3.6, Z + 1.45 - 0.08 * k, 0.4, f"S{(k + 1) % 4}")
+        crystal(s, g, f"sf{k}_{tag}", along(E_, W_, u + 0.04), a - 5, 8.5 - (k % 2) * 1.6, 3.4, Z - 1.5 - 0.08 * k, 0.4, f"S{(k + 3) % 4}")
 
     # tertiaires et scapulaires, fixés à l'humérus
     for k, (u, a, L, wd) in enumerate(TERT):
-        crystal(s, sh, f"t{k}_{tag}", along(S_, E_, u), a, L, wd, Z - 0.96 - 0.2 * k, 0.7, f"M{(k + 1) % 4}")
+        crystal(s, sh, f"t{k}_{tag}", along(S_, E_, u), a, L, wd, Z - 0.96 - 0.2 * k, 0.6, f"M{(k + 1) % 4}")
     crystal(s, sh, f"sca0_{tag}", along(S_, E_, 0.42), -96, 7.8, 3.2, Z + 1.0, 0.5, "S2")
     crystal(s, sh, f"sca1_{tag}", along(S_, E_, 0.78), -103, 9.0, 3.4, Z - 1.85, 0.5, "S0")
+
+    # éventail de la main : une rémige par groupe, escalier de profondeur, chaque rémige recouvre la suivante
+    for k, (a, L, wd) in enumerate(PRIM):
+        g = group(f"c{k + 1}_{tag}", [s * W_[0], W_[1], Z], parent=wr)
+        crystal(s, g, f"p{k}_{tag}", polar(W_, a, 0.4), a, L, wd, Z - 0.75 + 0.25 * k, 0.5, f"L{k % 7}")
+        if k < len(MID):
+            ma, mL, mw = MID[k]
+            crystal(s, g, f"q{k}_{tag}", polar(W_, ma, 0.4), ma, mL, mw, Z - 1.65 + 0.11 * k, 0.5, f"M{k % 4}")
+        # couverts dessus et dessous : petits cristaux qui cachent la racine
+        crystal(s, g, f"cb{k}_{tag}", polar(W_, a + 4, 1.4), a + 4, 11.0 - (k % 2) * 2.2, 3.8, Z + 1.55 + 0.09 * k, 0.4, f"S{k % 4}")
+        crystal(s, g, f"cf{k}_{tag}", polar(W_, a - 4, 1.4), a - 4, 10.0 - (k % 2) * 1.8, 3.6, Z - 2.35 - 0.09 * k, 0.4, f"S{(k + 2) % 4}")
 
     # points de départ des flocons : pointe des cristaux
     emit(f"c2_{tag}", polar(W_, PRIM[1][0], PRIM[1][1]), s)
@@ -415,17 +604,21 @@ def build(s):
     emit(f"c6_{tag}", polar(W_, PRIM[5][0], PRIM[5][1]), s)
     u, a, L, _w = SEC[2]
     emit(f"s3_{tag}", polar(along(E_, W_, u), a, L), s)
+    SIDE[0] = 0
     return rt, sh
 
 
+build(-1)                    # premier passage : relevé des plaques, puis répartition en profondeur
+repartir()
+elements.clear(); groups.clear(); EMITS.clear(); OPTI[0] = True
 (LR_, L_), (RR_, Rr_) = build(-1), build(1)
 
 # Particule (guide, section 5 ter) : une seule plaque, face up seule, à 0,3 px au-dessus du pivot, image de flocon.
+# Petit flocon (0,8 px, fiche de style Givre) : la neige se lit à sa quantité, pas à la taille d'un flocon.
 PL = group("particle_givre", [0, 0, 0])
-PW, PTH, PY = 3.4, 0.3, 0.3
+PW, PTH, PY = 0.8, 0.3, 0.3
 pu0, pv0, pu1, pv1 = UV["flake"]
 groups[PL]["ids"].append(cube("flocon", [-PW / 2, PY, -PW / 2], [PW / 2, PY + PTH, PW / 2], [0, 0, 0], faces={"up": [pu0, pv0, pu1, pv1]}))
-
 
 def bone(name):
     g = groups[name]
@@ -510,14 +703,16 @@ def anim(name, length, segs, fold, n_kf=None, loop="loop", only=None):
 
 Z0 = C(0)
 
-# idle 8 s : respiration à plateaux (4 s), étirement sec 4,6–6,6 s
+# idle 8 s : repos replié (2026-11-04 : épaule, coude et poignet abaissés de 57, 7 et 9° ; pointes à y ≈ 4, au bas des mollets,
+# balayage arrière de l'épaule ramené de 14 à 8°) ; respiration à plateaux (4 s), étirement sec 4,6–6,6 s (envergure ≈ 64 px)
 st = lambda t: bump(t, 4.6, 4.95, 6.15, 6.6)
 mix = lambda f, v: (lambda t: f(t) * (1 - st(t)) + v * st(t))
+IZ = [float(v) for v in os.environ.get("IZ", "-55,-10,-15,0.4,6,8,-6,8").split(",")]   # z épaule, coude, poignet ; fold ; x, y épaule ; y coude ; y poignet
 idle = anim("idle", 8.0, {
-    "shoulder": (mix(S(4, 1.0, 0, 6), 15), mix(S(4, 1.5, 0, 14), -6), mix(S(4, 2, 0, 2), 10)),
-    "elbow":    (Z0, mix(S(4, 1, -30, -6), -4), mix(S(4, 1.5, -30, -3), 4)),
-    "wrist":    (Z0, mix(S(4, 0.8, -50, 8), -6), mix(S(4, 1, -50, -6), 3))},
-    fold=lambda t: (0.22 + 0.05 * snapv(math.sin(TAU * t / 4))) * (1 - st(t)), n_kf=80)
+    "shoulder": (mix(S(4, 1.0, 0, IZ[4]), 15), mix(S(4, 1.5, 0, IZ[5]), -6), mix(S(4, 2, 0, IZ[0]), 10)),
+    "elbow":    (Z0, mix(S(4, 1, -30, IZ[6]), -4), mix(S(4, 1.5, -30, IZ[1]), 4)),
+    "wrist":    (Z0, mix(S(4, 0.8, -50, IZ[7]), -6), mix(S(4, 1, -50, IZ[2]), 3))},
+    fold=lambda t: (IZ[3] + 0.05 * snapv(math.sin(TAU * t / 4))) * (1 - st(t)), n_kf=80)
 
 # fly 2,4 s : joueur debout en vol créatif : plan basculé d'environ 40°. Descente brève et dure, remontée poignet fléchi, éventail fermé.
 T = 2.4
@@ -655,7 +850,73 @@ PF, PR = 3.0, 6.0
 givre_fall = particle_anim("particle_givre_fall", PF, lambda t: (24 * math.sin(TAU * t / PF), 360 * t / PF, 18 * math.cos(2 * TAU * t / PF)), 24)
 givre_rest = particle_anim("particle_givre_rest", PR, lambda t: (0, 0, 1.2 * math.sin(TAU * t / PR)), 12)
 
-ANIMS = [idle, walk, run, sneak, fly, glide, fall, swim, mount, sleep, attack, hurt, givre_fall, givre_rest]
+# Apparition et retrait (guide 6.4). Joués une fois par-dessus l'état : rotations et positions s'AJOUTENT à celles de l'état,
+# échelles se MULTIPLIENT (d'où les échelles relatives : un enfant reçoit g_enfant / g_parent). Pas de sac ni de boîtier : la glace
+# POUSSE depuis le dos, en cascade : racine, humérus, avant-bras, poignet, puis chaque rémige, de la plus haute à la plus basse.
+# Les cristaux restent raides : ils grandissent et l'éventail s'ouvre, rien ne plie.
+def event_anim(name, L, g, k_fan, sons=(), n=None):
+    """g(niveau, t) : échelle absolue d'un niveau ('root', 'shoulder', 'elbow', 'wrist', ('c', k), ('s', k), 'thumb') ;
+    k_fan(k, t) : fermeture ajoutée de la rémige k (1 = éventail fermé)."""
+    n = n or int(round(L * 12))
+    times = [round(i * L / n, 3) for i in range(n + 1)]
+    A = {}
+
+    def rel(a, b, t):
+        ga, gb = g(a, t), g(b, t)
+        return 0.0 if gb < 1e-3 else min(1.0, ga / gb)
+
+    def put(nm, kfs):
+        A[groups[nm]["uuid"]] = {"name": nm, "type": "bone", "keyframes": kfs}
+
+    def sc(f):
+        return [kf("scale", t, f(t), f(t), f(t)) for t in times]
+
+    for s_, tag in ((-1, "l"), (1, "r")):
+        put(f"wingroot_{tag}", sc(lambda t: g("root", t)))
+        # sortie du dos : le pivot de l'épaule part de 2,6 px plus près du dos (canal position, sens z supposé celui du modèle)
+        put(f"shoulder_{tag}", sc(lambda t: g("shoulder", t)) + [kf("position", t, 0, 0, -2.6 * (1 - g("shoulder", t))) for t in times])
+        put(f"elbow_{tag}", sc(lambda t: rel("elbow", "shoulder", t)))
+        put(f"wrist_{tag}", sc(lambda t: rel("wrist", "elbow", t)))
+        put(f"thumb_{tag}", sc(lambda t: rel("thumb", "wrist", t)))
+        for k in range(len(PRIM)):
+            put(f"c{k + 1}_{tag}", sc(lambda t, k=k: rel(("c", k), "wrist", t))
+                + [kf("rotation", t, *mirror(s_, 0, 0, -FCLOSE[k] * k_fan(k, t))) for t in times])
+        for k in range(len(SEC)):
+            put(f"s{k + 1}_{tag}", sc(lambda t, k=k: rel(("s", k), "elbow", t)))
+    a = {"uuid": nuid(), "name": name, "loop": "once", "override": False, "length": L, "snapping": 24, "selected": False, "animators": A}
+    if sons:
+        a["animators"]["effects"] = {"name": "Effects", "type": "effect", "keyframes":
+                                     [{"channel": "sound", "data_points": [{"effect": e, "file": ""}], "time": t} for t, e in sons]}
+    return a
+
+
+def _lvl(x):
+    """Rang dans la cascade (0 racine … 4 rémiges, 3 secondaires)."""
+    if isinstance(x, tuple):
+        return (4 + 0.12 * x[1]) if x[0] == "c" else (2.6 + 0.12 * x[1])
+    return {"root": 0, "shoulder": 1, "elbow": 2, "wrist": 3, "thumb": 3.4}[x]
+
+
+# event_equip 1,8 s : chaque niveau pousse de 2 % à 100 % en 0,55 s, 0,22 s après le précédent (racine 0 s, dernière rémige ≈ 1,6 s) ;
+# un léger dépassement (3 %) puis la glace se fige. L'éventail, fermé au départ, s'ouvre à mesure que les rémiges sortent.
+# Un seul son (tools/sons.py) : un carillon d'améthyste quand les rémiges s'ouvrent.
+EQ = 1.8
+eq_g = lambda x, t: 0.02 + 0.98 * sm(t, 0.22 * _lvl(x) - 0.1, 0.22 * _lvl(x) + 0.45) + 0.03 * bump(t, 0.22 * _lvl(x) + 0.3, 0.22 * _lvl(x) + 0.45, 0.22 * _lvl(x) + 0.5, 0.22 * _lvl(x) + 0.62) * (t < EQ - 0.05)
+equip = event_anim("event_equip", EQ, lambda x, t: 1.0 if t >= EQ else eq_g(x, t), lambda k, t: 1 - sm(t, 0.85 + 0.06 * k, 1.45 + 0.04 * k),
+                   sons=((1.05, "block.amethyst_block.chime"),))
+# event_unequip 2,2 s : à l'envers, les pointes d'abord : les rémiges se serrent et rentrent, puis poignet, avant-bras, humérus,
+# racine ; dernière image à l'échelle 0, gardée jusqu'au départ (guide 6.4).
+UQ = 2.2
+uq_g = lambda x, t: 1.0 - sm(t, 0.2 * (4.8 - _lvl(x)), 0.2 * (4.8 - _lvl(x)) + 0.5) if t < UQ - 1e-6 else 0.0
+unequip = event_anim("event_unequip", UQ, uq_g, lambda k, t: sm(t, 0.0, 0.5))
+for _an, _fin in ((equip, 1.0), (unequip, 0.0)):
+    for _b in _an["animators"].values():
+        if _b["type"] != "bone":
+            continue
+        _end = [k for k in _b["keyframes"] if k["channel"] == "scale"][-1]["data_points"][0]
+        assert abs(float(_end["x"]) - _fin) < 1e-6, (_an["name"], _b["name"], _end)
+
+ANIMS = [idle, walk, run, sneak, fly, glide, fall, swim, mount, sleep, attack, hurt, givre_fall, givre_rest, equip, unequip]
 assert 6 <= len(EMITS) <= 8 and len(ANIMS) <= 16
 assert 200 <= len(elements) <= 450, f"budget : {len(elements)} cubes"
 
@@ -664,6 +925,10 @@ if AVEC_E:
     textures.append({"name": f"{NOM}_e.png", "uv_width": TEX, "uv_height": TEX, "source": tex_e_b64})
 model = {"meta": {"format_version": "4.10", "model_format": "free", "box_uv": False}, "name": NOM,
          "resolution": {"width": TEX, "height": TEX}, "elements": elements, "outliner": outliner, "textures": textures, "animations": ANIMS}
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))
+from sons import limiter_sons
+limiter_sons(model)          # un son au plus, à l'apparition ; aucun en mouvement (retour « infernal »)
 os.makedirs(".build", exist_ok=True)
 OUT = f".build/{NOM}_brut.bbmodel"
 with open(OUT, "w") as fh:
@@ -679,3 +944,4 @@ def depth(n, d=1):
 print(len(elements), "cubes ;", len(groups) + 2, "groupes ; profondeur", depth(outliner[0]), ";", len(ANIMS), "anims ;",
       sum(len(b["keyframes"]) for a in ANIMS for b in a["animators"].values()), "keyframes ;", os.path.getsize(OUT) // 1024, "Ko ;",
       f"{len(EMITS)} emit_ ; texture {len(tex_b64) // 1024} Ko")
+print(f"profondeur des cristaux : z {min(ZCACHE.values()) - Z:+.2f} .. {max(ZCACHE.values()) - Z:+.2f} autour du plan ; conflits de répartition : {CONFLITS or 'aucun'}")

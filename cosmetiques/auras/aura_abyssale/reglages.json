@@ -1,0 +1,23 @@
+{
+ "particules": [
+  {
+   "particule": "braise (modélisée)",
+   "role": "Petite braise vert acide (0,6 px) qui monte lentement près du corps et s'éteint.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "1 par seconde",
+    "Durée": "2 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "20°",
+    "Élan": "100 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

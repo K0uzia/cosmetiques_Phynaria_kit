@@ -1,0 +1,12 @@
+{
+  "nom": "Capuche lapin-nuage",
+  "description": "Capuche de peluche lilas bordée de nuage, avec deux grandes oreilles de lapin molles, un cœur de sucre et des pompons. Les oreilles frémissent, suivent chaque saut, se couchent au vent et sous la pluie, et tombent doucement quand la vie baisse.",
+  "lore": "Les lapins de coton du pays Nuage Guimauve tricotent leurs capuches dans le duvet des nuages du matin. Les oreilles gardent un peu de leur caractère : elles écoutent, boudent sous la pluie et se dressent de joie. Quand celui qui la porte va mal, elles s'inquiètent avant lui.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

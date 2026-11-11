@@ -1,0 +1,24 @@
+{
+ "particules": [
+  {
+   "particule": "braise (modélisée)",
+   "role": "Braises vert acide qui s'échappent de la flamme d'âme (deux points dans la flamme) et montent ; un troisième point, à la gueule, est coupé par ctrl_emit sauf quand il crache une flammèche (comportement tiré au hasard) et quand il mord (attaque). Rien ne tombe ni ne se pose.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "1 par seconde",
+    "Durée": "1,5 s",
+    "Mouvement": "Monte",
+    "Au sol": "Disparaît",
+    "Rendu": "Opaque",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Élan": "100 %",
+    "Variation": "Légère",
+    "Rafale": "À l'attaque",
+    "Limite": "64"
+   }
+  }
+ ]
+}

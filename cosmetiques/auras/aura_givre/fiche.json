@@ -1,0 +1,12 @@
+{
+  "nom": "Aura de givre",
+  "description": "Une lumière froide entoure le joueur : une rosace de givre derrière la nuque, des piliers de lumière où montent des paillettes de glace, et un hexagone de givre au sol, avec ses grappes de cristaux et sa brume.",
+  "lore": "Par les nuits de grand froid, la lumière du Cœur d'Hiver se dresse en piliers et l'air s'emplit de poussière de diamant. Les gardiens la portent sur eux : un flocon de lumière dans le dos, le givre qui dessine un hexagone sous leurs pas, et ce silence calme qui les suit.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

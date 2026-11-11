@@ -1,0 +1,12 @@
+{
+  "nom": "Marteau du tonnerre",
+  "description": "Skin de masse : toutes tes masses deviennent un marteau-tambour de métal d'orage cerclé d'or, à la face de frappe sertie d'un œil de cristal et à la couronne-paratonnerre. Au repos, de petits arcs crépitent entre ses dents ; à chaque coup qui touche, la décharge jaillit de la face.",
+  "lore": "Les forgerons de l'orage battent leur métal au rythme du tonnerre ; ce marteau-là est leur tambour. Sa pointe appelle la foudre dès qu'on le prend en main, sa couronne la retient en crépitant, et la face de frappe ne la rend qu'au moment du coup. Un Dompteur ne frappe jamais deux fois : l'éclair a déjà parlé.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

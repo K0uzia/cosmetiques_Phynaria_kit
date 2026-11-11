@@ -1,0 +1,12 @@
+{
+  "nom": "Pelle de l'Abysse",
+  "description": "Skin de pelle : remplace toutes tes pelles par une omoplate d'os noir au bout vert acide, serrée par deux griffes. Le fer sort du collet quand tu la prends en main, et son fil s'avive à chaque coup et à chaque pelletée.",
+  "lore": "Les Chasseurs de l'Abysse n'enterrent pas leurs démons : ils les creusent hors du sol. La pelle a été taillée dans l'omoplate d'une bête qui portait des ailes, et le bout a gardé le goût de la terre noire. Chaque pelletée y réveille un peu de vert, comme si l'os cherchait encore ce qui dort dessous.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

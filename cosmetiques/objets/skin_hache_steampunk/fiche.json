@@ -1,0 +1,12 @@
+{
+ "nom": "Fendeuse à pression",
+ "description": "Skin de hache : toutes tes haches deviennent un fer d'acier bruni serti dans une roue dentée de laiton à manomètre ambre, avec un marteau à vapeur au dos et un pommeau-chaudière. Au repos, la pression monte cran par cran ; au coup qui touche, le dos crache un jet de vapeur.",
+ "lore": "Les bûcherons de la ville basse fendaient le chêne de l'Atelier à la force des bras, et l'Atelier n'aime pas gaspiller. Un chaudronnier a logé un foyer dans le pommeau, couru un tuyau de cuivre le long du manche jusqu'au marteau du dos, et serti le fer dans une roue dentée. Quand l'aiguille touche le rouge, il suffit de frapper : la vapeur fait le reste.",
+ "prix_manuel": false,
+ "en_vente": true,
+ "rarete": "epique",
+ "prix": {
+  "pv": 850,
+  "phynarium": 300
+ }
+}

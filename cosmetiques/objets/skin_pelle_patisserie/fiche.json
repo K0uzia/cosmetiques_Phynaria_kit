@@ -1,0 +1,12 @@
+{
+  "nom": "Pelle à tarte nappée",
+  "description": "Skin de pelle : remplace toutes tes pelles par une pelle à tarte d'acier au bord dentelé, manche de hêtre trempé dans le chocolat, la lame encore nappée de glaçage fraise qui coule. Le nappage tremble à chaque coup, et chaque bloc cassé lâche une pincée de vermicelles qui s'envolent.",
+  "lore": "À la Vitrine enchantée, la pelle à tarte ne quitte jamais le bol de nappage : le pâtissier dit qu'une part se sert mieux quand la lame est déjà sucrée. Un apprenti l'a emportée un jour pour creuser son jardin. La terre s'est mise à sentir la fraise, et les vermicelles n'ont jamais cessé de sortir des mottes.",
+  "rarete": "rare",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  }
+}

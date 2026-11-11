@@ -1,0 +1,83 @@
+{
+ "particules": [
+  {
+   "particule": "eclat (modélisée)",
+   "role": "Petit carré de lumière blanc bleuté (0,6 px) qui monte du corps : lueur légère pendant la charge, envolée dense quand la silhouette se défait au départ, et quand le joueur apparaît à l'arrivée.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Monte",
+    "Au sol": "Disparaît",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Moyen",
+    "Dispersion": "45°",
+    "Élan": "0 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "strie (modélisée)",
+   "role": "Trait vertical fin (0,35 × 3 px) qui file vers le haut depuis le cercle au sol, tant que le faisceau tient ; plus dense au moment où le corps part.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Monte",
+    "Au sol": "Disparaît",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Rapide",
+    "Dispersion": "0°",
+    "Élan": "0 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "mc_electric_spark (Minecraft)",
+   "role": "Grésillement blanc aux mains et aux pieds : par petites salves pendant la charge, de plus en plus serré pendant que la silhouette se charge (départ) et juste après l'apparition (arrivée).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_electric_spark"
+  },
+  {
+   "particule": "mc_firework (Minecraft)",
+   "role": "Gerbe d'étincelles blanches au pied du faisceau, à l'impact quand il touche le sol et à l'extinction.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_firework"
+  },
+  {
+   "particule": "mc_dust_b4c8ff_10 (Minecraft)",
+   "role": "Poussière bleu pâle qui flotte dans le faisceau tant qu'il tient (six points à différentes hauteurs) ; deux points seulement pendant la charge.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_dust_b4c8ff_10"
+  }
+ ]
+}

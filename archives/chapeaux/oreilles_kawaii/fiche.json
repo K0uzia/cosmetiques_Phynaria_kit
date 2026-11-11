@@ -1,0 +1,12 @@
+{
+  "nom": "Oreilles de lapin-nuage",
+  "description": "Deux grandes oreilles de lapin molles et dodues, la gauche pliée à mi-hauteur, intérieur rose, petit nœud lavande à la base de la droite. Elles ballottent avec un léger retard à chaque mouvement.",
+  "lore": "Les lapins-nuages ont les oreilles si légères qu'ils doivent les nouer pour ne pas s'envoler. Ils en prêtent une paire à leurs amis, à condition qu'ils promettent d'écouter ce qu'on leur dit gentiment.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

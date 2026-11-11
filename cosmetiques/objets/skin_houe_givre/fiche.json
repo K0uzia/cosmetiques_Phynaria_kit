@@ -1,0 +1,12 @@
+{
+  "nom": "Houe de givre",
+  "description": "Skin de houe : toutes tes houes deviennent une houe en croissant de glace, lame en demi-lune veinée d'un éventail de givre lumineux, col de cygne d'argent, œil frappé d'un flocon. Au coup qui touche, des aiguilles de givre jaillissent ; à chaque motte retournée, la terre se couvre de givre.",
+  "lore": "Les jardiniers du Cœur d'Hiver ne labourent qu'une nuit par an, la plus froide, pour que la graine dorme sous le gel. Leur houe est née d'un col d'argent planté dans un champ de neige : à l'aube, la glace y avait poussé en croissant de lune. La terre qu'elle retourne se couvre de givre, et rien n'y pourrit avant le printemps.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

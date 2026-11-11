@@ -1,0 +1,12 @@
+{
+  "nom": "Chapeau abyssal",
+  "description": "Chapeau démoniaque à bord asymétrique en membrane pourpre-noir tendue sur des baleines d'os, calotte recourbée vers l'arrière et percée de deux cornes. Les veines vert acide de la membrane luisent la nuit.",
+  "lore": "Taillé dans l'aile d'un démon tombé, il garde la mémoire du vol : son bord frémit encore au vent. Les chasseurs le portent pour rappeler aux créatures de l'Abysse ce qu'il advient de ceux qui remontent trop haut.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

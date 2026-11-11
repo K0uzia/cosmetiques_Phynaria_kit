@@ -1,0 +1,12 @@
+{
+  "nom": "Ramure de givre",
+  "description": "Deux bois de cerf en glace taillée qui poussent sur le dessus de la tête : merrain en lyre à cœur cyan lumineux, nœuds de givre et andouillers pointus. À l'équipement, la ramure pousse tronçon par tronçon ; ses pointes frémissent au pas et scintillent.",
+  "lore": "Au Cœur d'Hiver, les grands cerfs blancs perdent leurs bois chaque printemps, et la glace les reprend. Les gardiens qui en sont jugés dignes voient la ramure repousser sur leur propre tête, un andouiller après l'autre, jamais deux fois pareille. Elle garde en son cœur la lumière bleue du Nord.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

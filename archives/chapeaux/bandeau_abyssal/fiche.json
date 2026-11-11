@@ -1,0 +1,12 @@
+{
+  "nom": "Bandeau abyssal",
+  "description": "Bandeau de cuir sombre posé sur les yeux, avec deux fentes de regard vert acide, des cornes en crochet à bagues et des oreilles pointues. Les pans déchirés du bandeau flottent derrière la tête au gré des mouvements.",
+  "lore": "Les chasseurs se couvrent les yeux pour ne plus être trompés par ce qu'ils voient : dans l'Abysse, seule la lueur verte dit vrai. Les cornes sont venues ensuite, la première année. Elles ne repoussent jamais quand on les brise, alors personne ne les brise.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

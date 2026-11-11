@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes Steampunk",
+  "description": "Ailes à vapeur articulées en laiton, cuivre et acier sombre : neuf lames d'éventail qui se déploient cran par cran, engrenages qui s'entraînent au coude et au poignet, vérin à tige coulissante. Mouvement mécanique saccadé, avec vapeur à la décharge.",
+  "lore": "Le chef d'atelier les a construites pour prouver qu'une machine pouvait voler sans tricher : chaque lame est entraînée par un engrenage, chaque engrenage par la vapeur. Elles mettent un instant à se régler avant de s'ouvrir, comme une montre qu'on remonte.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

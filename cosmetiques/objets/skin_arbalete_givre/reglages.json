@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "snowflake (Minecraft)",
+   "role": "Flocons de neige qui jaillissent devant l'arc quand le carreau part (rafale au tir, appuyée par ctrl_emit dans event_release, en plus du nuage de flocons modélisé). Coupés le reste du temps (ctrl_emit −1 en main et pendant le chargement).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Canne du paratonnerre",
+  "description": "Skin de canne à pêche : toutes tes cannes deviennent un scion d'acier d'orage à anneaux d'or, au moulinet-tambour gravé de trois virgules et à la pointe de cristal. Au lancer, le scion fouette, le moulinet se dévide et la pointe crépite tant que la ligne est à l'eau.",
+  "lore": "Les Dompteurs d'orage pêchent quand le ciel gronde : leur canne est un paratonnerre. La pointe de cristal boit la foudre, la ligne la porte jusqu'à l'eau, et le moulinet garde le reste enroulé sur sa bobine. On dit que les poissons des pics montent d'eux-mêmes vers la lueur, et qu'il ne faut jamais relever la ligne avant le deuxième coup de tonnerre.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

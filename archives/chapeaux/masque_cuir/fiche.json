@@ -1,0 +1,13 @@
+{
+  "nom": "Masque de cuir",
+  "description": "Harnais de tête en cuir noir verni à quincaillerie chrome lourde, avec bâillon-boule.",
+  "lore": "Une pièce d'essai de la Maison du cuir verni, restée à l'atelier.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": false,
+  "note_vente": "Écarté par l'utilisateur : hors catalogue."
+}

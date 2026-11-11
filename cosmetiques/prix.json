@@ -1,0 +1,256 @@
+{
+  "statut": "Proposition à valider par le staff (2026-11-05). Toutes les valeurs ci-dessous sont modifiables ; relancer ensuite python tools/prix.py pour mettre à jour les fiches et le Vestiaire.",
+  "sources": {
+    "vote": "https://phynaria.fr/vote (relevé en visiteur le 2026-11-05)",
+    "boutique": "https://phynaria.fr/shop/categories/phynarium (relevé en visiteur le 2026-11-05)"
+  },
+  "hypotheses": {
+    "chances_par_vote": [
+      {
+        "pv": 10,
+        "chance": 0.8
+      },
+      {
+        "pv": 20,
+        "chance": 0.28
+      },
+      {
+        "pv": 30,
+        "chance": 0.01
+      }
+    ],
+    "interpretation": "independantes",
+    "note_chances": "Le site affiche 80 %, 28 % et 1 % : la somme fait 109 %, la configuration est ambiguë. « independantes » : chaque récompense est tirée séparément (un vote peut en donner plusieurs), espérance 13,9 PV. « normalisees » : une seule récompense par vote, poids 80/28/1 ramenés à 100 %, espérance 12,75 PV. À confirmer par le staff.",
+    "sites_de_vote": 2,
+    "votes_par_site_et_par_jour": 1,
+    "note_votes": "Délai entre deux votes non affiché (« Vote chaque jour ») : on suppose 1 vote par site et par jour, chaque jour.",
+    "jours_par_mois": 30,
+    "taux_pv_phynarium": null,
+    "note_taux": "Aucun taux PV ↔ Phynarium n'est affiché : les deux prix sont fixés séparément, par rareté."
+  },
+  "packs_phynarium": [
+    {
+      "phynarium": 100,
+      "euros": 1.99
+    },
+    {
+      "phynarium": 200,
+      "euros": 3.49
+    },
+    {
+      "phynarium": 300,
+      "euros": 4.99
+    },
+    {
+      "phynarium": 400,
+      "euros": 6.49
+    },
+    {
+      "phynarium": 500,
+      "euros": 7.49
+    }
+  ],
+  "raretes": {
+    "commun": {
+      "libelle": "Commun",
+      "pv": 200,
+      "phynarium": 100,
+      "intention": "environ une semaine de vote, ou le plus petit pack"
+    },
+    "rare": {
+      "libelle": "Rare",
+      "pv": 450,
+      "phynarium": 200,
+      "intention": "environ deux semaines de vote, ou le pack de 200"
+    },
+    "epique": {
+      "libelle": "Épique",
+      "pv": 850,
+      "phynarium": 300,
+      "intention": "environ un mois de vote, ou le pack de 300"
+    },
+    "legendaire": {
+      "libelle": "Légendaire",
+      "pv": 1600,
+      "phynarium": 500,
+      "intention": "environ deux mois de vote, ou le plus gros pack"
+    }
+  },
+  "ordre_raretes": [
+    "commun",
+    "rare",
+    "epique",
+    "legendaire"
+  ],
+  "rarete_par_categorie": {
+    "sacs": "commun",
+    "queues": "commun",
+    "outils": "commun",
+    "blocs": "commun",
+    "chapeaux": "rare",
+    "epaules": "rare",
+    "armes": "rare",
+    "ailes": "epique",
+    "auras": "epique",
+    "familiers": "legendaire",
+    "objets": "rare",
+    "effets": "epique"
+  },
+  "complexite": {
+    "note": "Une pièce dont le nombre de cubes atteint le seuil de sa catégorie monte d'une rareté (pièce phare de l'ensemble, travail plus lourd). Les familiers sont déjà au plus haut.",
+    "seuil_cubes": {
+      "sacs": 120,
+      "queues": 90,
+      "outils": 120,
+      "blocs": 120,
+      "chapeaux": 120,
+      "epaules": 140,
+      "armes": 100,
+      "ailes": 350,
+      "auras": 90,
+      "objets": 100,
+      "effets": 90
+    }
+  },
+  "lot": {
+    "remise": 0.2,
+    "pieces_min": 2,
+    "arrondi_pv": 50,
+    "arrondi_phynarium": 100,
+    "note": "Prix d'un ensemble complet : somme des pièces en vente, moins la remise, arrondie."
+  },
+  "surcharge": "Dans cosmetiques/<categorie>/<nom>/fiche.json, mettre \"prix_manuel\": true pour garder la rareté et le prix écrits à la main (tools/prix.py ne les recalcule plus).",
+  "calcule": {
+    "rythme": {
+      "pv_par_vote": 13.9,
+      "votes_par_jour": 2,
+      "pv_par_jour": 27.8,
+      "pv_par_semaine": 195,
+      "pv_par_mois": 834
+    },
+    "raretes": {
+      "commun": {
+        "pv": 200,
+        "phynarium": 100,
+        "jours": 7.2,
+        "euros": 1.99
+      },
+      "rare": {
+        "pv": 450,
+        "phynarium": 200,
+        "jours": 16.2,
+        "euros": 3.49
+      },
+      "epique": {
+        "pv": 850,
+        "phynarium": 300,
+        "jours": 30.6,
+        "euros": 4.99
+      },
+      "legendaire": {
+        "pv": 1600,
+        "phynarium": 500,
+        "jours": 57.6,
+        "euros": 7.49
+      }
+    },
+    "lots": {
+      "Abyssal": {
+        "pv": 7750,
+        "phynarium": 2700,
+        "jours": 278.8,
+        "euros": 40.94,
+        "pieces": 11,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 9700,
+          "phynarium": 3400
+        }
+      },
+      "Bérénice": {
+        "pv": 3000,
+        "phynarium": 1000,
+        "jours": 107.9,
+        "euros": 14.98,
+        "pieces": 4,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 3750,
+          "phynarium": 1300
+        }
+      },
+      "Givre": {
+        "pv": 14650,
+        "phynarium": 5000,
+        "jours": 527.0,
+        "euros": 74.9,
+        "pieces": 18,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 18300,
+          "phynarium": 6200
+        }
+      },
+      "Kawaii": {
+        "pv": 7250,
+        "phynarium": 2400,
+        "jours": 260.8,
+        "euros": 36.45,
+        "pieces": 8,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 9050,
+          "phynarium": 3000
+        }
+      },
+      "Orage": {
+        "pv": 10500,
+        "phynarium": 3700,
+        "jours": 377.7,
+        "euros": 55.92,
+        "pieces": 15,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 13100,
+          "phynarium": 4600
+        }
+      },
+      "Pâtisserie": {
+        "pv": 2400,
+        "phynarium": 900,
+        "jours": 86.3,
+        "euros": 13.98,
+        "pieces": 4,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 3000,
+          "phynarium": 1100
+        }
+      },
+      "Steampunk": {
+        "pv": 6300,
+        "phynarium": 2200,
+        "jours": 226.6,
+        "euros": 33.45,
+        "pieces": 8,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 7900,
+          "phynarium": 2700
+        }
+      },
+      "Stellaire": {
+        "pv": 3850,
+        "phynarium": 1200,
+        "jours": 138.5,
+        "euros": 18.47,
+        "pieces": 3,
+        "remise": 0.2,
+        "sans_remise": {
+          "pv": 4800,
+          "phynarium": 1500
+        }
+      }
+    }
+  }
+}

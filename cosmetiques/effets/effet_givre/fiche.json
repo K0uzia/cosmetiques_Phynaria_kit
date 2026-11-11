@@ -1,0 +1,12 @@
+{
+  "nom": "Tempête de givre",
+  "description": "Un cercle de givre s'allume sous vos pieds. Au départ, un cristal incliné jaillit du sol, vous fige dans la glace, se fend et vole en éclats. À l'arrivée, une gerbe de cristaux explose autour de vous, puis se dissout en poussière de givre.",
+  "lore": "Les gardiens du Cœur d'Hiver ne marchent pas sur les longues routes : ils confient leur corps à la glace. Le froid les fige d'un souffle, les brise en mille éclats, puis les fait renaître ailleurs, là où le givre a tracé son cercle. On dit qu'il faut ne jamais avoir peur du froid pour en revenir entier.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

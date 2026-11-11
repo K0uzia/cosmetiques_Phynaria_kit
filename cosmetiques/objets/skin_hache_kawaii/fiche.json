@@ -1,0 +1,12 @@
+{
+  "nom": "Coupe-Nuage",
+  "description": "Skin de hache : un large fer de sucre lilas aux coins tout ronds, serti de dragées-cœurs lumineuses, qui sort d'un gros cœur framboise, avec un petit nuage au dos et un manche de guimauve torsadée. Le cœur bat doucement ; au coup qui touche, une bouffée de petits cœurs s'envole.",
+  "lore": "À Nuage Guimauve, les bûcherons ne coupent pas les arbres : ils taillent les nuages trop gonflés pour qu'il ne pleuve pas sur les fêtes. Ce fer a été tiré au sucre lilas autour du même cœur de framboise que les lames du village, et un bout du dernier nuage taillé s'est collé au dos pour ne plus le quitter. Chaque coup laisse échapper quelques cœurs, comme des miettes.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

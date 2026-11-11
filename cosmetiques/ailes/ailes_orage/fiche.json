@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes d'orage",
+  "description": "Ailes de faucon en plumes d'acier forgé, longues et pointues comme des lames, liserées de cuivre et d'or. La foudre court sur le bord d'attaque et saute de pointe en pointe ; elles se déploient dans une décharge et s'ouvrent d'un coup à l'attaque.",
+  "lore": "Les forgerons des pics battent ces plumes une à une au rythme du tonnerre, dans un acier sombre qui conduit la foudre sans la craindre. Chaque rémige est trempée comme une lame et gravée d'une virgule d'or. Quand l'orage gronde, l'éclair naît à l'épaule, file le long de l'aile et part de la pointe des lames, jamais au hasard.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

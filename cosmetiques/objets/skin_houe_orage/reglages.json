@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "electric_spark (Minecraft)",
+   "role": "Gerbe d'étincelles au fil de la lame quand un bloc est cassé (event_break : ctrl_emit +7 pendant 0,2 s), coupée le reste du temps (ctrl_emit −1 dans item_idle, item_swing et item_gui). Animations des skins coupées par le joueur : cadence du staff, 4 par seconde ; la mettre à Jamais si elle se voit trop.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

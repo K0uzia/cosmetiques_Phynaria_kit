@@ -1,0 +1,12 @@
+{
+  "nom": "Arbalète à vapeur",
+  "description": "Skin d'arbalète : remplace l'apparence de toutes tes arbalètes par une arbalète d'horloger, arc en lames de ressort de laiton, câble d'acier, fût de bois sombre, engrenage de remontage à manivelle et petit réservoir de vapeur à manomètre. Pendant le chargement, la corde recule, les lames plient, l'engrenage tourne et l'aiguille grimpe ; chargée, la lentille ambre de la noix s'allume (carreau empenné de cuivre ou fusée de feu d'artifice).",
+  "lore": "Les chaudronniers de l'Atelier de laiton trouvaient indigne de bander une arbalète à la force des bras. Ils lui ont donné un ressort de voiture, un tambour et un peu de pression : un tour de manivelle par cran, et le manomètre dit quand il faut s'arrêter. Quand la lentille s'allume, la noix tient la corde, et plus rien ne la fera lâcher avant la détente.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

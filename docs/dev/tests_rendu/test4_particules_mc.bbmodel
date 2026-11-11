@@ -1,0 +1,312 @@
+{
+ "meta": {
+  "format_version": "4.10",
+  "model_format": "free",
+  "box_uv": false
+ },
+ "name": "test4_particules_mc",
+ "resolution": {
+  "width": 64,
+  "height": 64
+ },
+ "elements": [
+  {
+   "name": "repere_tete",
+   "type": "cube",
+   "uuid": "f2fe9e50-62e2-44f9-83d9-3992f7321d70",
+   "from": [
+    -0.5,
+    33.5,
+    -0.5
+   ],
+   "to": [
+    0.5,
+    34.5,
+    0.5
+   ],
+   "origin": [
+    0.0,
+    34.0,
+    0.0
+   ],
+   "box_uv": false,
+   "faces": {
+    "north": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "south": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "east": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "west": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "up": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "down": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    }
+   }
+  },
+  {
+   "name": "repere_orbite",
+   "type": "cube",
+   "uuid": "c1d6e277-fcd7-452d-875f-2d7f8c081dac",
+   "from": [
+    9.5,
+    15.5,
+    -0.5
+   ],
+   "to": [
+    10.5,
+    16.5,
+    0.5
+   ],
+   "origin": [
+    10.0,
+    16.0,
+    0.0
+   ],
+   "box_uv": false,
+   "faces": {
+    "north": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "south": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "east": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "west": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "up": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    },
+    "down": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": 0
+    }
+   }
+  }
+ ],
+ "outliner": [
+  {
+   "name": "head",
+   "origin": [
+    0,
+    24,
+    0
+   ],
+   "uuid": "c78d278f-2dd8-44bf-8b7f-238992415185",
+   "children": [
+    "f2fe9e50-62e2-44f9-83d9-3992f7321d70",
+    {
+     "name": "emit_mc_flame",
+     "origin": [
+      0,
+      34,
+      0
+     ],
+     "uuid": "db516b5f-f29a-4809-bf23-186d25f90ccc",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "body",
+   "origin": [
+    0,
+    24,
+    0
+   ],
+   "uuid": "542a5fec-263d-4a4d-b7d0-fdfb2e3fe63e",
+   "children": [
+    {
+     "name": "orbite",
+     "origin": [
+      0,
+      16,
+      0
+     ],
+     "uuid": "ff8c98fb-7008-4cd2-804d-b861e8b22033",
+     "children": [
+      "c1d6e277-fcd7-452d-875f-2d7f8c081dac",
+      {
+       "name": "emit_mc_end_rod",
+       "origin": [
+        10,
+        16,
+        0
+       ],
+       "uuid": "ae3f7679-937d-4e58-b1a2-4088d08d7b33",
+       "children": []
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "name": "test4_particules_mc.png",
+   "uv_width": 64,
+   "uv_height": 64,
+   "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACaUlEQVR4nO2Yz27aQBDGvxkvGIraJmojpVIfpIeec+pD5JwHyjkP00PepIekSkqFwDberb5dKkUNSARbtYnnd4L1zOL5szOzyPX1TUADrq4un61lAkwUcCrx+9oHrDxQb/+lJHQgFxffGr2/Q4vQ8JOR4N1IMM0EI03rlQeWdcC8Cniswi5HdIJra6NcgbOJ4sNY8H4smEUHpOBWPmBRB/wqA6ZlwN3Ko/B4PQ7IJBl/PlGc5YLTXPHWCfIsPS9q4Pc6YJZ5jDSF/8fS9yITXBubMO0ZeRp/PlV8zBUn43QMCNP/sQwxSwCPyguWa8HPMhy/AzJBPPNMe0aexn+KThDMXHLAYh0wzZKxTH0eh3klvagHrukGrPaMNM88056Rp/F0wuk4VcGHkgfeY1lLNJyy1KHuosZxO8BpqvYseDzz0RlOovGf32zaABA7AJ9RZrTRiW2y4xRQDBzXdAMOOezzbHWs9ix4PPMp7RP8zDU+o0y10aHu0TtgtRlyWNjY6ljtU8HzMe0Jjb8v0jPKUJY61D16B9QhnW8OOezzqdXRKc/b4H3h8VD4KDvvQQdobQ5gO+OEl4acNOWx2v87CNH4uyLE/k+dPuDa2ISR5HhLOOQwxXeNwjSesn2Ifqt3AUad4y0nPEZ/cJchQsP+pvcLrsNGl8i2xdubr1tj9eXy+15/XjTV/5/IPi++ryFN9TsdhW/3fPldsk31u0IxcPTQiDzVaarfJYqBoxg4ioGjGDiKgaOHDiZPdZrqd4li4OghEdkm21S/K2TolyHDMAzDMAzDMAzDMAzDMAzDMAzDMAzDMAy8dv4AKmJhq1FM7o4AAAAASUVORK5CYII="
+  }
+ ],
+ "animations": [
+  {
+   "uuid": "6c52a887-58c4-47e4-be3d-c364f0a5c1b2",
+   "name": "idle",
+   "loop": "loop",
+   "override": false,
+   "length": 4.0,
+   "snapping": 24,
+   "selected": false,
+   "animators": {
+    "ff8c98fb-7008-4cd2-804d-b861e8b22033": {
+     "name": "orbite",
+     "type": "bone",
+     "keyframes": [
+      {
+       "channel": "rotation",
+       "data_points": [
+        {
+         "x": "0",
+         "y": "0",
+         "z": "0"
+        }
+       ],
+       "time": 0.0,
+       "interpolation": "linear"
+      },
+      {
+       "channel": "rotation",
+       "data_points": [
+        {
+         "x": "0",
+         "y": "-90",
+         "z": "0"
+        }
+       ],
+       "time": 1.0,
+       "interpolation": "linear"
+      },
+      {
+       "channel": "rotation",
+       "data_points": [
+        {
+         "x": "0",
+         "y": "-180",
+         "z": "0"
+        }
+       ],
+       "time": 2.0,
+       "interpolation": "linear"
+      },
+      {
+       "channel": "rotation",
+       "data_points": [
+        {
+         "x": "0",
+         "y": "-270",
+         "z": "0"
+        }
+       ],
+       "time": 3.0,
+       "interpolation": "linear"
+      },
+      {
+       "channel": "rotation",
+       "data_points": [
+        {
+         "x": "0",
+         "y": "-360",
+         "z": "0"
+        }
+       ],
+       "time": 4.0,
+       "interpolation": "linear"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

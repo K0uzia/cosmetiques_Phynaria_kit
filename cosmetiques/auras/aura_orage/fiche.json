@@ -1,0 +1,12 @@
+{
+  "nom": "Aura d'orage",
+  "description": "La charge d'un orage s'allume sur le joueur : une couronne de foudre qui grésille derrière la tête, des éclairs brefs aux épaules, aux mains et aux pieds, un tambour de foudre au sol. Elle crépite plus vite quand la vie baisse.",
+  "lore": "Quand l'orage gronde sur les pics, les mâts et les cornes des bêtes s'allument d'une flamme bleue qui ne brûle pas. Les Dompteurs d'orage ont appris à la porter sur eux. Elle couronne leur tête et ne lâche ses éclairs que par les pointes : épaules, mains, talons.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

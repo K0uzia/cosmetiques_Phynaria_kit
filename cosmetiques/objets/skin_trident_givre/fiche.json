@@ -1,0 +1,12 @@
+{
+  "nom": "Trident de givre",
+  "description": "Skin de trident : trois dents de glace taillées en prismes, au cœur cyan lumineux, serties dans une fourche d'argent en croissant. Levé pour lancer, le givre gagne les dents ; il part dans un éclat de glace et file en semant des flocons.",
+  "lore": "Les pêcheurs du Cœur d'Hiver ne taillent pas leurs dents de trident : ils posent une fourche d'argent sur la glace d'un lac et attendent la nuit. Au matin, trois cristaux y ont poussé, droits comme des stalactites. Lancé, le trident laisse derrière lui une neige fine qui ne fond pas avant qu'il revienne.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

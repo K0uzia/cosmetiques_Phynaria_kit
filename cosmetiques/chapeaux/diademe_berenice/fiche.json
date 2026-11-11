@@ -1,0 +1,12 @@
+{
+  "nom": "Diadème de Bérénice",
+  "description": "Fin bandeau d'or doux, avec une pierre ivoire au front sur un soleil de rayons fins comme des cheveux, de petites étoiles à quatre branches et des ailettes de plumes ivoire aux tempes. La pierre et les rayons luisent doucement la nuit.",
+  "lore": "Il fut fait de ce qui restait de la chevelure offerte, tissé de fils si fins qu'on les prend pour de la lumière. Celui qui le porte ne commande à personne ; on le suit pourtant, sans savoir pourquoi.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

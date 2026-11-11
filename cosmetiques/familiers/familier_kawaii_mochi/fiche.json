@@ -1,0 +1,12 @@
+{
+  "nom": "Mochi nuage",
+  "description": "Petit nuage dodu à visage kawaii qui suit le joueur en volant près de son épaule. Vivant et expressif : il rebondit, fait des pirouettes, s'endort en nuage plat, grisonne sous la pluie, fait un arc-en-ciel quand il est content et un petit orage boudeur quand on blesse son maître.",
+  "lore": "Il s'est détaché d'un grand nuage un jour de fête et n'a jamais voulu retourner là-haut. Il n'a pas de poids, pas d'âge et pas vraiment de nom ; il répond quand même à tous ceux qu'on lui donne.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

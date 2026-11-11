@@ -1,0 +1,69 @@
+{
+ "particules": [
+  {
+   "particule": "goutte (modélisée)",
+   "role": "Goutte de sang (1,8 px, lisible de loin) qui tombe de 18 blocs : au bout des gouttes renflées des jointures (8 points), sous la poche qui gonfle (3) et au bout des filets qui retombent quand elle se vide (4).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Durée": "6 s",
+    "Mouvement": "Lourde",
+    "Au sol": "Disparaît",
+    "Rendu": "Opaque",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "etincelle (modélisée)",
+   "role": "Étincelle rose qui monte de la lueur rouge au sol, sur un cercle de 4 blocs (6 points), tant que le ciel d'alvéoles est allumé.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "256"
+   }
+  },
+  {
+   "particule": "dust sang (Minecraft, emit_mc_dust_8c0c1c_15)",
+   "role": "Le sang retombé s'évapore : poussière rouge sombre qui monte de la flaque (4 blocs) pendant que le joueur redescend à sa taille (arrivée).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_dust_8c0c1c_15"
+  },
+  {
+   "particule": "dust rose (Minecraft, emit_mc_dust_ff8c8c_10)",
+   "role": "Poussière rose qui flotte sous le plafond d'alvéoles, à 7 blocs du centre et 17 de haut (4 points), une seule pendant la charge.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_dust_ff8c8c_10"
+  }
+ ]
+}

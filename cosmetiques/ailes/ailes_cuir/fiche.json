@@ -1,0 +1,13 @@
+{
+  "nom": "Ailes de cuir",
+  "description": "Ailes de chauve-souris en cuir verni noir tendu sur une ossature d'argent noirci.",
+  "lore": "Un prototype de la Maison du cuir verni, jamais sorti de l'atelier.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": false,
+  "note_vente": "Écarté par l'utilisateur : hors catalogue."
+}

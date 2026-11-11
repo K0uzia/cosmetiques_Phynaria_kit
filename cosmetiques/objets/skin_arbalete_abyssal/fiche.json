@@ -1,0 +1,12 @@
+{
+  "nom": "Échine de l'Abysse",
+  "description": "Skin d'arbalète : remplace toutes tes arbalètes par une échine d'os noir, un arc court en os d'aile terminé en serres et un fil de lueur vert acide. Les branches sortent du crâne quand tu la prends en main ; chargée, les serres se crispent, et au tir la corde claque dans une gerbe verte.",
+  "lore": "Le premier démon que les Chasseurs ont abattu dans l'Abysse n'avait plus que ses os quand ils l'ont remonté. Ils ont fait de son échine un arbrier, de ses ailes un arc, et tendu entre ses serres un fil de la lueur qui ronge le gouffre. On dit qu'elle se crispe encore quand on la charge, comme une bête qui retient son souffle.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Envergure de l'Abysse",
+  "description": "Skin d'arc : remplace tous tes arcs par deux longs os d'aile noirs terminés en serres, tendus d'un fil de lueur vert acide. Les branches sortent de la poignée quand tu le prends en main ; bandé, il frémit et brille, et au tir la corde claque dans une gerbe verte.",
+  "lore": "Un démon ailé ne se laisse pas abattre : il faut le prendre au vol. Les Chasseurs de l'Abysse ont taillé l'Envergure dans les ailes de ceux qu'ils ont fait tomber, et tendu entre les deux serres un fil de la lueur qui ronge le gouffre. Il ne siffle pas quand il tire. Il claque, sec, comme une mâchoire qui se referme.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

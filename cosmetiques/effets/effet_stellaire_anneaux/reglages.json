@@ -1,0 +1,37 @@
+{
+ "particules": [
+  {
+   "particule": "poussiere (modélisée)",
+   "role": "Point de lumière dorée qui monte du bord de la plaque (six points) pendant la charge, tant que les anneaux descendent, et à l'apparition du joueur.",
+   "reglages": {"Quand": "Toujours", "Nombre": "4 par seconde", "Durée": "3 s", "Mouvement": "Monte", "Rendu": "Lumineux",
+                "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "15°", "Élan": "0 %",
+                "Variation": "Légère", "Rafale": "Aucune", "Limite": "128"}
+  },
+  {
+   "particule": "etincelle (modélisée)",
+   "role": "Trait vif projeté vers l'extérieur du bord d'un anneau (deux points par anneau) quand il se pose, puis quand la bande de lumière le traverse ; retombe.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Durée": "1 s", "Mouvement": "Lourde", "Au sol": "Disparaît",
+                "Rendu": "Lumineux", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Rapide", "Dispersion": "45°",
+                "Élan": "0 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "256"}
+  },
+  {
+   "particule": "eclat (modélisée)",
+   "role": "Éclat de lumière qui jaillit du sommet de la colonne quand le rayon part vers le ciel (départ) ou en tombe (arrivée).",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Durée": "1 s", "Mouvement": "Monte", "Rendu": "Lumineux",
+                "Sens": "Face caméra", "Fin de vie": "Rétrécit", "Départ": "Rapide", "Dispersion": "45°", "Élan": "0 %",
+                "Variation": "Forte", "Rafale": "Aucune", "Limite": "128"}
+  },
+  {
+   "particule": "mc_wax_on (Minecraft)",
+   "role": "Éclats orange au bord de chaque anneau au moment où il se pose.",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Départ": "Moyen", "Dispersion": "45°", "Rafale": "Aucune", "Limite": "256"},
+   "groupe": "emit_mc_wax_on"
+  },
+  {
+   "particule": "mc_electric_spark (Minecraft)",
+   "role": "Crépitement blanc dans la colonne (quatre hauteurs) au passage de la bande de lumière.",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Départ": "Rapide", "Dispersion": "180°", "Rafale": "Aucune", "Limite": "128"},
+   "groupe": "emit_mc_electric_spark"
+  }
+ ]
+}

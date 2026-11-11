@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "dust_82d335_8 (Minecraft)",
+   "role": "Poussière vert acide qui jaillit devant le crâne quand le carreau part (rafale au tir ; l'animation event_release l'appuie par ctrl_emit). Coupée le reste du temps (ctrl_emit −1 en main et pendant le chargement).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  }
+ ]
+}

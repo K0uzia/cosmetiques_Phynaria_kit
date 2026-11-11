@@ -1,0 +1,13 @@
+{
+  "nom": "Rondache de latex",
+  "description": "Skin de bouclier : une rondache de latex noir verni tendu sur une armature chromée, umbo bombé et bordure rivetée. Levée, ses sangles se tendent d'un coup ; quand elle frappe, un reflet fait le tour de sa bordure.",
+  "lore": "La Maison du cuir verni tend sa peau à la main, pan par pan, jusqu'à ce que le latex sonne quand on le touche. L'armature est polie au point qu'on s'y voit. Elle n'a jamais été faite pour la guerre, seulement pour tenir : les coups glissent dessus sans laisser de trace.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": false,
+  "note_vente": "Réservé au grade admin (serveur privé), hors boutique."
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Arc de l'orage",
+  "description": "Skin d'arc : tous tes arcs deviennent un arc d'acier d'orage aux branches en ailes de faucon repliées, articulées au poignet par un tambour d'or. Quand tu bandes, l'aile se replie et la corde se charge de foudre ; au tir, la flèche part dans une décharge.",
+  "lore": "Les Dompteurs d'orage disent que l'oiseau du tonnerre replie ses ailes juste avant de frapper. Leurs archers forgent donc leurs arcs en ailes repliées, rémige par rémige, et tendent entre les deux pointes un fil de foudre prisonnière. Plus on tire, plus la corde gronde ; on ne lâche jamais une flèche, on lâche l'éclair qui la porte.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

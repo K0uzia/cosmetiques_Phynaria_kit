@@ -1,0 +1,12 @@
+{
+  "nom": "Crâne abyssal",
+  "description": "Petit crâne démoniaque habité par une flamme d'âme vert acide, qui flotte à droite du joueur. Vivant et espiègle : il suit votre regard, claque des dents, tourne sur lui-même, s'assoupit, fait peur puis rit, et sa flamme réagit à la pluie, à la nuit et à la pleine lune.",
+  "lore": "On ne sait pas à qui il appartenait. On sait seulement qu'il a choisi de suivre un chasseur plutôt que de rester dans l'Abysse, et qu'il trouve cela très drôle. Sa flamme s'agite quand un démon est proche ; le reste du temps, il ricane pour rien.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "snowflake (Minecraft)",
+   "role": "Gerbe de flocons au noyau quand le coup touche (event_hit : ctrl_emit +8 pendant 0,22 s), coupée le reste du temps (ctrl_emit −1 dans item_idle, item_gui et après la gerbe). Animations des skins coupées par le joueur : cadence du staff, 4 par seconde ; la mettre à Jamais si elle se voit trop.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

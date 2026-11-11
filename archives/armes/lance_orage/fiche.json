@@ -1,0 +1,12 @@
+{
+  "nom": "Lance d'orage",
+  "description": "Lance à une main en métal d'orage, gainée de cuir bleu nuit et d'or, au fer de cristal d'orage translucide traversé d'un filet d'éclair ; des décharges courent sur le fer et l'éclair jaillit au moment du coup.",
+  "lore": "Son fer est un morceau de cristal d'orage qui a déjà gardé un éclair captif pendant cent ans. Elle se tient d'une main, toujours pointée vers le ciel au repos, pour que la foudre sache où revenir.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

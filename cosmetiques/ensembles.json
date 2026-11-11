@@ -1,0 +1,132 @@
+{
+  "Abyssal": {
+    "nom": "Abyssal",
+    "titre": "Les Chasseurs de l'Abysse",
+    "theme": "Démoniaque",
+    "accroche": "Chasseurs de démons élégants : charbon, pourpre-noir et un seul éclat, le vert acide.",
+    "lore": "Sous les terres de Phynaria s'ouvre l'Abysse, un gouffre dont la lueur verte ronge tout ce qu'elle touche. Les Chasseurs de l'Abysse y descendent pour traquer les démons qui en remontent, et en reviennent changés : des cornes, des ailes de nuit, un regard qui brille dans l'ombre. Ils ont pris à l'ennemi ses armes sans lui céder leur âme ; le vert qui court dans leurs veines rappelle le prix de ce pacte.",
+    "couleur": "#9fe04e"
+  },
+  "Tentacule": {
+    "nom": "Tentacule",
+    "titre": "Le Rejeton des profondeurs",
+    "theme": "Démoniaque",
+    "accroche": "Une chose vivante accrochée au dos, faite de chair et de patience.",
+    "lore": "Tous ne remontent pas de l'Abysse tout à fait seuls. Une chose s'accroche parfois au dos du survivant, faite de chair et de patience, et regarde le monde par un œil d'ambre. On la dit liée à son porteur jusqu'à la fin de l'un des deux.",
+    "couleur": "#c4506e"
+  },
+  "Bérénice": {
+    "nom": "Bérénice",
+    "titre": "La Chevelure de Bérénice",
+    "theme": "Divin",
+    "accroche": "Ivoire, or doux et lumière qui monte : le sacré qui apaise.",
+    "lore": "Une reine offrit un jour sa chevelure au ciel pour que les siens reviennent sains et saufs ; le ciel la garda et en fit une constellation. Ceux qu'elle protège portent depuis ses dons : des plumes ivoire à la pointe d'or, un diadème de rayons fins comme des cheveux, une lumière qui s'élève doucement autour d'eux. Rien n'y brûle ni n'aveugle : la grâce de Bérénice apaise.",
+    "couleur": "#e6c675"
+  },
+  "Givre": {
+    "nom": "Givre",
+    "titre": "Le Cœur d'Hiver",
+    "theme": "Éléments",
+    "accroche": "Glace taillée comme du cristal, givre en dentelle, lumière bleue venue de l'intérieur.",
+    "lore": "Au nord de Phynaria, la glace ne fond jamais : elle pousse. Les gardiens du Cœur d'Hiver ont appris à la faire croître à leur gré, en grappes de cristal taillé qui portent une lumière bleue venue de l'intérieur. Leur froid est calme et précis ; là où ils passent, le sol se couvre de givre et l'air se fait silencieux.",
+    "couleur": "#7fd3ef"
+  },
+  "Orage": {
+    "nom": "Orage",
+    "titre": "Les Dompteurs d'orage",
+    "theme": "Éléments",
+    "accroche": "Une tempête domptée : calme chargé, puis un éclair bref et net.",
+    "lore": "Sur les pics où les nuages se brisent, des forgerons battent un métal sombre au rythme du tonnerre. Ce métal conduit la foudre sans la craindre, et le cristal d'orage la garde captive jusqu'au moment voulu. Les Dompteurs d'orage portent leurs tambours gravés de virgules d'or et ne laissent jamais l'éclair partir au hasard : il naît toujours d'une pointe, d'un fer ou d'un cimier.",
+    "couleur": "#8fa8ff"
+  },
+  "Brasier": {
+    "nom": "Brasier",
+    "titre": "Le Brasier intérieur",
+    "theme": "Éléments",
+    "accroche": "Une chaleur de braise qui enveloppe et s'élève, sans rien brûler.",
+    "lore": "Il est des colères qui ne brûlent personne et qui éclairent tout. Le Brasier intérieur est une chaleur que certains combattants apprennent à laisser sortir d'eux sans s'y consumer : un liseré de braise, des filets d'air qui tremblent, des braises qui montent, jamais une flamme qui dévore.",
+    "couleur": "#ff6a4a"
+  },
+  "Kawaii": {
+    "nom": "Kawaii",
+    "titre": "Nuage Guimauve",
+    "theme": "Mignon",
+    "accroche": "Un pays de nuages, de guimauve et de rubans lavande, doux comme un oreiller.",
+    "lore": "Au-dessus des nuages de Phynaria flotte un pays doux comme un oreiller, fait de guimauve, de rubans lavande et de petits cœurs. Ses habitants sont des nuages qui ont appris à sourire, des lanternes qui ont pris une âme de chat et des lapins de coton. Ceux qui en reviennent en gardent toujours un morceau sur eux, et un peu de légèreté.",
+    "couleur": "#f7d27a"
+  },
+  "Pâtisserie": {
+    "nom": "Pâtisserie",
+    "titre": "La Vitrine enchantée",
+    "theme": "Mignon",
+    "accroche": "Fraise, vanille, chocolat : des gâteaux de vitrine qui se portent.",
+    "lore": "Dans une ruelle qu'on ne trouve que le ventre vide, une pâtisserie enchantée vend des gâteaux qui ne se mangent pas : ils se portent. Fraise, vanille et chocolat y prennent la forme d'un halo, d'un chapeau ou d'un sac, encore tièdes et poudrés de sucre. Le pâtissier ne dit jamais son nom ; il dit seulement qu'un dessert partagé porte bonheur.",
+    "couleur": "#e88a9a"
+  },
+  "Steampunk": {
+    "nom": "Steampunk",
+    "titre": "L'Atelier de laiton",
+    "theme": "Mécanique",
+    "accroche": "Laiton, cuivre et vapeur : des machines d'horloger qui respirent.",
+    "lore": "Dans les ateliers de la ville basse, horlogers et chaudronniers construisent ensemble des machines qui respirent. Chaque engrenage en entraîne un autre, chaque tuyau mène quelque part, et la vapeur ne sort qu'une fois que la pression a monté, cran par cran. Les pièces de l'Atelier de laiton se portent comme des instruments de précision : elles cliquettent, se règlent, et sifflent quand elles ont travaillé.",
+    "couleur": "#d69a62"
+  },
+  "Cuir": {
+    "nom": "Cuir",
+    "titre": "La Maison du cuir verni",
+    "theme": "Fétiche",
+    "accroche": "Latex noir brillant et chrome : des accessoires de mode d'une rigueur absolue. Réservé au grade admin.",
+    "lore": "Une maison de couture discrète taille dans le latex et le cuir verni des accessoires d'une rigueur absolue : sangles tendues, boucles chromées, finitions sans défaut. Tout y est net, brillant et fait pour durer. Ses pièces ne se vendent pas : elles sont réservées au grade admin.",
+    "en_vente": false,
+    "couleur": "#c23848"
+  },
+  "Admin": {
+    "nom": "Admin",
+    "titre": "Les Gardiens hors du temps",
+    "theme": "Staff",
+    "accroche": "Réservé au staff : quand le monde doit écouter, le ciel se couvre d'alvéoles écarlates.",
+    "lore": "Au-delà du ciel de Phynaria s'étend un lieu sans heures, d'où les Gardiens veillent sur le monde comme on regarde le mécanisme d'une horloge. Ils ne descendent que lorsqu'il le faut, et le ciel l'annonce avant eux : il se couvre d'alvéoles marquées de leur sceau, et chacun sait alors qu'il doit écouter.",
+    "couleur": "#9fd8ff"
+  },
+  "Stellaire": {
+    "nom": "Stellaire",
+    "titre": "Les Portes stellaires",
+    "theme": "Cosmique",
+    "accroche": "Des passages anciens entre les étoiles : anneaux, rayons et portes qui relient les mondes.",
+    "lore": "Bien avant Phynaria, un peuple de bâtisseurs disparu reliait les étoiles par des passages de métal et de lumière. Leurs anneaux d'acier sombre dorment encore sous certaines ruines, leurs faisceaux traversent parfois le ciel, et leurs grandes portes s'éveillent quand on sait composer la bonne adresse. Ceux qui les empruntent disent sentir, un instant, le froid de l'espace entre deux mondes.",
+    "couleur": "#6fc3ff"
+  },
+  "Néant": {
+    "nom": "Néant",
+    "titre": "L'Autre côté du ciel",
+    "theme": "Staff",
+    "accroche": "Réservé au staff : la voûte se fend, deux yeux rouges s'allument, une main d'os vient vous chercher.",
+    "lore": "Sous le ciel de Phynaria, il y a un noir sans étoiles où quelque chose attend. Il ne vient que si on l'appelle : il fend la voûte comme une vitre, tend la main et ne repart jamais les mains vides. Ceux qui ont croisé ses yeux disent qu'ils ne clignent pas.",
+    "couleur": "#d8434f",
+    "en_vente": false
+  },
+  "Runes": {
+    "nom": "Runes",
+    "titre": "Le Cercle des douze runes",
+    "theme": "Arcanes",
+    "accroche": "Douze runes gravées dans le vide, un portail de lumière bleue, des éclats de pierre en orbite.",
+    "lore": "Bien avant les routes, des graveurs de runes ont appris à plier la distance. Douze signes tracés en cercle suffisent à tendre l'air comme une toile ; un pas de plus, et elle se déchire sur un couloir de lumière bleue. Leur art s'est presque perdu, mais leurs cercles s'allument encore sous les pas de ceux qui en connaissent l'ordre.",
+    "couleur": "#3f7fe8"
+  },
+  "Forge Errante": {
+    "nom": "Forge Errante",
+    "titre": "Les Passeurs de la Forge Errante",
+    "theme": "Arcanes",
+    "accroche": "Des portes dessinées d'un geste dans le métal en fusion, des gerbes d'étincelles, une pluie de braises.",
+    "lore": "La Forge Errante n'a ni murs ni enclume : elle voyage avec ses passeurs, d'un feu de camp à l'autre. On y apprend un seul art, mais on le pousse loin : battre la lumière comme du fer, à mains nues, jusqu'à ce qu'elle garde la forme voulue. Leurs gestes laissent des sceaux dans l'air et des braises au sol.",
+    "couleur": "#ffb238"
+  },
+  "Distorsion": {
+    "nom": "Distorsion",
+    "titre": "Les Plieurs de monde",
+    "theme": "Cosmique",
+    "accroche": "L'espace se tord en spirale sombre, aspire, implose, puis rend ce qu'il a pris.",
+    "lore": "Certains voyageurs ne marchent pas : ils plient le monde. Ils tordent l'espace comme un tissu qu'on essore, s'y glissent jusqu'à n'être plus qu'un point, puis le laissent se défaire ailleurs. On ne les voit jamais arriver ; on sent seulement l'air onduler un instant avant qu'ils soient là.",
+    "couleur": "#9a6bff"
+  }
+}

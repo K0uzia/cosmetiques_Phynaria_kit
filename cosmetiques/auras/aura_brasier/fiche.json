@@ -1,0 +1,12 @@
+{
+  "nom": "Aura du Brasier",
+  "description": "Une chaleur de braise autour du joueur : liseré or et orange derrière la silhouette, filets de chaleur qui ondulent et montent, braises qui s'élèvent et refroidissent, sol fendu qui rougeoie. S'allume du sol vers la tête.",
+  "lore": "Ce n'est pas un incendie : rien n'y brûle. C'est la chaleur d'un combattant qui ne s'éteint jamais tout à fait, assez forte pour fendre la pierre sous ses pieds et faire trembler l'air au-dessus de lui. Les braises qui s'en échappent montent, pâlissent, et retombent en cendre bien loin de lui.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

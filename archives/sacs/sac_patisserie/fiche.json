@@ -1,0 +1,12 @@
+{
+  "nom": "Sac cupcake",
+  "description": "Petit sac à dos en forme de cupcake fraise, caissette plissée, glaçage en dôme et cerise ; il ballotte et se tasse au rythme du pas.",
+  "lore": "Les apprentis de la Vitrine enchantée livraient les commandes dans des sacs en forme de gâteau, pour que les passants sachent d'où ils venaient. Celui-ci sent encore la fraise, même vide.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Fouet chantilly",
+  "description": "Skin de masse : un grand fouet de pâtissier au manche de hêtre verni, aux fils gainés de rouge fraise, plein de chantilly vanille et d'une fraise nappée. La crème fait « plop » quand tu le prends en main, traîne derrière chaque coup et s'écrase en nuage de farine et de sucre glace quand il touche.",
+  "lore": "Le pâtissier de la Vitrine enchantée ne fouette jamais sa crème à la main : il la laisse faire. Un soir, son grand fouet a battu la chantilly si fort qu'elle n'en est plus jamais ressortie. Depuis, il ne quitte plus le comptoir que pour régler les disputes, et chaque coup qu'il donne laisse dans l'air un petit nuage sucré.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

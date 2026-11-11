@@ -1,0 +1,12 @@
+{
+  "nom": "Baguette sucre d'orge",
+  "description": "Baguette magique tenue dans la main droite : tige de sucre d'orge à rayures fraise et vanille, nœud de ruban rose et étoile-bonbon dodue au visage souriant, qui tourne et lance des paillettes sucrées à l'attaque.",
+  "lore": "C'est avec elle que le pâtissier de la Vitrine enchantée fait lever les gâteaux qui se portent. Elle n'a qu'un seul sort, mais il est délicieux. L'étoile, au bout, se plaint quand on la secoue trop.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

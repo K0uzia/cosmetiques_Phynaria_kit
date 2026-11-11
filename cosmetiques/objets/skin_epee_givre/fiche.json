@@ -1,0 +1,12 @@
+{
+  "nom": "Épée de givre",
+  "description": "Skin d'épée : remplace l'apparence de toutes tes épées, du bois à la netherite, par une lame de cristal translucide au cœur cyan lumineux, à garde d'argent froid ornée de flocons et de cristaux en éventail.",
+  "lore": "Les gardiens du Cœur d'Hiver ne forgent pas leurs épées : ils les confient à la glace. Une lame ordinaire laissée une nuit au pied d'un cristal se réveille changée, prise dans un givre qui ne fond plus. Le fer est toujours là, quelque part sous le cristal ; il a seulement appris à se taire.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

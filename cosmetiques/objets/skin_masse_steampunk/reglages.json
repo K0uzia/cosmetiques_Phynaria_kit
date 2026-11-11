@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "white_smoke (Minecraft)",
+   "role": "Vapeur qui monte de l'échappement de l'épaule de la tête : à chaque décharge de pression au repos (deux par boucle de 24 s) et au coup qui touche (event_hit). Coupée le reste du temps (ctrl_emit −1).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

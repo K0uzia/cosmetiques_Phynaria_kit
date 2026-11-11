@@ -1,39 +1,37 @@
+---
+paths:
+  - "cosmetiques/**"
+---
+
 # Règles — animations
 
 ## Axes
 
-`docs/guide-cosmetiques.md` prime sur ce fichier. Le jeu lit les rotations telles quelles, comme la vue 3D de Blockbench ; seul l'export Bedrock inverse X et Y. Le renderer `tools/render_bbmodel.py` les reproduit avec `MODCONV=1`.
+`docs/guide-cosmetiques.md` prime sur ce fichier. Convention des axes : `essentiel.md`, Axes. Aile : `mirror()` et biomécanique dans `categories/ailes.md`.
 
-Le joueur regarde −Z, sa droite est +X. Valeurs de keyframe :
-- **+X** : le haut du groupe bascule vers l'arrière.
-- **+Y** : le côté droit (+X) avance.
-- **+Z** : le côté droit monte, donc le côté gauche descend.
-
-Pour une aile : écrire une seule fois l'intention dans une fonction, et centraliser le signe dans `mirror()`. Modèle : `cosmetiques/ailes/aurelion_wings/gen_aurelion_wings.py`.
-
-Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et `hurt` en `once`, avec les seuls groupes concernés ; les keyframes n'ont pas la limite de ±360°. Superposition (overlay, `event_*`) : rotations et positions s'ajoutent, échelles se multiplient (`fonctions-avancees.md`).
+Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et `hurt` en `once`, avec les seuls groupes concernés ; les keyframes n'ont pas la limite de ±360°. Superposition (overlay, `event_*`) : `fonctions-avancees.md`, Pièges.
 
 ## Molang
 
-- Variables mémorisées (`v.x = …;`, 16 instructions par clé, 512 caractères) et nouvelles requêtes (`q.is_boosting`, `q.yaw_speed`, `q.head_*`, `q.instance_seed`, `q.delta_time`…) : guide 6.3. Le battement à la fusée validé en jeu utilise un seuil de vitesse (exclut les piqués) ; `q.is_boosting` est l'alternative directe, à essayer avec `/cosmetique apercu`.
+- Variables mémorisées (`v.x = …;`, 16 instructions par clé, 512 caractères) et requêtes (`q.is_boosting`, `q.yaw_speed`, `q.head_*`, `q.instance_seed`, `q.delta_time`, armure `q.has_*`, `q.body_x_rotation`, angles des bras, `q.limb_swing`, familier `q.owner_*` : liste dans `fonctions-avancees.md`) : guide 6.3 et 6.6. Une chaîne ou un pendentif : `phys_…_g100` (gravité du mod) plutôt qu'une contre-rotation par état. Le battement à la fusée validé en jeu utilise un seuil de vitesse (exclut les piqués), resté en place sur les ailes livrées ; `q.is_boosting` (vaut 1 pendant la poussée d'une fusée en élytres, correctif du 2026-11-04) est l'alternative directe, à essayer avec `/cosmetique apercu`.
 - Le renderer ne simule pas les variables mémorisées : une expression qui en dépend se juge en jeu.
-- Simuler dans le renderer : `MOLANG_QUERY="ground_speed=33,vertical_speed=0"`, puis vérifier aussi l'extension dans cet état.
+- Simuler dans le renderer : `MOLANG_QUERY="ground_speed=33,vertical_speed=0"`, puis regarder aussi la taille dans cet état (l'extension animée n'est plus limitée par le mod, mais reste à juger en jeu).
 - `math.sin` et `math.cos` sont en degrés. Période fermée : `q.anim_time * 360 * k / durée`.
 
 ## Canaux
 
-- **`rotation`, `position` et `scale` sont supportés.** Vérifier en jeu le premier usage de `position` et `scale` sur une pièce.
+- **`rotation`, `position` et `scale` sont supportés** (CLAUDE.md, règle 6). Vérifier en jeu le premier usage de `position` et `scale` sur une pièce.
 - `position` : +Y monte, +X va vers la droite du joueur (guide, section 3).
 - Halo qui flotte ou pulse, élément qui apparaît ou disparaît → possible dans le modèle.
 - Éléments détachés du joueur (plumes qui se posent au sol) → groupes `particle_<nom>` et `emit_<nom>`, animations `particle_<nom>_fall` et `_rest` (guide, section 5 ter).
-- En vol créatif, le joueur reste debout : un plan à 90° se voit par la tranche de face. En élytres et en nage, le corps est couché et le cosmétique le suit : le plan du dos est déjà horizontal dans le monde.
+- En vol créatif, le joueur reste debout : un plan à 90° se voit par la tranche de face (bascule d'environ 40°, sans plainte depuis, mais pas de validation explicite ; `fall` environ 26°). En élytres et en nage, le corps est couché et le cosmétique le suit : le plan du dos est déjà horizontal dans le monde (déduit du fonctionnement du mod).
 
 ## Boucles
 
 - Toute animation `loop` doit avoir **la même pose à t=0 et t=length**. Le vérificateur le mesure (< 0,05 px).
 - Construire les courbes avec des fonctions périodiques de période = durée (sin/cos), ou des impulsions `bump()` qui reviennent à 0 avant la fin.
 - Pour l'interpolation `catmullrom`, **ne pas mettre de keyframe à t=length** : la boucle se referme sur t=0. Pour `linear`, en mettre un identique au premier.
-- Une pièce qui tourne en continu va dans une animation `overlay_<nom>` (guide 6.4) : jouée en permanence par-dessus l'état, elle ne saute plus au changement d'état. Elle fait exactement 360°·k par boucle.
+- Une pièce qui tourne en continu (engrenages, rotors, halos) va dans une animation `overlay_<nom>` (guide 6.4) : jouée en permanence par-dessus l'état, elle ne saute plus au changement d'état. Elle fait exactement 360°·k par boucle.
 - Pas de `uuid` dans les keyframes : l'optimiseur les retire, Blockbench les régénère.
 
 ## États du mod et animations attendues
@@ -53,16 +51,11 @@ Autres points du guide : `air` n'est pas reconnu (utiliser `fall`) ; `attack` et
 | Attaque | `attack` | `once` : déploiement brusque puis retour à 0 (0,8 s), groupes concernés seuls |
 | Blessé | `hurt` | `once` : sursaut vers l'arrière + tremblement amorti, retour à 0 (0,8 s) |
 
-Mots reconnus et repli d'un état manquant : guide, section 6.2 (élytres → vol, course → marche, sinon `idle`). Ailes et queues : les 12 états. Pièces discrètes (tête, épaules, armes, auras) : seulement les états utiles.
+**Attaque et blessé (consigne de l'utilisateur, 2026-11-05)** : « pas logique qu'un équipement réagisse à une attaque ou à des dégâts ; à la limite le visuel peut changer suivant la barre de vie ». Pas d'`attack` ni de `hurt` sur les pièces portées (tête, épaules, queue, sac, aura). **Exceptions** : les ailes les gardent (« liées au corps, c'est normal ») ; les armes gardent `attack` ; les familiers gardent leur réaction (être vivant). À la place, si utile, un aspect qui suit la vie en continu et en douceur dans les états (`query.health / query.max_health`, guide 6.3) : vie basse = effet plus instable ou plus terne, jamais un changement brutal de forme ou de pose. `attack` reste pour les armes (c'est l'objet qui frappe). `tools/reactions.py` (`retirer_reactions(model)`) avant l'écriture.
 
-## Biomécanique (pour que ça ait l'air d'une aile)
+Mots reconnus et repli d'un état manquant : guide, section 6.2 (élytres → vol, course → marche, sinon `idle`). Seuls ces noms sont joués d'office (le vérificateur alerte sur un nom libre comme `ondulation`, que seul un choix manuel du staff ferait jouer). Événements d'une pièce portée : `event_jump`, `event_land`, `event_equip`, `event_unequip`, `event_enter_<état>`/`event_exit_<état>` avec les états **en anglais du guide** : idle, walk, **sprint**, sneak, fly, glide, swim, fall, **ride**, sleep (pas `run` ni `mount`). Ailes : les 12 états. Queues : les 10 états hors `attack` et `hurt`. Pièces discrètes (tête, épaules, armes, auras) : seulement les états utiles.
 
-- Squelette = bras : épaule → coude → poignet → bout. Bones imbriqués, chaque plume rattachée au segment qui la porte.
-- Au repos : plan vertical, plumes qui pendent, léger balayage arrière en Z (humérus arrière, avant-bras revient, main repart).
-- En vol : le plan bascule (voir le tableau) ; descente = extension complète, primaires écartées ; remontée = poignet et coude fléchis, primaires serrées.
-- Cascade : coude et poignet déphasés de 0,1–0,2 cycle après l'épaule.
-- Une seconde paire (plus petite) suit la grande à ~80 % d'amplitude avec un léger retard.
-- Pas d'angle droit : répartir le repli sur les 3 articulations (ex. course : −30 / +18 / −22, pas 40/40/46).
+Familier vivant (états `pet_`) : `categories/familiers.md`. Effet de téléportation (`charge`, `depart`, `arrivee`) : `categories/effets.md`.
 
 ## Échantillonnage
 

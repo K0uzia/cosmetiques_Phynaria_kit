@@ -1,0 +1,12 @@
+{
+  "nom": "Haut-de-forme Steampunk",
+  "description": "Haut-de-forme de feutre brun à ruban de cuir, posé sur une petite chaudière : foyer rougeoyant au dos, manomètre, cheminée qui lâche sa vapeur. En sneak, un moteur à vapeur bascule les lunettes ambre devant les yeux, puis deux loupes d'horloger pivotent devant le verre droit.",
+  "lore": "Aucun maître de l'Atelier de laiton ne sort sans son haut-de-forme : le foyer du dos tient la chaudière au chaud, et le petit moteur du bord abaisse les lunettes dès qu'il faut regarder de près. Quand l'aiguille du manomètre monte trop, la cheminée siffle, et tout l'atelier sait qu'il vaut mieux se taire.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

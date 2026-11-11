@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "heart (Minecraft)",
+   "role": "Petits cœurs qui montent de la pointe du cœur pendant que l'arbalète se tend (À l'utilisation), puis une rafale de cœurs quand le carreau part (Au tir). Rien au repos.",
+   "reglages": {
+    "Quand": "À l'utilisation",
+    "Nombre": "1 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  }
+ ]
+}

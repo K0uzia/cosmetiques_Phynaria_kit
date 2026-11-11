@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes papillon bonbon",
+  "description": "Ailes de papillon en sucre de bonbon, fraise à la racine et lilas irisé vers la pointe, bordure prune semée de pois blancs, un cœur dans chaque aile. Elles battent puis planent comme un vrai papillon, et éclosent d'une chrysalide menthe quand on les équipe.",
+  "lore": "À Nuage Guimauve, les chenilles se nourrissent de sucre filé et tissent leur chrysalide sur le dos de ceux qui dorment dans l'herbe tiède. Au réveil, la chrysalide se fend et un cœur bat dans chaque aile neuve. On dit qu'elles ne se posent que sur les gens qui ont été doux toute une saison.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

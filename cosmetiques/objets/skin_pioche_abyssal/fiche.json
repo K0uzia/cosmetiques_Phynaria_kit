@@ -1,0 +1,12 @@
+{
+  "nom": "Pic de l'Abysse",
+  "description": "Skin de pioche : remplace toutes tes pioches par un pic de deux crocs d'os noir au fil vert acide, corne au sommet et griffe au pommeau. Les crocs sortent de l'œil quand tu le prends en main, et le fil s'avive à chaque coup.",
+  "lore": "Sous les mines, les Chasseurs de l'Abysse creusent vers ce qui dort. Le Pic a été taillé dans les deux crocs d'un démon fouisseur, qui rongeait la roche bien avant les hommes. Il mord la pierre comme il mordait autrefois, et la lueur verte remonte le long des crocs chaque fois qu'il touche quelque chose de vivant.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "nom": "Portail de passage",
+  "description": "Des runes s'allument en cercle devant vous. Au départ, l'air se déchire en un portail ovale de lumière bleue, entouré de runes et d'éclats de pierre en orbite : vous le traversez et il implose. À l'arrivée, un portail s'ouvre dans votre dos et vous en sortez.",
+  "lore": "Bien avant les routes, les graveurs de runes traçaient douze signes dans le vide pour plier la distance. Le cercle tend l'air comme une toile ; un pas de plus et elle se déchire sur un couloir de lumière. On dit que chaque portail arrache un peu de la pierre du lieu qu'on quitte, et qu'elle tourne autour de vous jusqu'à ce que la porte se referme.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true,
+  "ensemble": "Runes"
+}

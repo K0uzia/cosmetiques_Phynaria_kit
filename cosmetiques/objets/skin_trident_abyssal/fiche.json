@@ -1,0 +1,12 @@
+{
+  "nom": "Fouëne de l'Abysse",
+  "description": "Skin de trident : remplace tous tes tridents par une fourche d'os noir à trois dents, ardillons tournés vers le bas et pointes vert acide. La fourche sort du collet quand tu la prends en main ; levée, ses pointes s'allument, et elle part dans un éclat vert.",
+  "lore": "Dans les eaux noires du fond de l'Abysse nagent des choses qu'aucune lame n'atteint. Les Chasseurs les pêchent comme on pêche le saumon, à la fouëne : trois dents taillées dans la mâchoire d'une bête du gouffre, des ardillons pour que rien ne glisse. Quand elle part, la lueur verte la suit comme un sillage, et il est rare qu'elle revienne sans prise.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

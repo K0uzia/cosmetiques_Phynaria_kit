@@ -22,7 +22,7 @@ Si le mod ne permet de choisir qu'une animation par état, générer aussi des f
 - `scale_test` / `pos_test` : quelque chose bouge ? (si non → canal non supporté)
 - La barre **bleue** pointe-t-elle vers l'arrière au repos ?
 
-## 3. Traduire en convention et l'écrire dans `.claude/rules/animation.md`
+## 3. Traduire en convention et l'écrire dans `.claude/rules/essentiel.md` (Axes)
 - Pour chaque axe, note « valeur positive = <effet> » tel qu'observé.
 - Compare avec la section 3 du guide. Si le jeu diverge, signale-le au développeur et aligne le renderer sur ce qui est observé.
 - Mets à jour la table des canaux supportés et `verify_bbmodel.py` (liste des canaux autorisés) si scale/position deviennent supportés.

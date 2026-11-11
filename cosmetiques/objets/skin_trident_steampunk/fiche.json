@@ -1,0 +1,12 @@
+{
+  "nom": "Harpon à vapeur",
+  "description": "Skin de trident : tous tes tridents deviennent une fourche d'acier sertie dans une roue dentée de laiton à manomètre ambre, avec une chaudière au talon. Levé, l'aiguille monte au rouge et la lentille s'allume ; au lancer, la buse crache un jet de vapeur.",
+  "lore": "Sur les quais de la ville basse, les pêcheurs de l'Atelier de laiton chassent ce qui remonte des eaux profondes avec un harpon qui garde sa chaleur. La chaudière du talon pousse la vapeur dans la hampe jusqu'à la roue qui sertit la fourche. On attend que l'aiguille touche le rouge, puis on lance, et la buse rend d'un coup toute la pression ; la corde reste nouée à l'œillet de laiton.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

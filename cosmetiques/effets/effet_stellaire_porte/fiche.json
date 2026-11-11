@@ -1,0 +1,12 @@
+{
+  "nom": "Porte des étoiles",
+  "description": "Un grand anneau de pierre et d'or sort du sol ; son cercle intérieur tourne et ses crans s'allument un à un. Au départ, l'eau jaillit, une surface bleue ondule et vous y entrez ; à l'arrivée, vous en sortez avant que la porte ne retourne sous terre.",
+  "lore": "Les plus grandes portes des bâtisseurs disparus dorment sous la terre de Phynaria. Il faut composer leur adresse cran par cran pour que l'anneau d'or tourne et que la lumière de l'autre monde jaillisse, froide comme l'eau d'un puits. On dit que la surface garde un instant la forme de ceux qui la traversent, avant de se refermer sans un bruit.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

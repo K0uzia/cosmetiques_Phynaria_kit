@@ -7,7 +7,7 @@ description: Traiter un retour de l'utilisateur sur un cosmétique en jeu (captu
 
 ## 1. Lire
 - Captures : `C:\Users\kouzi\AppData\Roaming\.phynaria\profiles\ftbe2\screenshots`. Lister par date et ouvrir **toutes** les nouvelles.
-- Lire `docs/guide-cosmetiques.md` s'il a changé, et `.claude/rules/retours-en-jeu.md`.
+- Lire `docs/guide-cosmetiques.md` s'il a changé, `.claude/rules/retours-en-jeu.md` (index) et le fichier de la catégorie (`.claude/rules/categories/`).
 - Reformuler les demandes. Si une phrase a deux sens opposés (« fait les plates »), vérifier sur les captures avant de coder.
 
 ## 2. Trier
@@ -32,4 +32,4 @@ Dans l'ordre : `.build/`, optimiseur, vérificateur, rendus incluant une vue de 
 
 ## 5. Livrer et apprendre
 - Message : point par point, ce qui est corrigé, cause mesurée ou supposée, 2–3 vérifications en jeu.
-- Quand l'utilisateur valide, refuse ou nuance une pièce ou une recette, mettre à jour `.claude/rules/retours-en-jeu.md`.
+- Quand l'utilisateur valide, refuse ou nuance une pièce ou une recette, noter l'avis dans `.claude/rules/categories/<catégorie>.md` (ou dans `retours-en-jeu.md` s'il vaut pour plusieurs catégories) et retirer la pièce de `.claude/references/historique-livraisons.md`.

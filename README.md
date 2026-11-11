@@ -31,7 +31,7 @@ index.html                catalogue généré
 ouvrir_vestiaire.bat      lance le Vestiaire
 ```
 
-`docs/guide-cosmetiques.md` est le guide officiel du mod : il prime sur toutes nos règles. `.claude/rules/retours-en-jeu.md` regroupe les leçons tirées des essais en jeu, à lire avant de commencer.
+`docs/guide-cosmetiques.md` est le guide officiel du mod : il prime sur toutes nos règles. `.claude/rules/retours-en-jeu.md` est l'index des leçons tirées des essais en jeu (avis par catégorie dans `.claude/rules/categories/`), à lire avant de commencer.
 
 ### Outils
 
@@ -43,7 +43,7 @@ ouvrir_vestiaire.bat      lance le Vestiaire
 | `tools/livrer.py` | Vérifie un cosmétique, crée ses aperçus, met à jour le livrable et le Vestiaire |
 | `tools/gen_calib.py`, `tools/calibration_axes.bbmodel` | Modèle de calibration des axes |
 | `tools/gen_index.py`, `tools/serve_vestiaire.py`, `tools/catalogue_modele.html` | Vestiaire |
-| `tools/example_wings_generator.py` | Ancien exemple d'ailes, qui contient des défauts corrigés depuis ; partir plutôt de `gen_aurelion_wings.py` |
+| `tools/example_wings_generator.py` | Ancien exemple d'ailes, qui contient des défauts corrigés depuis ; partir plutôt de `gen_ailes_berenice.py` |
 
 ### Dossier d'un cosmétique
 
@@ -89,6 +89,6 @@ Un rendu propre et une vérification verte ne prouvent pas le résultat en jeu :
 
 ## Règles à connaître
 
-- Les axes suivent le guide du mod, section 3 : le jeu lit le `.bbmodel` comme la vue 3D de Blockbench (`.claude/rules/animation.md`).
+- Les axes suivent le guide du mod, section 3 : le jeu lit le `.bbmodel` comme la vue 3D de Blockbench (`.claude/rules/essentiel.md`, Axes).
 - Aucune reproduction de design protégé (personnages, logos) : une référence sert à cerner l'ambiance, le design reste original.
 - Les limites du mod (cubes, groupes, textures, animations, particules) sont listées dans `CLAUDE.md`.

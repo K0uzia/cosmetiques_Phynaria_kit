@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "electric_spark (Minecraft)",
+   "role": "Gerbe d'étincelles sur la face de frappe quand le coup touche (event_hit : ctrl_emit +8 pendant 0,25 s, soit 8 fois la cadence). Coupée le reste du temps (item_idle : ctrl_emit −1). Animations des skins coupées par le joueur : cadence du staff, 4 par seconde ; la mettre à Jamais si elle se voit trop.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

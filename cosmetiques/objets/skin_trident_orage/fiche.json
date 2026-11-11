@@ -1,0 +1,12 @@
+{
+  "nom": "Trident de l'orage",
+  "description": "Skin de trident : une fourche d'acier d'orage forgée d'une pièce, trois dents biseautées où la foudre est couchée. Levé pour lancer, des arcs sautent d'une pointe à l'autre ; il part dans une décharge et file chauffé à blanc, la foudre en traîne.",
+  "lore": "Les Dompteurs d'orage disent qu'un trident n'est qu'un paratonnerre qu'on ose lancer. Leurs forgerons battent la fourche d'une seule pièce sous l'averse, puis couchent l'éclair dans ses gouttières. Tant qu'on le tient, la foudre dort ; dès qu'on le lève, elle s'éveille d'une dent à l'autre et ne demande plus qu'à partir.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

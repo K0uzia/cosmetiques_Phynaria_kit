@@ -8,6 +8,21 @@ Chaque panneau est porté par le doigt du DESSUS : quand les doigts se ferment v
 sur les autres comme les lames d'un éventail, sans jamais ouvrir de trou. La pose neutre (fold = 0) est l'aile
 grande ouverte : les animations ne font que fermer.
 Griffes et cornes : recette peau + âme d'Aurelion (plaque découpée, âme pleine plus étroite).
+Fiche de style : .claude/styles/abyssal.md.
+
+Validé en jeu (« juste incroyable »), à ne pas toucher : forme, membrane et veines, textures, poses et animations des états,
+battement à la fusée en glide (V0 = 26, DV = 5, piqués exclus), braises qui tombent des ailes.
+
+Mise aux règles du 2026-11-05 (avant : .build/gen_avant.py, .build/avant_livrable.bbmodel) :
+- taille : aile réduite dans son plan (K = 0,60 autour de l'épaule, profondeur gardée) : envergure déployée 87–108 px → 57–70 px ;
+- couches : plaques de membrane à 0,1 px au moins l'une de l'autre (avant 0,04 px entre les deux moitiés d'un panneau),
+  doigts centrés sur leurs membranes, os des doigts d'au moins 0,42 px en profondeur, bouts des cubes à 45° rentrés de 0,1 px ;
+  contrôle par .build/mesure.py et .build/resume.py ;
+- event_equip (1,6 s, un battement de phantom) et event_unequip (2,0 s, finit à l'échelle 0) : les ailes percent le dos ;
+- sons limités par tools/sons.py ; reglages.json pour les braises.
+Fonctions avancées : particle_braise + emit_braise, calque _e, event_equip, event_unequip, son.
+À juger en jeu seulement (/cosmetique apercu) : apparition et retrait (somme avec l'état, sens de la position z), calque _e de nuit
+(avec shader : invisible à ce jour, bug du mod ; les veines vertes restent dans la texture de base).
 """
 import base64, io, json, math, os, re, uuid as _uuid
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -265,6 +280,15 @@ col = col.astype(np.float32)
 
 # ------------------------------------------------------------------ panneaux : qui porte quoi
 OV = 1.3      # recouvrement entre plaques voisines d'un même doigt (px)
+# Niveaux en profondeur des plaques de membrane (mise aux règles du 2026-11-05) : plaques de 0,3 px sur une grille de 0,1 px,
+# deux plaques qui se recouvrent toujours à 0,1–0,2 px ou ≥ 0,4 px l'une de l'autre (faces opposées comprises ≥ 0,1 px).
+# Avant : 0,04 px entre les deux moitiés d'un panneau (scintillement possible quand la phalange se creuse).
+LV = [-0.35, -0.15, 0.05, 0.25]          # m1a..m4a ; mkb = mka + 0,1
+Z_M5, Z_M6 = -0.15, -0.30
+# Chaque doigt est centré sur ses membranes, et son os garde au moins 0,42 px d'épaisseur en profondeur : les faces des
+# membranes (±0,3 px autour du doigt) restent à ≥ 0,1 px des faces de l'os. Vu de face, l'os ne change pas.
+DZ = [-0.30, -0.20, 0.0, 0.20]           # décalage en profondeur des doigts d1..d4
+QZ_MIN = 0.42
 
 
 def tilted(pts, deg):
@@ -300,23 +324,23 @@ for k in range(NF - 1):
     f = FINGERS[k]
     poly = [W_] + far_pts(f["pts"], 3.0)[1:] + list(reversed(far_pts(tilted(RS[k + 1], -3.5), 6.0)))
     ja = f["a"] + f["b1"]
-    zb = -0.21 + 0.13 * k
+    zb = LV[k]
     panel(f"m{k + 1}a", f"d{k + 1}", poly, zb, side(f["J"], ja, -1, OV))
-    panel(f"m{k + 1}b", f"d{k + 1}b", poly, zb + 0.04, side(f["J"], ja, +1, OV))
+    panel(f"m{k + 1}b", f"d{k + 1}b", poly, zb + 0.1, side(f["J"], ja, +1, OV))
 
 # dernier doigt : son panneau part vers l'intérieur, jusqu'au rayon qui descend de l'avant-bras
 f = FINGERS[-1]
 poly = [W_] + far_pts(f["pts"], 3.0)[1:] + list(reversed(far_pts(tilted(RAY_A, -3.0), 5.0)))
-panel("m4a", "d4", poly, 0.18, side(f["J"], f["a"] + f["b1"], -1, OV))
-panel("m4b", "d4b", poly, 0.22, side(f["J"], f["a"] + f["b1"], +1, OV))
+panel("m4a", "d4", poly, LV[3], side(f["J"], f["a"] + f["b1"], -1, OV))
+panel("m4b", "d4b", poly, LV[3] + 0.1, side(f["J"], f["a"] + f["b1"], +1, OV))
 # avant-bras
 poly = [along([S_, E_], 0.8), E_, (W_[0] + 0.8, W_[1] + 0.2), (W_[0] + 2.6, W_[1] - 3.0)] + \
     far_pts(ray((W_[0] + 2.6, W_[1] - 3.0), (M1[0] + 3.0, M1[1])), 4.0)[1:] + \
     [(M2[0] - 1.8, M2[1] - 4.0), (along([S_, E_], 0.8)[0] - 1.0, along([S_, E_], 0.8)[1] - 4.0)]
-panel("m5", "elbow", poly, -0.30)
+panel("m5", "elbow", poly, Z_M5)
 # humérus : jusqu'au corps
 poly = [S_, along([S_, E_], 1.0), (E_[0] + 1.2, E_[1] - 2.0), (M2[0] + 1.6, M2[1] - 4.5), (HIP[0] - 1.0, HIP[1] - 3.0), (HIP[0] - 1.2, HIP[1] + 2)]
-panel("m6", "shoulder", poly, -0.26)
+panel("m6", "shoulder", poly, Z_M6)
 
 # ------------------------------------------------------------------ peinture des griffes, os, particule
 
@@ -535,8 +559,10 @@ def plate(s, g, name, cx, cy, w, h, phi, z, uv, flip_v=False, th=0.3):
     groups[g]["ids"].append(cube(name, [x - w / 2, cy - h / 2, z - th / 2], [x + w / 2, cy + h / 2, z + th / 2], [x, cy, z], rot=(0, 0, s * phi), faces=faces))
 
 
-def bar(s, g, name, x, y, z, L, q, phi, u0, u1, octo=True, ov=0.0):
-    """Tronçon d'os le long de l'axe local X. octo : section octogonale (deux cubes à 45°), sinon losange seul."""
+def bar(s, g, name, x, y, z, L, q, phi, u0, u1, octo=True, ov=0.0, qz=None):
+    """Tronçon d'os le long de l'axe local X. octo : section octogonale (deux cubes à 45°), sinon losange seul.
+    qz : demi-épaisseur en profondeur (z) du cube droit, si elle diffère de la demi-largeur q."""
+    qz = q if qz is None else qz
     bu0, bv0, bu1, bv1 = UV["bone"]
     ua, ub = lerp(bu0, bu1, u0), max(lerp(bu0, bu1, u1), lerp(bu0, bu1, u0) + 2)
     long_ = [ua, bv0, ub, bv1]
@@ -546,13 +572,14 @@ def bar(s, g, name, x, y, z, L, q, phi, u0, u1, octo=True, ov=0.0):
     o = [s * x, y, z]
     gid = groups[g]["ids"]
     if octo:
-        gid.append(cube(name, [a, y - q, z - q], [b, y + q, z + q], o, rot=(0, 0, s * phi), faces=faces))
-        gid.append(cube(name + "o", [a + 0.03, y - q * 0.97, z - q * 0.97], [b - 0.03, y + q * 0.97, z + q * 0.97], o, rot=(45, 0, s * phi), faces=faces))
+        gid.append(cube(name, [a, y - q, z - qz], [b, y + q, z + qz], o, rot=(0, 0, s * phi), faces=faces))
+        # bouts du cube à 45° rentrés de 0,1 px (avant : 0,03 px, faces de bout presque confondues)
+        gid.append(cube(name + "o", [a + 0.1, y - q * 0.97, z - q * 0.97], [b - 0.1, y + q * 0.97, z + q * 0.97], o, rot=(45, 0, s * phi), faces=faces))
     else:
         gid.append(cube(name, [a, y - q, z - q], [b, y + q, z + q], o, rot=(45, 0, s * phi), faces=faces))
 
 
-def chain(s, g, name, pts, r0, r1, u0=0.0, u1=1.0, octo_until=1.0, z=Z, z1=None):
+def chain(s, g, name, pts, r0, r1, u0=0.0, u1=1.0, octo_until=1.0, z=Z, z1=None, zfloor=False):
     """Os effilé et légèrement courbe : tronçons qui se recouvrent, rayon qui décroît, couleur continue le long de l'os."""
     n = len(pts) - 1
     z1 = z if z1 is None else z1
@@ -562,7 +589,8 @@ def chain(s, g, name, pts, r0, r1, u0=0.0, u1=1.0, octo_until=1.0, z=Z, z1=None)
         phi = math.degrees(math.atan2(yb - ya, xb - xa))
         t0, t1 = i / n, (i + 1) / n
         q = lerp(r0, r1, (t0 + t1) / 2)
-        bar(s, g, f"{name}{i}", xa, ya, lerp(z, z1, t0), L, q, phi, lerp(u0, u1, t0), lerp(u0, u1, t1), octo=(t1 <= octo_until + 1e-6), ov=0.12)
+        qz = max(q, QZ_MIN + 0.3 * (q - 0.2)) if zfloor else q
+        bar(s, g, f"{name}{i}", xa, ya, lerp(z, z1, t0), L, q, phi, lerp(u0, u1, t0), lerp(u0, u1, t1), octo=(t1 <= octo_until + 1e-6), ov=0.12, qz=qz)
 
 
 def hook(s, g, name, x, y, z, L, ang, tile, down=False, core=3):
@@ -628,10 +656,11 @@ def build(s):
     for k, f in enumerate(FINGERS):
         d = group(f"d{k + 1}_{tag}", [s * W_[0], W_[1], Z], parent=wr)
         db = group(f"d{k + 1}b_{tag}", [s * f["J"][0], f["J"][1], Z], parent=d)
-        chain(s, d, f"f{k + 1}a_{tag}", f["p1"], 0.66, 0.42, 0.55, 0.78)
-        chain(s, db, f"f{k + 1}b_{tag}", f["p2"], 0.42, 0.2, 0.78, 1.0, octo_until=0.61)
-        bar(s, db, f"nod{k + 1}_{tag}", f["J"][0] - 0.45, f["J"][1], Z, 0.9, 0.5, f["a"] + f["b1"], 0.75, 0.8, octo=True)
-        hook(s, db, f"cl{k + 1}_{tag}", f["tip"][0], f["tip"][1], Z, 4.2, f["end"], "hook_small", down=True, core=2)
+        zd = Z + DZ[k]
+        chain(s, d, f"f{k + 1}a_{tag}", f["p1"], 0.66, 0.42, 0.55, 0.78, z=zd, zfloor=True)
+        chain(s, db, f"f{k + 1}b_{tag}", f["p2"], 0.42, 0.2, 0.78, 1.0, octo_until=0.61, z=zd, zfloor=True)
+        bar(s, db, f"nod{k + 1}_{tag}", f["J"][0] - 0.45, f["J"][1], zd, 0.9, 0.58, f["a"] + f["b1"], 0.75, 0.8, octo=True, qz=0.62)
+        hook(s, db, f"cl{k + 1}_{tag}", f["tip"][0], f["tip"][1], zd, 4.2, f["end"], "hook_small", down=True, core=2)
 
     # membrane
     names = {"elbow": el, "shoulder": sh}
@@ -648,6 +677,79 @@ def build(s):
 
 
 (LR_, L_), (RR_, R_) = build(-1), build(1)
+
+# ------------------------------------------------------------------ taille (mise aux règles du 2026-11-05)
+# Envergure déployée avant : 87–108 px (règle : 52–70). L'aile est réduite dans son plan (x, y) autour de l'épaule, d'un
+# facteur K, comme les ailes de Bérénice ; la profondeur (z) et l'épaisseur des plaques sont gardées, donc les écarts
+# entre couches aussi. Forme, textures, poses et animations validées en jeu inchangées.
+K = 0.60
+
+
+def _euler(Rm):
+    """Inverse de rot_matrix (R = Rz·Ry·Rx, ordre de Blockbench)."""
+    ry = math.asin(max(-1.0, min(1.0, -Rm[2, 0])))
+    return (math.degrees(math.atan2(Rm[2, 1], Rm[2, 2])), math.degrees(ry), math.degrees(math.atan2(Rm[1, 0], Rm[0, 0])))
+
+
+def _rot(rx, ry, rz):
+    rx, ry, rz = map(math.radians, (rx, ry, rz))
+    cx, sx, cy, sy, cz, sz = math.cos(rx), math.sin(rx), math.cos(ry), math.sin(ry), math.cos(rz), math.sin(rz)
+    return (np.array([[cz, -sz, 0], [sz, cz, 0], [0, 0, 1]]) @ np.array([[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]])
+            @ np.array([[1, 0, 0], [0, cx, -sx], [0, sx, cx]]))
+
+
+def reduire(racine, P, k):
+    M = np.diag([k, k, 1.0])
+    P = np.array(P, float)
+    T = lambda v: P + M @ (np.array(v, float) - P)
+    par_uuid = {e["uuid"]: e for e in elements}
+    todo = [racine]
+    while todo:
+        n = todo.pop()
+        todo += [m for m, g in groups.items() if g["parent"] == n]
+        g = groups[n]
+        g["origin"] = [round(v, 3) for v in T(g["origin"])]
+        for u in g["ids"]:
+            e = par_uuid[u]
+            o = np.array(e["origin"], float)
+            Rm = _rot(*e.get("rotation", (0, 0, 0)))
+            ext = np.array(e["to"]) - np.array(e["from"])
+            # axes propres du cube, du plus long au plus mince : le plus long garde sa direction exacte, le plan des deux plus
+            # longs (le plan d'une plaque) est exactement l'image du plan d'origine ; seul l'axe mince est recalculé.
+            i0, i1, i2 = np.argsort(-ext)
+            MR = M @ Rm
+            l = MR[:, i0] / np.linalg.norm(MR[:, i0])
+            w = MR[:, i1] - (MR[:, i1] @ l) * l
+            sc = np.ones(3)
+            sc[i0] = np.linalg.norm(MR[:, i0])
+            sc[i1] = np.linalg.norm(w)
+            w /= sc[i1]
+            nrm = np.cross(l, w)
+            if nrm @ Rm[:, i2] < 0:
+                nrm = -nrm
+            Q = np.zeros((3, 3))
+            Q[:, i0], Q[:, i1], Q[:, i2] = l, w, nrm
+            if np.linalg.det(Q) < 0:          # repère indirect : on retourne l'axe mince et on garde la boîte symétrique
+                Q[:, i2] = -Q[:, i2]
+            sc[i2] = 1.0 if ext[i2] <= 0.35 else abs(MR[:, i2] @ Q[:, i2])   # axe mince : plaque gardée à son épaisseur ; sinon : ≈ 1 s'il est en profondeur (peaux, âmes), ≈ K s'il est dans le plan (os)
+            a, b = (np.array(e["from"]) - o) * sc, (np.array(e["to"]) - o) * sc
+            if np.linalg.det(Q) > 0 and Q[:, i2] @ Rm[:, i2] < 0:
+                a[i2], b[i2] = -b[i2], -a[i2]
+            o2 = T(o)
+            e["origin"] = [round(v, 3) for v in o2]
+            e["from"] = [round(v, 3) for v in o2 + a]
+            e["to"] = [round(v, 3) for v in o2 + b]
+            rr = _euler(Q)
+            if any(abs(v) > 1e-3 for v in rr):
+                e["rotation"] = [round(v, 2) for v in rr]
+            else:
+                e.pop("rotation", None)
+
+
+
+for _s, _t in ((-1, "l"), (1, "r")):
+    for _g in (f"shoulder_{_t}", f"wingroot_{_t}"):
+        reduire(_g, (_s * S_[0], S_[1], Z), K)
 
 # Particule (guide, section 5 ter) : une seule plaque, face up seule, à 0,3 px au-dessus du pivot : aucun contact avec le sol.
 PL = group("particle_braise", [0, 0, 0])
@@ -883,7 +985,68 @@ PF, PR = 3.0, 6.0
 braise_fall = particle_anim("particle_braise_fall", PF, lambda t: (24 * math.sin(TAU * t / PF), 360 * t / PF, 18 * math.cos(2 * TAU * t / PF)), 24)
 braise_rest = particle_anim("particle_braise_rest", PR, lambda t: (0, 0, 1.2 * math.sin(TAU * t / PR)), 12)
 
-ANIMS = [idle, walk, run, sneak, fly, glide, fall, swim, mount, sleep, attack, hurt, braise_fall, braise_rest]
+
+
+# ------------------------------------------------------------------ apparition et retrait (mise aux règles du 2026-11-05)
+# Joués par-dessus l'état (guide 6.4) : les rotations s'ajoutent à celles de l'état, les échelles se multiplient.
+# Pas de sac ni de boîtier : les ailes percent le dos, petites et repliées serrées, puis s'ouvrent d'un coup comme un
+# étirement (les doigts passent un peu au-delà de la pose), et se posent. Le retrait fait l'inverse et finit à l'échelle 0.
+PLI = {"shoulder": (7, 12, 6), "elbow": (0, -15, 0), "wrist": (0, 6, -34)}     # repli serré (pose de sneak), en intention
+
+
+def event_anim(name, L, k_scale, k_fold, k_fing, k_root, sons=(), n=None):
+    n = n or int(round(L * 24))
+    times = [round(i * L / n, 3) for i in range(n + 1)]
+    A = {}
+
+    def put(g, kfs):
+        A[groups[g]["uuid"]] = {"name": g, "type": "bone", "keyframes": kfs}
+
+    def lag(f, d):                       # cascade : chaque articulation suit avec un retard
+        return lambda t: f(max(0.0, t - d))
+
+    for s_, tag in ((-1, "l"), (1, "r")):
+        for i, seg in enumerate(SEG):
+            fx, fy, fz = PLI[seg]
+            kfo = lag(k_fold, 0.08 * i)
+            ks = [kf("rotation", t, *mirror(s_, fx * kfo(t), fy * kfo(t), fz * kfo(t))) for t in times]
+            if seg == "shoulder":
+                ks += [kf("scale", t, k_scale(t), k_scale(t), k_scale(t)) for t in times]
+                # sortie du dos : la racine part de 1,5 px dans le torse (canal position, sens de z supposé comme pour Bérénice)
+                ks += [kf("position", t, 0, 0, -1.5 * k_fold(t)) for t in times]
+            put(f"{seg}_{tag}", ks)
+        for k in range(NF):
+            kfi = lag(k_fing, 0.03 * (NF - 1 - k))
+            put(f"d{k + 1}_{tag}", [kf("rotation", t, *mirror(s_, 0, 0, -CLOSE[k] * kfi(t))) for t in times])
+        put(f"thumb_{tag}", [kf("rotation", t, *mirror(s_, 0, 0, 32 * max(0.0, k_fing(t)))) for t in times])
+        put(f"wingroot_{tag}", [kf("scale", t, k_root(t), k_root(t), k_root(t)) for t in times])
+    a = {"uuid": nuid(), "name": name, "loop": "once", "override": False, "length": L, "snapping": 24, "selected": False, "animators": A}
+    if sons:
+        a["animators"]["effects"] = {"name": "Effects", "type": "effect", "keyframes":
+                                     [{"channel": "sound", "data_points": [{"effect": e, "file": ""}], "time": t} for t, e in sons]}
+    return a
+
+
+# event_equip 1,6 s : 0–0,45 s les ailes percent le dos (échelle 0,04 → 0,6, repliées, doigts fermés) ; 0,35–0,95 s elles
+# grandissent et se déplient en cascade ; 0,75–1,0 s les doigts s'ouvrent d'un coup au-delà de la pose (étirement) ; 1,0–1,6 s
+# tout se pose. Un seul son, au claquement de l'ouverture.
+EQ = 1.6
+equip = event_anim("event_equip", EQ,
+                   k_scale=lambda t: 0.04 + 0.56 * sm(t, 0.0, 0.45) + 0.40 * sm(t, 0.35, 0.95),
+                   k_fold=lambda t: 1 - sm(t, 0.35, 0.95),
+                   k_fing=lambda t: 1 - sm(t, 0.7, 0.92) - 0.16 * bump(t, 0.8, 0.95, 1.05, 1.5),
+                   k_root=lambda t: 0.3 + 0.7 * sm(t, 0.0, 0.4),
+                   sons=((0.85, "entity.phantom.flap"),))
+# event_unequip 2,0 s : les doigts se ferment, l'aile se replie en cascade, puis rentre dans le dos en rapetissant ;
+# dernière image à l'échelle 0, gardée jusqu'au départ (guide 6.4).
+UQ = 2.0
+unequip = event_anim("event_unequip", UQ,
+                     k_scale=lambda t: 1 - sm(t, 0.9, 1.9),
+                     k_fold=lambda t: sm(t, 0.25, 1.1),
+                     k_fing=lambda t: sm(t, 0.0, 0.6),
+                     k_root=lambda t: 1 - sm(t, 1.3, 1.9))
+
+ANIMS = [idle, walk, run, sneak, fly, glide, fall, swim, mount, sleep, attack, hurt, braise_fall, braise_rest, equip, unequip]
 assert 6 <= len(EMITS) <= 8 and len(ANIMS) <= 16
 assert 150 <= len(elements) <= 500, f"budget : {len(elements)} cubes"
 
@@ -892,6 +1055,10 @@ if AVEC_E:
     textures.append({"name": f"{NOM}_e.png", "uv_width": TEX, "uv_height": TEX, "source": tex_e_b64})
 model = {"meta": {"format_version": "4.10", "model_format": "free", "box_uv": False}, "name": NOM,
          "resolution": {"width": TEX, "height": TEX}, "elements": elements, "outliner": outliner, "textures": textures, "animations": ANIMS}
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))
+from sons import limiter_sons
+limiter_sons(model)          # un son au plus, à l'apparition ; aucun en mouvement (tools/sons.py)
 os.makedirs(".build", exist_ok=True)
 OUT = f".build/{NOM}_brut.bbmodel"
 with open(OUT, "w") as fh:

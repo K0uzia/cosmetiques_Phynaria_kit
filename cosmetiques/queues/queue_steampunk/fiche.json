@@ -1,0 +1,12 @@
+{
+  "nom": "Queue Steampunk",
+  "description": "Colonne de neuf vertèbres de laiton sur rotules d'acier, tirée par quatre câbles de cuivre qu'enroulent les tambours du boîtier, aidée de deux vérins. Elle ondule en vague, se raidit quand la pression monte, puis lâche la vapeur par la buse de son empennage.",
+  "lore": "L'Atelier de laiton cherchait où évacuer la vapeur de ses machines portées sans brûler le dos de leur porteur. Un chaudronnier a fait passer le tuyau dans une colonne articulée, puis lui a donné des câbles, des tambours et un gouvernail. Elle ne sert plus seulement d'échappement : elle garde l'équilibre, et elle siffle quand on la fait attendre.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Chapeau macaron",
+  "description": "Gros macaron à la fraise posé de travers sur le dessus de la tête, avec sa collerette, sa crème et une petite fourchette plantée dedans ; il vacille et rebondit doucement avec les pas.",
+  "lore": "Le plus grand macaron jamais sorti du four de la Vitrine enchantée était trop beau pour être mangé : le pâtissier en a fait un chapeau. Quelqu'un y a quand même planté une fourchette, et personne n'avoue.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

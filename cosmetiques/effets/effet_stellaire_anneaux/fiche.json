@@ -1,0 +1,12 @@
+{
+  "nom": "Anneaux de transport",
+  "description": "Une plaque gravée s'éclaire sous vos pieds, puis cinq anneaux d’acier sombre descendent du ciel et s'empilent autour de vous ; une onde de lumière remonte la colonne et vous emporte, avant que les anneaux ne repartent vers les étoiles.",
+  "lore": "Les bâtisseurs disparus ne voyageaient pas seulement par leurs grandes portes : pour les courtes distances, ils appelaient des anneaux. Il suffit de se tenir sur l'une de leurs plaques gravées pour qu'ils tombent du ciel, se referment en colonne autour du voyageur et l'échangent contre la lumière. On raconte qu'au sommet de la colonne, l'espace d'un battement, on aperçoit le noir glacé entre les étoiles.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

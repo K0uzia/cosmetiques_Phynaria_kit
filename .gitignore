@@ -7,3 +7,9 @@ __pycache__/
 
 # Raccourcis Windows locaux
 *.lnk
+
+# Export sous nom propre (tools/exporter.py) : copie des livrables versionnés dans cosmetiques/, régénérable
+livrables/
+
+# Copies de sécurité du mode édition du Vestiaire (tools/edition.py)
+*.bak

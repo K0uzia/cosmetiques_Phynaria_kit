@@ -1,0 +1,111 @@
+{
+ "particules": [
+  {
+   "particule": "flocon (modélisée)",
+   "role": "Flocon à six branches (0,8 px) lâché par 6 points du cercle, qui monte en tourbillon. Cadence par ctrl_emit : vague qui fait le tour du cercle pendant la charge, tempête (×5) au départ, bouffées (×4 à ×5) à l'impact et à l'éclatement, coupée à la fin.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Translucide",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Moyen",
+    "Dispersion": "45°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "eclat (modélisée)",
+   "role": "Éclat de glace en losange (1 px) projeté par 6 points autour du cristal, dirigés vers le haut et le dehors : gerbe (×9) à l'éclatement du cristal, puis quelques éclats qui retombent. Coupé le reste du temps.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Lourde",
+    "Au sol": "Disparaît",
+    "Rendu": "Translucide",
+    "Sens": "Libre",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "poudre (modélisée)",
+   "role": "Poudre de glace scintillante : des fissures du cristal au départ puis en nuage (×9) à l'éclatement ; à l'arrivée, à l'explosion des cristaux puis en nuage pendant leur dissolution.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "10 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "180°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "snowflake (Minecraft, emit_mc_snowflake)",
+   "role": "Neige poudreuse au pied et au centre du cristal : charge discrète, tempête au départ, bouffées à l'impact et à l'éclatement.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Départ": "Moyen",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "item_snowball (Minecraft, emit_mc_item_snowball)",
+   "role": "Neige soulevée au sol par 4 points penchés vers le dehors : quand les morceaux du cristal retombent (départ), à l'explosion de la formation (arrivée).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Départ": "Moyen",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   }
+  },
+  {
+   "particule": "poof (Minecraft, emit_mc_poof)",
+   "role": "Bouffée blanche à l'instant de l'éclatement (et de l'impact à l'arrivée), 0,15 s.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Départ": "Poussée",
+    "Dispersion": "180°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  },
+  {
+   "particule": "dust bleu glacier (Minecraft, emit_mc_dust_bfeaff_12)",
+   "role": "Poussière bleu glacier lâchée par le bout de 4 cristaux de la formation de l'arrivée quand ils se dissolvent (un sort qui s'éteint).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "128"
+   },
+   "groupe": "emit_mc_dust_bfeaff_12"
+  }
+ ]
+}

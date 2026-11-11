@@ -1,0 +1,12 @@
+{
+  "nom": "Arc de guimauve",
+  "description": "Skin d'arc : tous tes arcs deviennent un arc de confiserie, branches de guimauve torsadée rose et crème, petits nuages aux bouts, gros cœur de sucre en poignée et corde lumineuse. Le cœur bat plus fort quand tu bandes, la flèche se charge d'une pointe en cœur, et au tir un nuage de sucre pailleté s'envole.",
+  "lore": "À Nuage Guimauve, on ne chasse rien : on vise les gens qu'on aime. Cet arc a été tressé dans deux brins de guimauve encore tièdes, noués à deux nuages du matin, et son cœur de sucre bat chaque fois qu'on le tend. Ses flèches ne blessent personne ; elles laissent seulement, là où elles passent, une petite pluie de paillettes.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

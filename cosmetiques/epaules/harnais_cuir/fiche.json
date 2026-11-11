@@ -1,0 +1,13 @@
+{
+  "nom": "Harnais de latex",
+  "description": "Harnais de torse en latex noir brillant : bretelles, barre de poitrine et X dans le dos tenus par des anneaux chromés, cadenas qui pend sur la poitrine, épaulières de latex moulé et brassards bouclés. Les sangles se resserrent à l'équipement.",
+  "lore": "La pièce maîtresse de la Maison du cuir verni : chaque sangle est tendue au millimètre, chaque anneau poli jusqu'au miroir. Le cadenas ne ferme rien ; il rappelle seulement que celui qui le porte a choisi de le porter.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": false,
+  "note_vente": "Réservé au grade admin (serveur privé), hors boutique."
+}

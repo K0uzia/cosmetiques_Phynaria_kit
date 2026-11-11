@@ -1,0 +1,13 @@
+{
+  "nom": "Vortex spatial",
+  "description": "L'air ondule autour de vous pendant l'attente. Au départ, l'espace se tord en une spirale sombre qui vous aspire en un point avant d'imploser. À l'arrivée, la spirale tourne à l'envers et vous recrache dans une onde de choc.",
+  "lore": "Certains voyageurs ne marchent pas : ils plient le monde. D'un regard, l'espace se tord autour d'eux comme un tissu qu'on essore, et ils glissent dans le pli jusqu'à n'être plus qu'un point. Ailleurs, le pli se défait et les rend au monde. Personne ne sait ce qu'on voit entre les deux.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true,
+  "ensemble": "Distorsion"
+}

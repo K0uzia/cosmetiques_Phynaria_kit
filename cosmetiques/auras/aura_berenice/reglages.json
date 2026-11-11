@@ -1,0 +1,23 @@
+{
+ "particules": [
+  {
+   "particule": "etoile (modélisée)",
+   "role": "Petite poussière d'étoiles dorée (0,6 px) qui monte lentement près du corps.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "1 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Élan": "100 %",
+    "Variation": "Aucune",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

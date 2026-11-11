@@ -1,0 +1,12 @@
+{
+  "nom": "Mâchoire de l'Abysse",
+  "description": "Skin de hache : remplace toutes tes haches par une hache barbue d'os noir au fil vert acide, à griffe au dos. Son fer pousse de l'œil quand tu la prends en main, et son fil s'avive à chaque coup et à chaque bûche abattue.",
+  "lore": "Les Chasseurs de l'Abysse disent qu'un démon se tue deux fois : la première à la lame, la seconde à la hache, pour qu'il ne remonte pas. La Mâchoire a été taillée dans l'os d'une mâchoire inférieure, la barbe à la place des dents. Chaque coup qui mord y réveille un peu de vert, comme une faim qui ne s'éteint pas.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

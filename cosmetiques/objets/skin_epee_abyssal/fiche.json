@@ -1,0 +1,12 @@
+{
+  "nom": "Croc de l'Abysse",
+  "description": "Skin d'épée : remplace toutes tes épées par une lame courbe d'os noir au fil vert acide, à garde de griffes. Elle sort de la garde quand tu la prends en main, ses griffes serrent la poignée à chaque coup et son fil s'embrase quand il touche.",
+  "lore": "Les Chasseurs de l'Abysse ne forgent pas leurs lames : ils les arrachent. Chaque Croc a été la mâchoire d'un démon, et l'os se souvient encore de mordre. Quand la lame frappe juste, la lueur verte remonte le long du fil, comme si quelque chose, tout au fond, avait faim.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

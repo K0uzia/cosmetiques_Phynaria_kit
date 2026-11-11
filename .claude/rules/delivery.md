@@ -1,4 +1,19 @@
-# Règles — vérification et livraison
+---
+paths:
+  - "cosmetiques/**"
+---
+
+# Règles — dossier d'un cosmétique, vérification et livraison
+
+## Dossier d'un cosmétique
+
+`cosmetiques/<categorie>/<nom>/` (`<nom>` en minuscules, sans espace ni accent) :
+- `gen_<nom>.py` : le générateur, qui écrit `<nom>.png` à côté de lui et sa sortie brute dans `.build/` (`os.chdir(os.path.dirname(os.path.abspath(__file__)))` en début de script) ;
+- `<nom>.bbmodel` + `<nom>.png` : le livrable optimisé et sa texture, **un seul fichier mis à jour sur place**, pas de nouveau fichier à chaque itération ;
+- `<nom>_<piece>.bbmodel` : les modèles associés (ex. `ailes_berenice_plume.bbmodel`) ;
+- `apercu/` : `planche.png` et `animations.gif`, chacun regroupant toutes les animations, écrasés à chaque mise à jour ;
+- `fiche.json` : **obligatoire pour toute nouvelle pièce** : nom propre (« Diadème de Bérénice »), description (1–2 phrases : animations, réactions, effets), lore (2–4 phrases, original, cohérent avec le lore du set), rareté et prix (grille `cosmetiques/prix.json`, proposition à valider par le staff : `python tools/prix.py`). Lore du set dans `cosmetiques/ensembles.json` (à compléter pour tout nouvel ensemble). `livrer.py` l'embarque dans le modèle (`unhandled_root_fields.phynaria.fiche`, guide 10 bis, `tools/fiche.py`) avec les réglages des particules, puis copie le livrable sous son nom propre dans `livrables/<Ensemble>/` (`tools/exporter.py`, seul le champ `name` change ; non versionné) ;
+- `.build/` : fichiers intermédiaires, jamais livrés.
 
 ## Avant toute livraison (dans cet ordre)
 
@@ -6,36 +21,14 @@ Dans ces commandes, `D=cosmetiques/<categorie>/<nom>`. Le livrable `$D/<nom>.bbm
 
 1. `python $D/gen_<nom>.py` — doit imprimer cubes / groupes / profondeur / anims / keyframes.
 2. `python tools/optimize_bbmodel.py $D/.build/<nom>_brut.bbmodel $D/.build/<nom>_opt.bbmodel`
-3. `python tools/verify_bbmodel.py $D/.build/<nom>_opt.bbmodel` — **tout doit passer** :
-   - JSON valide, format free ou modded_entity, 1 texture PNG embarquée ≤ 512² (+ `_e`, `_r`, `_m`), semi-transparence seulement avec des groupes `trans_`, résolution = PNG, résolution UV ≤ 4096 ; `ctrl_` connus, `emit_mc_` sans chiffre final, sons ≤ 32 par animation
-   - cubes ≤ 8192, groupes ≤ 2048, profondeur ≤ 64, anims ≤ 16, keyframes ≤ 32768
-   - rotations de base des cubes et groupes ≤ ±360°, rotations de face multiples de 90°, inflate ≤ ±8
-   - noms de groupes et d'animations ≤ 64 caractères, noms de groupes uniques
-   - aucune épaisseur nulle, aucun élément strictement superposé
-   - canaux `rotation`/`position`/`scale` uniquement, durée ≤ 600 s, expressions Molang ≤ 512 caractères (complexité non mesurable, à tester en jeu)
-   - boucles fermées (écart début/fin < 0,05 px) pour toutes les anims `loop`
-   - extension max < 64 px par axe sur toutes les anims (alerte si > 60)
-   - poids brut et compressé (zlib) affichés ; brut ≤ 16 Mo (alerte si > 8 Mo : la taille nettoyée par le serveur n'est pas mesurable ici) ; compressé < 1 000 Ko (estimation : le mod compresse le fichier nettoyé)
+3. `python tools/verify_bbmodel.py $D/.build/<nom>_opt.bbmodel` — **tout doit passer** (aucun FAIL ; les WARN sont à mentionner). Liste de ce qu'il contrôle : `outils.md`, Vérificateur.
 4. Rendus de contrôle en **convention du mod** :
    `MODCONV=1 ANIM=idle T=1.0 python tools/render_bbmodel.py $D/.build/<nom>_opt.bbmodel idle.png 1.5`
    idem pour `fly` (T=0.6), `run` (T=0.3), `sneak` (T=0.5), `glide` (T=0.9). Assembler en planche. **Regarder la planche** avant d'envoyer.
 5. Livrer : `python tools/livrer.py $D`. Il revérifie avec et sans fusée, crée `apercu/planche.png`, `apercu/animations.gif` et `apercu/etats.json`, met à jour `<nom>.bbmodel` et `index.html`. Si la vérification échoue, le livrable reste intact. Regarder la planche.
 
-6. Particules : écrire `$D/reglages.json` (`{"particules": [{"particule", "role", "reglages": {Quand, Nombre, Départ, Dispersion, Rafale, Limite… }}]}`), affiché dans la fiche du Vestiaire (« Réglages des particules (staff) »). Les particules Minecraft n'ont que Quand, Nombre, Départ, Dispersion, Rafale et Limite.
+6. Particules : écrire `$D/reglages.json` (`{"particules": [{"particule", "role", "reglages": {Quand, Nombre, Départ, Dispersion, Rafale, Limite… }}]}`), affiché dans la fiche du Vestiaire (« Réglages des particules (staff) »). Les particules Minecraft n'ont que Quand, Nombre, Départ, Dispersion, Rafale et Limite. Libellés et valeurs du guide (5 ter §5 et §6), pas d'intervalle ni de valeur intermédiaire : `Nombre` 0,5/1/2/4/6/10 par seconde, `Durée` 1/3/6/10/15/20 s. `livrer.py` les **embarque** dans le modèle (`unhandled_root_fields.phynaria.particules`, identifiants du guide) ; **le mod les lit à l'import** et pré-remplit les fenêtres du staff (guide 5 ter §6) ; le vérificateur les contrôle (alerte si des particules n'ont pas de réglages).
+7. Fiche : `$D/fiche.json` (`nom` propre, `description`, `lore`, `rarete`, `prix` {`pv`, `phynarium`}, `en_vente` ; facultatif : `vignette` {angle, zoom, etat, temps} pour la carte du menu, guide 10 bis, recopiée dans `phynaria.vignette`) avant `livrer.py`, puis `python tools/prix.py` (rareté et prix par la grille `cosmetiques/prix.json`, sauf `"prix_manuel": true`). Nouvel ensemble : son entrée dans `cosmetiques/ensembles.json` (nom, titre, thème, accroche, lore, couleur) ; pièce rangée hors de l'ensemble de son nom : `"ensemble"` dans `fiche.json`. `livrer.py` embarque la fiche dans le modèle (`phynaria.fiche` : `nom`, `ensemble` = « nom » de `ensembles.json`, `rarete`, `description`, `lore`, guide 10 bis ; `tools/fiche.py`, qui raccourcit à la fin d'une phrase un texte trop long et le signale), puis exporte `livrables/<Ensemble>/<Nom propre>.bbmodel` (`tools/exporter.py`, identique au livrable sauf `name`) ; `python tools/exporter.py` refait tout l'export.
+8. **Skins d'objets** : `categories/objets.md`, Livraison. **Effets de téléportation** : `categories/effets.md`, Livraison.
 
-## Dans le message de livraison
-
-- Ce qui a changé par rapport à la version précédente, en réponse aux retours (point par point).
-- Chiffres : cubes, groupes, poids brut/compressé, extension max.
-- **Ce qu'il faut vérifier en jeu** (2–3 points max) et ce qui est connu comme non faisable côté modèle, avec la raison.
-- Ne jamais affirmer qu'un rendu correspondra en jeu : dire ce qui est mesuré, ce qui est supposé et ce qui reste à voir.
-
-## Quand l'utilisateur renvoie une capture
-
-- La capture a raison. Diagnostiquer précisément (quel axe, quel état) avant de toucher au code.
-- Si le diagnostic est une inversion d'axe : un seul signe dans `mirror()`, pas une refonte.
-- Si plusieurs retours à la fois : les lister, traiter chacun, et dire lesquels sont hors de portée du modèle (→ `docs/dev/demandes_mod.md`).
-
-## Pas de « v+1 » cosmétique
-
-Avant de relancer une génération complète, se demander : le problème est-il dans la **convention** (→ calibrer), dans l'**outil** (renderer/vérificateur), ou dans le **design** ? Ne refaire le design que si c'est le design.
+Message de livraison, retour par capture, pas de « v+1 » : `essentiel.md`.

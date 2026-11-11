@@ -1,0 +1,12 @@
+{
+  "nom": "Écu de l'orage",
+  "description": "Skin de bouclier : deux ailes de faucon en acier d'orage repliées autour d'un tambour d'or aux trois virgules. Levé, la foudre couchée dans ses gouttières s'allume ; un coup bloqué la renvoie en décharge depuis le tambour.",
+  "lore": "Les Dompteurs d'orage ne fuient pas la foudre : ils la reçoivent. Leurs forgerons replient deux ailes d'acier autour d'un tambour, et couchent l'éclair dans les gouttières des plumes. Tant que l'écu pend au bras, la foudre dort ; qu'on le lève, elle s'éveille, et le coup qui s'y brise repart vers celui qui l'a porté.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

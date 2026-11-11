@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "snowflake (Minecraft)",
+   "role": "Flocons à la pointe quand le trident part (rafale au tir ; l'animation event_release l'appuie par ctrl_emit +8 pendant 0,2 s). Coupés le reste du temps (ctrl_emit −1 en main, dans l'inventaire et pendant que le trident est levé). Animations des skins coupées par le joueur : cadence du staff en continu ; la mettre à Jamais si elle se voit trop.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  }
+ ]
+}

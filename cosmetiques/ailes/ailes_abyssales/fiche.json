@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes abyssales",
+  "description": "Grandes ailes de démon aux os fins et à la membrane pourpre-noir, veinée de vert acide qui luit dans la nuit. Animées dans les douze états : repos menaçant à demi fermé, étirement ample, battement de chauve-souris en vol, ouverture brutale à l'attaque ; des braises vertes tombent du bout des doigts.",
+  "lore": "Elles ne poussent pas : elles percent le dos, la première nuit où le chasseur revient de l'Abysse. On dit que chaque déchirure de la membrane est un démon qui a cru le rattraper. Leurs veines s'allument quand un ennemi approche, comme si elles se souvenaient d'où elles viennent.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

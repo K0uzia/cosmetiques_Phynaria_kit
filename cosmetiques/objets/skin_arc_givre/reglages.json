@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "dust_c8f0ff_10 (Minecraft)",
+   "role": "Poussière de givre bleu pâle qui jaillit de la fenêtre de l'arc quand la flèche part (rafale au tir ; l'animation event_release l'appuie par ctrl_emit). Coupée le reste du temps (ctrl_emit −1 en main et pendant la tension).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  }
+ ]
+}

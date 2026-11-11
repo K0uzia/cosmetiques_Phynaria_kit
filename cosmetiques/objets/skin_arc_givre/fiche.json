@@ -1,0 +1,12 @@
+{
+  "nom": "Arc de givre",
+  "description": "Skin d'arc : tous tes arcs deviennent un arc recourbé aux branches de cristal, poignée d'argent froid gainée de cuir bleu nuit et corde de givre lumineuse. Quand tu bandes, la glace se tend cran par cran et une flèche de glace se forme sur la corde ; au tir, un éclat de givre jaillit de la fenêtre.",
+  "lore": "Les gardiens du Cœur d'Hiver ne taillent pas leurs arcs : ils posent une poignée d'argent au pied d'un cristal et laissent la glace y pousser ses deux branches. La corde est un fil de givre tiré de l'air le plus froid de la nuit. On n'y encoche aucune flèche : il suffit de tirer, et le froid en forme une, juste le temps du vol.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

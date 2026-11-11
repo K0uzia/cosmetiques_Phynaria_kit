@@ -1,0 +1,12 @@
+{
+  "nom": "Épaulières abyssales",
+  "description": "Paire asymétrique d'épaulières en plaques d'os noir fissurées de vert acide, hérissées de griffes recourbées, plus grandes sur l'épaule gauche, tenues par des lanières de cuir cousu.",
+  "lore": "L'épaule gauche est celle qui reçoit les coups quand on avance lame en avant ; c'est elle que les chasseurs couvrent le plus. Chaque griffe est prise à un démon différent, et les anciens les comptent comme d'autres comptent les années.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

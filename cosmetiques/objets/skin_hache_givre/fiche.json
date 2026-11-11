@@ -1,0 +1,12 @@
+{
+  "nom": "Hache de givre",
+  "description": "Skin de hache : toutes tes haches deviennent une hache barbue de cristal, fer veiné d'une fougère de givre lumineuse, œil d'argent froid frappé d'un flocon, marteau de glace au dos. À chaque coup qui touche, des aiguilles de givre jaillissent du fil ; à chaque bloc cassé, des copeaux de glace s'envolent.",
+  "lore": "Les gardiens du Cœur d'Hiver n'abattent que les arbres déjà morts de froid. Leur hache est née d'un œil d'argent planté dans un tronc gelé : la sève figée y a poussé en fer de cristal, et sa fougère de givre brille encore. Le bois qu'elle fend ne fait pas d'éclats, seulement des copeaux de glace qui fondent avant de toucher le sol.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

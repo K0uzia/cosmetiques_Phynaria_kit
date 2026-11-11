@@ -1,0 +1,12 @@
+{
+  "nom": "Pique à pression",
+  "description": "Skin de lance : toutes tes lances deviennent un fer d'acier bruni serti dans une roue dentée de laiton à manomètre ambre, avec deux buses de cuivre et un réservoir sur la hampe. Levée pour charger, l'aiguille tient le rouge ; au coup qui touche, la buse crache un jet de vapeur.",
+  "lore": "Les gardes des écluses de la ville basse tenaient leurs piques comme des outils, et l'Atelier de laiton leur a donné de quoi pousser plus fort. Un chaudronnier a fixé un réservoir à foyer sur la hampe, couru un tuyau jusqu'à la roue qui sertit le fer et percé deux buses à la place des ailettes. On charge quand l'aiguille touche le rouge : chaque coup qui porte rend un peu de pression.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

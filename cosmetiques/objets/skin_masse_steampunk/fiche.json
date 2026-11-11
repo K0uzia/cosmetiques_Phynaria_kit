@@ -1,0 +1,12 @@
+{
+ "nom": "Pilon de chaudière",
+ "description": "Skin de masse : toutes tes masses deviennent une chaudière de cuivre à manomètre ambre, cerclée d'une couronne dentée de laiton et coiffée d'un pilon d'acier. Au repos, la pression monte cran par cran ; au coup qui touche, le pilon frappe et l'épaule crache un jet de vapeur.",
+ "lore": "Les forgerons de l'Atelier de laiton gardaient leur marteau-pilon au fond de l'atelier, trop lourd pour en sortir. Un chaudronnier en a fait tenir un dans la main : un foyer à la base, une couronne dentée qui compte les coups, un ballon de cuivre qui garde la pression. Il suffit d'attendre que l'aiguille touche le rouge, puis de frapper : la vapeur pousse le pilon.",
+ "prix_manuel": false,
+ "en_vente": true,
+ "rarete": "epique",
+ "prix": {
+  "pv": 850,
+  "phynarium": 300
+ }
+}

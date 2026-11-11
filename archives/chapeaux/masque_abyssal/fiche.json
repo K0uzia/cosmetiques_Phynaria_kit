@@ -1,0 +1,12 @@
+{
+  "nom": "Masque abyssal",
+  "description": "Masque de plaques d'os charbon à reflets violacés, fissuré de vert acide, avec deux grandes cornes et deux petites ; les orbites laissent voir les yeux du joueur.",
+  "lore": "Ce masque n'appartient pas aux chasseurs : c'est un trophée, arraché au visage d'un seigneur de l'Abysse. Celui qui le porte emprunte un peu de sa terreur. Les fissures vertes, elles, continuent lentement de s'ouvrir.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

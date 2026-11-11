@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "heart (Minecraft)",
+   "role": "Petits cœurs qui montent du cœur ailé pendant la charge (item_use, ctrl_emit 0 : réglage du staff) et au coup qui touche (event_hit, ctrl_emit +5). Coupés au repos (ctrl_emit −1 dans item_idle).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

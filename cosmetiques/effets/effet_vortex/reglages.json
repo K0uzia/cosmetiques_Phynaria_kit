@@ -1,0 +1,39 @@
+{
+ "particules": [
+  {
+   "particule": "poussiere (modélisée)",
+   "role": "Poussière d'espace gris-violet (0,4 px) lâchée par 8 points qui tournent avec le tourbillon. Au départ, ils visent le centre : la poussière suit la spirale et s'y engouffre de plus en plus vite ; à l'arrivée, ils visent le dehors (recrachée). Charge : quelques grains seulement. Coupée à l'implosion.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Durée": "1 s", "Mouvement": "Légère", "Au sol": "Disparaît", "Rendu": "Translucide", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Rapide", "Dispersion": "15°", "Élan": "0 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "128"}
+  },
+  {
+   "particule": "fragment (modélisée)",
+   "role": "Éclat d'espace sombre à bord clair (0,8 px) lancé par 6 points du tourbillon vers le centre pendant l'aspiration (départ), vers le dehors à l'expulsion (arrivée).",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Durée": "1 s", "Mouvement": "Légère", "Au sol": "Disparaît", "Rendu": "Opaque", "Sens": "Libre", "Fin de vie": "Rétrécit", "Départ": "Rapide", "Dispersion": "15°", "Élan": "0 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "64"}
+  },
+  {
+   "particule": "eclat (modélisée)",
+   "role": "Petite étoile lilas pâle (0,6 px, pas d'end_rod) jaillie du centre à l'implosion (départ), à l'ouverture et quand le joueur se pose (arrivée), 0,15 à 0,4 s.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Durée": "1 s", "Mouvement": "Flotte", "Rendu": "Lumineux", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Rapide", "Dispersion": "180°", "Élan": "0 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "64"}
+  },
+  {
+   "particule": "portal (Minecraft, emit_mc_portal)",
+   "role": "Grains violets au centre du vortex pendant l'aspiration du départ (en jeu, cette particule converge d'ordinaire vers son point de départ : à vérifier). Coupée à l'arrivée.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Départ": "Moyen", "Dispersion": "180°", "Rafale": "Aucune", "Limite": "128"}
+  },
+  {
+   "particule": "reverse_portal (Minecraft, emit_mc_reverse_portal)",
+   "role": "Grains violets qui montent de 4 points au sol : respiration pendant la charge, bouffée après l'implosion (départ) et pendant l'expulsion (arrivée).",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Départ": "Lent", "Dispersion": "45°", "Rafale": "Aucune", "Limite": "128"}
+  },
+  {
+   "particule": "smoke (Minecraft, emit_mc_smoke)",
+   "role": "Fumée qui monte du centre et du sol juste après l'implosion (départ) et quand le joueur se pose (arrivée).",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Départ": "Lent", "Dispersion": "180°", "Rafale": "Aucune", "Limite": "64"}
+  },
+  {
+   "particule": "squid_ink (Minecraft, emit_mc_squid_ink)",
+   "role": "Encre sombre lancée par 4 points du tourbillon vers le centre pendant l'aspiration (départ), vers le dehors à l'expulsion (arrivée).",
+   "reglages": {"Quand": "Toujours", "Nombre": "4 par seconde", "Départ": "Moyen", "Dispersion": "15°", "Rafale": "Aucune", "Limite": "64"}
+  }
+ ]
+}

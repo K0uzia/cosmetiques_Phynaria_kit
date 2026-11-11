@@ -1,0 +1,12 @@
+{
+  "nom": "Queue pompon nuage",
+  "description": "Petit pompon de lapin en nuage tout rond, fait de lobes de coton qui se chevauchent ; il rebondit et frétille en suivant les mouvements du joueur.",
+  "lore": "Personne au pays de Nuage Guimauve n'a jamais réussi à attraper un lapin-nuage par la queue : le pompon se détache et repousse dans la nuit. C'est ainsi qu'on en trouve parfois un, oublié sur un oreiller.",
+  "rarete": "commun",
+  "prix": {
+    "pv": 200,
+    "phynarium": 100
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

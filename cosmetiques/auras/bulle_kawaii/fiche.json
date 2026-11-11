@@ -1,0 +1,12 @@
+{
+  "nom": "Bulle de chewing-gum",
+  "description": "Une grappe de bulles de gomme rose bonbon brille derrière la tête et les épaules : elles gonflent par bouffées puis éclatent l'une après l'autre dans un « pop » de lumière, sur une lueur rose qui suit la silhouette et un rond de bulles au sol.",
+  "lore": "Le marchand de gomme de Nuage Guimauve vend une seule saveur, « rose », et une seule bulle par client : elle ne finit jamais d'éclater et de revenir. Ceux qui la mâchent assez longtemps voient leurs bulles leur pousser autour des épaules. Les enfants y voient une promesse ; les adultes, une leçon de patience.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

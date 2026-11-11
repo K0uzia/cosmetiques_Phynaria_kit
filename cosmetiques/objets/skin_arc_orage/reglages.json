@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "electric_spark (Minecraft)",
+   "role": "Gerbe d'étincelles à la fenêtre de l'arc quand la flèche part (rafale au tir ; l'animation event_release l'appuie par ctrl_emit +5 pendant 0,15 s). Coupée le reste du temps (ctrl_emit −1 en main, dans l'inventaire et pendant la tension). Animations des skins coupées par le joueur : cadence du staff, 2 par seconde ; la mettre à Jamais si elle se voit trop.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Rapide",
+    "Dispersion": "45°",
+    "Rafale": "Au tir",
+    "Limite": "64"
+   }
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Pic à vapeur",
+  "description": "Skin de pioche : toutes tes pioches deviennent un pic de mineur à vapeur, manche de bois et de cuir, chaudière de cuivre à manomètre ambre, cylindre de frappe en laiton. Quand tu mines, la pointerolle martèle ; chaque bloc cassé lâche un jet de vapeur, et au repos la pression remonte cran par cran.",
+  "lore": "Les mineurs de la ville basse en avaient assez de rentrer les bras cassés. Les chaudronniers de l'Atelier de laiton ont fixé une chaudière au manche et un piston dans le fer : le mineur porte sa pression avec lui, et c'est la vapeur qui frappe. Quand l'aiguille touche le rouge, la soupape siffle, et il n'y a plus qu'à viser la veine.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

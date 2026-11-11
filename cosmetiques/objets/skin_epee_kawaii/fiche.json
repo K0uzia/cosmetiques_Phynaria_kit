@@ -1,0 +1,12 @@
+{
+  "nom": "Lame Câline",
+  "description": "Skin d'épée : toutes tes épées deviennent une lame de sucre lilas à pointe ronde, sertie de dragées-cœurs lumineuses, avec un gros cœur framboise en garde, des nuages en quillons et une fusée de guimauve torsadée. Le cœur bat doucement ; au coup qui touche, une bouffée de petits cœurs s'envole.",
+  "lore": "À Nuage Guimauve, on ne forge pas les épées : on les fait cuire. Celle-ci a été coulée dans du sucre lilas encore tiède, autour d'un cœur de framboise qui n'a jamais cessé de battre. Elle ne coupe que les mauvaises humeurs ; ceux qu'elle touche repartent avec quelques cœurs en trop et l'envie de faire la paix.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Canne de banquise",
+  "description": "Skin de canne à pêche : toutes tes cannes deviennent une courte canne de glace à anneaux d'argent, au moulinet orné d'un flocon et à la pointe de cristal. Au lancer, le moulinet se dévide et la pointe se couvre de givre tant que la ligne est à l'eau.",
+  "lore": "Les gardiens du Cœur d'Hiver pêchent au trou, à genoux sur la banquise. Leur canne n'est qu'un moulinet d'argent laissé une nuit sur la glace : au matin, le scion y a poussé, droit et clair. Quand la ligne descend dans l'eau noire, la pointe se givre ; on dit que les poissons du grand lac viennent voir ce qui brille.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

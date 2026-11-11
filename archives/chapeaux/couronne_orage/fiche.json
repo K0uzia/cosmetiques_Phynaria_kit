@@ -1,0 +1,12 @@
+{
+  "nom": "Couronne d'orage",
+  "description": "Cercle de métal d'orage d'où montent huit pointes en éclair coiffées de cristal, avec un tambour du tonnerre au front frappé de trois virgules d'or ; des arcs électriques sautent d'une pointe à l'autre, au hasard.",
+  "lore": "Le premier Dompteur la forgea au sommet du plus haut pic, en laissant la foudre frapper huit fois le même cercle. Depuis, elle attire les éclairs sans jamais les laisser toucher celui qui la porte.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

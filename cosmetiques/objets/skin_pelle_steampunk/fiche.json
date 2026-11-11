@@ -1,0 +1,12 @@
+{
+  "nom": "Pelle de chauffe",
+  "description": "Skin de pelle : toutes tes pelles deviennent un fer d'acier bruni à bout rond serti dans une roue dentée de laiton à manomètre ambre, avec une chaudière de cuivre sur le manche et une poignée en D. Au repos, la pression monte cran par cran puis la soupape lâche sa vapeur ; à chaque pelletée, le fer se relève d'un coup sec.",
+  "lore": "Les terrassiers de la ville basse creusaient les fondations de l'Atelier de laiton à la sueur du front. Un chaudronnier a fixé une petite chaudière au milieu du manche et couru un tuyau de cuivre jusqu'au manomètre du fer : la pelle sait quand elle est prête. Quand l'aiguille touche le rouge, la soupape siffle, et la terre part toute seule.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

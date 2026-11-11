@@ -1,0 +1,12 @@
+{
+  "nom": "Cornes abyssales",
+  "description": "Cornes en crochet qui percent le crâne : leurs racines d'os fendues de vert courent sur la tête et se referment sur les yeux en demi-masque. Le regard s'allume en dernier, cligne au repos et se plisse à l'affût.",
+  "lore": "On ne porte pas ces cornes : elles poussent. Chez les chasseurs de l'Abysse, elles percent le crâne la première année, et leurs racines cherchent les yeux jusqu'à les couvrir d'os. Ce qu'on voit à travers la fente verte n'est plus la lumière du jour, mais ce qui s'y cache.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

@@ -1,0 +1,24 @@
+{
+ "particules": [
+  {
+   "particule": "plume (modélisée)",
+   "role": "Plume ivoire à pointe dorée qui se détache des primaires et des secondaires (10 points emit_plume) et tournoie en tombant. Recette validée en jeu (« ok »).",
+   "reglages": {
+    "Quand": "En vol",
+    "Nombre": "1 par seconde",
+    "Durée": "6 s",
+    "Mouvement": "Légère",
+    "Au sol": "Se pose",
+    "Rendu": "Opaque",
+    "Sens": "Libre",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Poussée",
+    "Dispersion": "15°",
+    "Élan": "40 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

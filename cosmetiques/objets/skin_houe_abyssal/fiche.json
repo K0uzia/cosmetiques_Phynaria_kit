@@ -1,0 +1,12 @@
+{
+  "nom": "Serre de l'Abysse",
+  "description": "Skin de houe : remplace toutes tes houes par une serre d'os noir au fil vert acide entre deux crocs, portée par une mandibule à épines. La serre sort de sa bague quand tu la prends en main, et le fil s'avive à chaque coup et à chaque bloc arraché.",
+  "lore": "Les Chasseurs de l'Abysse savent que la terre de Phynaria garde des œufs que l'on ne doit pas laisser éclore. La Serre a été arrachée à la patte d'un démon qui labourait les champs la nuit pour y semer sa couvée. Elle retourne la terre comme il le faisait, mais pour la vider : chaque motte qu'elle tire fait monter un peu de vert le long de ses crocs.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

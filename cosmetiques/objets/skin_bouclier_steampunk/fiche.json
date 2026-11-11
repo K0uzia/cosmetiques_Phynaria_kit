@@ -1,0 +1,12 @@
+{
+  "nom": "Rondache de chaudière",
+  "description": "Skin de bouclier : une porte de chaudière en acier riveté montée sur une roue dentée de laiton, manomètre ambre au centre. Au dos, une petite chaudière à foyer rougeoyant fait monter la pression cran par cran ; un coup paré lâche de la vapeur, et au coup qui touche la soupape crache un jet.",
+  "lore": "Les chaudronniers de l'Atelier de laiton gardent toujours une porte de chaudière de rebut : l'acier qui a tenu la pression tient aussi les coups. Ils l'ont sertie dans une roue dentée et lui ont laissé un petit foyer au dos, pour qu'elle reste chaude. Quand l'aiguille touche le rouge, la soupape siffle, et l'adversaire comprend qu'il frappe une machine qui travaille.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

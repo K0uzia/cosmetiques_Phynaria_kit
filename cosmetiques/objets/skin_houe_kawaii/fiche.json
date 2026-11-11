@@ -1,0 +1,12 @@
+{
+  "nom": "Binette Câline",
+  "description": "Skin de houe : une lame de sucre lilas en forme de cœur, sertie de dragées-cœurs lumineuses, au bout d'une crosse de sucre d'orge qui sort d'un cœur framboise. Le cœur bat doucement, soupire parfois une bouffée de petits cœurs, et à chaque motte la lame mord puis tire avec un rebond.",
+  "lore": "À Nuage Guimauve, les jardins ne se bêchent pas : on les chatouille. Cette binette a été tirée au sucre lilas autour du même cœur de framboise que les lames du village, et son col s'est enroulé tout seul en sucre d'orge pendant qu'il refroidissait. Elle trace des sillons en forme de cœur, et quand le travail dure, elle pousse un soupir sucré.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

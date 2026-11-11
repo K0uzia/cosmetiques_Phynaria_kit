@@ -1,0 +1,12 @@
+{
+  "nom": "Écu de givre",
+  "description": "Skin de bouclier : un écu de glace taillée, bordé d'argent froid, couronné de cristaux, un flocon au cœur. Quand tu pares, le givre se renforce et des aiguilles jaillissent de l'orle ; chaque coup qui touche fend la glace, qui se referme aussitôt.",
+  "lore": "Les gardiens du Cœur d'Hiver ne portent pas de bouclier : ils laissent l'hiver se poser sur leur bras. La glace se fend sous les coups, puis se referme, plus épaisse qu'avant. On dit qu'un écu de givre ne se brise jamais vraiment ; il se souvient seulement de chaque coup qu'il a reçu.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

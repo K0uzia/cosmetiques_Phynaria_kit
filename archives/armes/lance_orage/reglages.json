@@ -1,0 +1,23 @@
+{
+ "particules": [
+  {
+   "particule": "étincelle (modélisée)",
+   "role": "Petite étoile électrique (0,5 px) qui jaillit du fer (2 points de décharge et la pointe) : seulement pendant une décharge au hasard ou à l'attaque (ctrl_emit −1, +7 pendant le flash et la coupe). Monte et s'éteint, ne se pose pas.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "6 par seconde",
+    "Durée": "0,8 s",
+    "Mouvement": "Monte",
+    "Rendu": "Translucide",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Rapide",
+    "Dispersion": "180°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "À l'attaque",
+    "Limite": "64"
+   }
+  }
+ ]
+}

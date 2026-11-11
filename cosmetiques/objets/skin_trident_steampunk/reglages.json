@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "white_smoke (Minecraft)",
+   "role": "Vapeur qui sort de la buse de la roue (côté haut en main) : à chaque décharge de pression au repos (deux par boucle de 24 s) et au lancer (event_release). Coupée le reste du temps (ctrl_emit −1), et pendant que le trident est levé.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

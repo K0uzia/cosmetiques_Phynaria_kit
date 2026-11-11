@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes Nuage Guimauve",
+  "description": "Ailes de chérubin-guimauve : un petit nuage dodu posé sur chaque bras, d'où pendent des plumes rondes rose framboise et lilas bien rangées. Elles battent avec des rebonds moelleux, s'étirent au repos et sortent d'un « plop » de nuage à l'équipement.",
+  "lore": "Au pays de Nuage Guimauve, les ailes ne servent pas à voler très haut, seulement assez pour atteindre l'étagère des bonbons. Celles-ci poussent sur un nuage du matin, encore tiède, que l'on a gardé au chaud sous l'oreiller. Elles sentent un peu la vanille.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

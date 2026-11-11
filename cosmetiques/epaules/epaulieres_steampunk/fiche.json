@@ -1,0 +1,12 @@
+{
+  "nom": "Épaulières Steampunk",
+  "description": "Épaulières en éventail de lames rivetées (laiton, acier, cuivre) autour d'un moyeu à engrenage : la roue arme la pompe cran par cran, l'aiguille du manomètre grimpe à gauche, les cheminées de droite déchargent la vapeur et les lames claquent d'un cran.",
+  "lore": "Les chaudronniers de l'Atelier de laiton les assemblent sur le modèle des vieilles épaulières d'armure, lame après lame, mais chaque rivet tient un ressort et chaque moyeu une roue d'horloge. Elles respirent au rythme de leur porteur : on dit qu'un apprenti sait qu'il est devenu compagnon le jour où ses épaulières sifflent avant lui.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

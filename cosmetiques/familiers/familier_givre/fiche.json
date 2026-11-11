@@ -1,0 +1,12 @@
+{
+  "nom": "Renard de givre",
+  "description": "Familier vivant : un petit renard polaire qui te suit tout seul, comme un loup apprivoisé. Il trotte à côté de toi, s'assoit quand tu t'accroupis, s'endort couché à tes pieds, nage, et s'inquiète quand ta vie baisse.",
+  "lore": "On dit que le premier est né d'un flocon tombé sur la truffe d'un renard endormi. Ceux d'aujourd'hui choisissent leur compagnon au premier regard et ne le quittent plus. Leur pelage ne mouille jamais, mais ils détestent la pluie quand même.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

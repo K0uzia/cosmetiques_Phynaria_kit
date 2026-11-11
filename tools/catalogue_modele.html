@@ -1,8 +1,12 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Vestiaire Phynaria</title>
+<meta name="color-scheme" content="dark light">
+<script>try { const t = localStorage.getItem("vestiaire-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Polices chargées sans bloquer l'affichage : hors ligne, la page s'affiche tout de suite avec les polices de repli. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap" media="print" onload="this.media='all'">
 <style>
 /* Concept : l'armoire d'un personnage. Colonne des thèmes et de leurs ensembles à gauche, vitrine à droite ; chaque ensemble impose sa teinte.
    Sur mobile, la colonne devient un tiroir et une rangée d'ensembles donne l'accès rapide. */
@@ -12,7 +16,19 @@
   --teinte:#b9a7e8;--sur-teinte:#16131f;--ok:#7fd49b;--alerte:#e8b45f;
   --titre:"Alegreya SC",Georgia,serif;--corps:"Alegreya Sans","Segoe UI",system-ui,sans-serif;--chiffre:"JetBrains Mono",Consolas,monospace;
   --aside:clamp(250px,15vw,300px);--marge:clamp(16px,2vw,40px);
+  --badge:#cfcadb;--refus:#e8828c;--ombre:#0008;--vitrine:#0e0d13;
 }
+/* Thème clair (bouton du panneau, mémorisé) : même structure, les vitrines d'aperçu restent sombres comme les images. */
+:root[data-theme=light]{
+  color-scheme:light;
+  --fond:#f3f1f7;--creux:#e8e5ef;--surface:#ffffff;--surface2:#ece9f3;--trait:#d3cede;--texte:#1d1a26;--doux:#585266;
+  --sur-teinte:#16131f;--ok:#25834a;--alerte:#9a6510;--badge:#3d3849;--refus:#b8323f;--ombre:#2a22401f;
+}
+:root[data-theme=light] .entete h1,:root[data-theme=light] .section h2,:root[data-theme=light] .sous b,:root[data-theme=light] .proprietes svg{color:color-mix(in srgb,var(--teinte) 55%,#000)}
+:root[data-theme=light] .fen,:root[data-theme=light] .avec img,:root[data-theme=light] .avec .sans{background:var(--vitrine)}
+:root[data-theme=light] .scene{background:var(--creux)}
+:root[data-theme=light] .neuf,:root[data-theme=light] .toast{color:#fff}
+:root[data-theme=light] .nav__lien[aria-pressed=true]:not([style]) .compteur{color:var(--surface)}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--fond);color:var(--texte);font:16px/1.45 var(--corps)}
@@ -112,7 +128,7 @@ main{min-width:0;padding:0 var(--marge) 56px}
 .grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(190px,11.5vw,290px),1fr));gap:clamp(14px,1.1vw,22px)}
 /* Carte : un seul déclencheur étiré sur le titre, méta après le titre dans le code. */
 .carte{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--trait);border-radius:12px;overflow:hidden;min-width:0;transition:transform .15s,border-color .15s,box-shadow .15s}
-.carte:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 60%,var(--trait));box-shadow:0 12px 30px #0008}
+.carte:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 60%,var(--trait));box-shadow:0 12px 30px var(--ombre)}
 .carte:focus-within{outline:2px solid var(--c);outline-offset:2px}
 .carte .fen{order:-1;border-bottom:1px solid var(--trait)}
 .carte .fen::after{content:"";position:absolute;inset:auto 0 0;height:3px;background:var(--c)}
@@ -124,9 +140,10 @@ main{min-width:0;padding:0 var(--marge) 56px}
 .meta{color:var(--doux);font-size:14.5px;margin:0}
 .meta b{font-weight:500;color:var(--texte)}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin:auto 0 0;padding:4px 0 0;list-style:none}
-.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:13.5px;color:#cfcadb;background:var(--surface2)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:13.5px;color:var(--badge);background:var(--surface2)}
 .badge svg{width:14px;height:14px;flex:none}
 .fen{position:relative;overflow:hidden;aspect-ratio:1;background:var(--creux);max-width:100%}
+.fen img.vignette{background:var(--vitrine)}
 .fen img{position:absolute;left:0;top:0;max-width:none;display:block}
 .fen img.vignette{width:100%;height:100%;object-fit:cover;transition:transform .3s}
 .carte:hover .fen img.vignette{transform:scale(1.04)}
@@ -135,6 +152,102 @@ main{min-width:0;padding:0 var(--marge) 56px}
 .neuf{position:absolute;right:8px;top:8px;z-index:2;background:var(--ok);color:#0d2415;font-size:12.5px;font-weight:700;padding:2px 8px;border-radius:5px}
 .rien{color:var(--doux);padding:60px 0;text-align:center;display:grid;justify-items:center;gap:14px}
 .rien button{min-height:40px;padding:6px 16px;border-radius:8px;background:var(--surface2);color:var(--texte)}
+
+/* ---- Affiner : statut des retours en jeu, contenu, ordre ---- */
+.affiner{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.affiner__groupe{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.affiner__titre{font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);margin-right:2px}
+.affiner .puce{min-height:32px;padding:3px 11px;font-size:14px}
+.affiner .puce .n{font:12px var(--chiffre);opacity:.8}
+.affiner .puce:disabled{opacity:.45;cursor:default}
+.affiner .puce[aria-pressed=true]{--teinte:var(--texte);background:var(--surface2);border-color:var(--doux);color:var(--texte)}
+.affiner .puce.st[aria-pressed=true]{background:color-mix(in srgb,var(--s) 24%,var(--surface));border-color:var(--s)}
+.ordre{display:flex;align-items:center;gap:6px;margin-left:auto;color:var(--doux);font-size:14px}
+.ordre select{min-height:34px;padding:4px 10px;border:1px solid var(--trait);border-radius:8px;background:var(--surface);color:var(--texte);font:inherit;font-size:14px}
+.st{--s:var(--alerte)}
+.st--valide{--s:var(--ok)}
+.st--refuse{--s:var(--refus)}
+.st .pastille{--c:var(--s);width:9px;height:9px}
+.badge.st{color:var(--texte);background:color-mix(in srgb,var(--s) 18%,var(--surface2));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--s) 45%,transparent)}
+/* Rareté et prix (cosmetiques/prix.json, proposition à valider par le staff) */
+.rarete{--r:var(--badge);display:inline-flex;align-items:center;padding:1px 8px;border-radius:999px;font:700 12px/1.6 var(--corps);letter-spacing:.04em;text-transform:uppercase;color:var(--texte);background:color-mix(in srgb,var(--r) 20%,var(--surface2));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--r) 55%,transparent);vertical-align:middle}
+.rarete--rare{--r:#5fa8e8}.rarete--epique{--r:#b07ae8}.rarete--legendaire{--r:#e8b84f}
+.rubrique .rarete{margin-left:8px}
+.vente-carte{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.prix-carte{margin:0;font-size:14px;color:var(--doux)}
+.prix-carte b{font:700 14px var(--chiffre);color:var(--texte)}
+.prix-carte.hors{font-style:italic}
+.prix{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0}
+.prix > div{padding:9px 12px;border-radius:10px;background:var(--surface2)}
+.prix dt{font-size:12.5px;color:var(--doux);margin-bottom:2px}
+.prix dd{margin:0;display:flex;flex-direction:column}
+.prix dd b{font:700 19px var(--chiffre);color:var(--texte)}
+.prix dd span{font-size:13.5px;color:var(--doux)}
+.description{margin:0 0 10px;font-size:15px}
+.lore{margin:0;padding:10px 14px;border-left:3px solid var(--teinte);border-radius:0 10px 10px 0;background:color-mix(in srgb,var(--teinte) 8%,var(--surface2));font-style:italic;font-size:14.5px;color:var(--texte)}
+.lore p{margin:0}
+.lore footer{margin-top:6px;font-style:normal;font-size:12.5px;color:var(--doux)}
+.lore footer::before{content:"— "}
+.presentation{margin:-6px 0 18px;border:1px solid color-mix(in srgb,var(--c) 30%,var(--trait));border-radius:12px;background:color-mix(in srgb,var(--c) 5%,var(--surface))}
+.presentation summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:10px 14px;cursor:pointer;list-style:none;min-height:44px}
+.presentation summary::-webkit-details-marker{display:none}
+.presentation summary svg{width:16px;height:16px;flex:none;align-self:center;color:var(--doux);transform:rotate(-90deg);transition:transform .15s}
+.presentation[open] summary svg{transform:none}
+.presentation__titre{font:700 16px var(--titre);color:var(--c)}
+.presentation__accroche{font-size:14.5px;color:var(--doux);flex:1 1 260px}
+.presentation__corps{display:grid;grid-template-columns:minmax(0,3fr) minmax(240px,2fr);gap:14px 22px;padding:0 14px 14px}
+.presentation__lore{margin:0;font-style:italic;font-size:15px;max-width:70ch}
+.presentation__lot .rubrique{margin-bottom:8px}
+.presentation__lot .note{margin-top:8px}
+@media (max-width:760px){.presentation__corps{grid-template-columns:1fr}}
+.carte.refusee .fen img{filter:grayscale(.6) brightness(.8)}
+/* Téléchargement direct depuis la carte, au-dessus du lien étiré. */
+.carte__dl{position:absolute;right:8px;bottom:8px;z-index:2;display:grid;place-items:center;width:34px;height:34px;border-radius:8px;color:var(--doux);background:var(--surface2);opacity:.75}
+.carte__dl:hover,.carte__dl:focus-visible{opacity:1;color:var(--texte);background:var(--trait)}
+.carte__dl svg{width:17px;height:17px}
+.corps-carte{padding-right:48px}
+.avis{margin:0;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--s) 12%,var(--surface2));border-left:3px solid var(--s);font-size:14.5px}
+.avis b{display:flex;align-items:center;gap:7px;margin-bottom:2px}
+.theme-btn{width:36px;height:36px}
+/* Aide des raccourcis */
+#aide{width:min(520px,calc(100vw - 32px));height:auto;max-height:calc(100dvh - 32px);padding:20px 22px;overflow:auto;display:none}
+#aide[open]{display:block}
+#aide h2{font:700 24px/1.2 var(--titre);margin:0 0 12px}
+#aide dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0 0 16px;align-items:baseline}
+#aide dt{text-align:right}
+#aide dd{margin:0;color:var(--doux)}
+kbd.k{font:12.5px var(--chiffre);border:1px solid var(--trait);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--surface2);color:var(--texte)}
+#aide .fin{display:flex;justify-content:flex-end}
+#aide .fin button{min-height:40px;padding:6px 16px;border-radius:8px;background:var(--surface2)}
+/* ---- Mode édition (serveur local seulement) : fiche d'une pièce dans la colonne, ensembles dans une fenêtre ---- */
+.form{display:grid;gap:14px}
+.form h4{margin:0}
+.champ{display:grid;gap:5px;min-width:0}
+.champ > span{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--doux)}
+.cpt{font:12px var(--chiffre);letter-spacing:0;text-transform:none;font-weight:400}
+.cpt.trop{color:var(--refus);font-weight:700}
+.form input[type=text],.form input[type=number],.form select,.form textarea{width:100%;min-height:40px;background:var(--creux);border:1px solid var(--trait);border-radius:8px;color:var(--texte);padding:8px 10px;font:inherit;font-size:15px}
+.form textarea{resize:vertical;min-height:96px;line-height:1.45}
+.form input[type=color]{width:52px;height:40px;padding:2px;border:1px solid var(--trait);border-radius:8px;background:var(--creux);flex:none}
+.form :is(input,select,textarea):focus{border-color:var(--teinte);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--teinte) 25%,transparent)}
+.form :is(input,select):disabled{opacity:.55}
+.coche{display:flex;align-items:center;gap:9px;font-size:15px}
+.coche input{width:18px;height:18px;accent-color:var(--teinte);flex:none}
+.deux{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ligne{display:flex;gap:8px;align-items:center}
+.boutons{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.boutons .secondaire{padding:9px 16px}
+.principal{min-height:42px;padding:9px 18px;border-radius:10px;background:var(--teinte);color:var(--sur-teinte);font-weight:700}
+.principal:disabled{opacity:.6;cursor:wait}
+.danger{color:var(--refus) !important}
+.secondaire:disabled{opacity:.45;cursor:default}
+.message{margin:0;padding:10px 12px;border-radius:10px;font-size:14.5px;white-space:pre-line;border-left:3px solid var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface2))}
+.message.erreur{border-left-color:var(--refus);background:color-mix(in srgb,var(--refus) 12%,var(--surface2))}
+.message:empty{display:none}
+.gerer{margin:0 4px}
+#dlg-ens{width:min(760px,calc(100vw - 32px));height:auto;max-height:calc(100dvh - 32px);padding:20px 22px;overflow:auto;display:none}
+#dlg-ens[open]{display:block}
+#dlg-ens h2{font:700 24px/1.2 var(--titre);margin:0 0 6px}
 
 /* ---- Fiche (dialog natif) : en-tête, scène, colonne d'infos qui défile seule ----
    La vue reste carrée et prend la plus grande taille qui tient dans la scène (unités de conteneur).
@@ -167,6 +280,8 @@ dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
 .evts{gap:6px 8px}
 .evts__titre{font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);margin-right:4px}
 .evts button{border-style:dashed}
+.mode-fam button{border-style:solid}
+.note-fam{margin:0;font-size:13px;color:var(--doux);line-height:1.45}
 #vue{flex:1;min-height:0;container-type:size;display:flex;flex-direction:column;align-items:center;justify-content:center}
 #vue > *{width:min(100cqw,100cqh);max-width:100%;flex:none}
 #vue > .rien,#vue > .cadre-img{width:100%}
@@ -198,6 +313,7 @@ dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
 .v3d__bascule[aria-pressed=true],.v3d__options .v3d__bascule[aria-pressed=true]{background:var(--teinte);border-color:var(--teinte);color:var(--sur-teinte);font-weight:700}
 .v3d__options select{min-height:34px;padding:5px 10px;border:1px solid var(--trait);border-radius:999px;color:var(--texte);font:inherit;font-size:14px}
 .v3d__aide{position:absolute;left:12px;top:12px;margin:0;font-size:13px;color:var(--doux);pointer-events:none;max-width:45%}
+.v3d__note{position:absolute;left:10px;right:10px;bottom:62px;margin:0;padding:4px 8px;border-radius:8px;font-size:12px;line-height:1.35;color:var(--texte);background:color-mix(in srgb,var(--surface) 72%,transparent);pointer-events:none}
 @container (max-width:720px){.v3d__aide{display:none}}
 .v3d__barre{position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:10px;padding:6px;border-radius:12px}
 .v3d__barre .icone-btn{background:transparent}
@@ -218,6 +334,7 @@ dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
 .chiffres div{background:var(--surface2);border-radius:10px;padding:10px 12px}
 .chiffres dt{font-size:13px;color:var(--doux)}
 .chiffres dd{margin:2px 0 0;font:700 clamp(18px,1.2vw,22px)/1.2 var(--chiffre)}
+.chiffres dd.petit{font-size:14.5px;line-height:1.5}
 .jauges{display:grid;gap:12px}
 .jauge{display:grid;gap:5px;font-size:14.5px}
 .jauge div:first-child{display:flex;justify-content:space-between;gap:8px;color:var(--doux)}
@@ -295,6 +412,13 @@ dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
   .rapides::-webkit-scrollbar{display:none}
   .rapides .puce{min-height:40px;scroll-snap-align:start;flex:none}
   .rapides .puce .pastille{width:9px;height:9px}
+  .affiner{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:2px 16px;scrollbar-width:none}
+  .affiner::-webkit-scrollbar{display:none}
+  .affiner__groupe{flex-wrap:nowrap}
+  .affiner__titre{display:none}
+  .affiner .puce{flex:none;min-height:38px}
+  .ordre{margin-left:0;flex:none}
+  .carte__dl{width:40px;height:40px}
   .filtre-actif{display:none}
   .section{margin-top:26px}
   .section__tete{margin-bottom:12px}
@@ -349,10 +473,13 @@ dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
 <aside id="panneau-filtres" aria-label="Filtres du vestiaire">
   <div class="aside-tete">
     <div class="marque">Vestiaire<small>Cosmétiques Phynaria</small></div>
+    <button class="icone-btn theme-btn" type="button" id="theme" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span class="masque">Thème clair</span></button>
+    <button class="icone-btn theme-btn" type="button" id="ouvrir-aide" aria-keyshortcuts="?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 7h18v10H3zM7 11h1M11 11h2M16 11h1M8 14h8"/></svg><span class="masque">Raccourcis clavier</span></button>
     <button class="icone-btn" type="button" id="fermer-filtres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="masque">Fermer les filtres</span></button>
   </div>
   <span class="seg seg--aside" id="tri" role="group" aria-label="Ranger par"></span>
   <nav class="nav" id="ensembles" aria-label="Filtres"></nav>
+  <button class="secondaire gerer" type="button" id="gerer-ens" hidden>Gérer les ensembles</button>
   <div class="etat-direct" id="direct" role="status"><span class="point"></span><span id="direct-txt"></span></div>
 </aside>
 <div class="voile" id="voile" hidden></div>
@@ -367,6 +494,7 @@ dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
       <div class="recherche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"/></svg><input type="search" id="recherche" placeholder="Chercher une pièce, un ensemble, un thème…" aria-label="Chercher un cosmétique" aria-keyshortcuts="/"><kbd aria-hidden="true">/</kbd></div>
       <div class="filtre-actif" id="filtre-actif"></div>
     </div>
+    <div class="affiner" id="affiner" role="group" aria-label="Affiner la liste"></div>
     <div class="rapides" id="rapides" role="group" aria-label="Accès rapide"></div>
   </header>
   <div id="liste"></div>
@@ -387,17 +515,85 @@ dialog::backdrop{background:#07060be0;backdrop-filter:blur(3px)}
     <div class="cote" id="cote"></div>
   </div>
 </dialog>
+<dialog id="aide" aria-labelledby="aide-titre">
+  <h2 id="aide-titre">Raccourcis clavier</h2>
+  <dl>
+    <dt><kbd class="k">/</kbd></dt><dd>Chercher (mots séparés : tous doivent correspondre)</dd>
+    <dt><kbd class="k">Échap</kbd></dt><dd>Vider la recherche, fermer la fiche</dd>
+    <dt><kbd class="k">←</kbd> <kbd class="k">→</kbd></dt><dd>Fiche précédente, suivante</dd>
+    <dt><kbd class="k">1</kbd> … <kbd class="k">7</kbd></dt><dd>Onglet de la fiche (3D, 4 vues, États…)</dd>
+    <dt><kbd class="k">T</kbd></dt><dd>Télécharger le .bbmodel de la fiche ouverte</dd>
+    <dt><kbd class="k">L</kbd></dt><dd>Copier le lien de la vue (fiche, filtres, recherche)</dd>
+    <dt><kbd class="k">Espace</kbd></dt><dd>Lecture ou pause de la vue 3D</dd>
+    <dt><kbd class="k">?</kbd></dt><dd>Cette aide</dd>
+  </dl>
+  <p class="note" style="margin:0 0 16px">Dans la vue 3D : glisser ou flèches pour tourner, molette ou <kbd class="k">+</kbd> <kbd class="k">−</kbd> pour zoomer, <kbd class="k">0</kbd> pour recadrer.</p>
+  <div class="fin"><button type="button" id="fermer-aide">Fermer</button></div>
+</dialog>
+<dialog id="dlg-ens" aria-labelledby="ens-titre">
+  <h2 id="ens-titre">Ensembles</h2>
+  <p class="note" style="margin-bottom:14px">Titre, thème, accroche, lore et couleur de chaque ensemble. Pour ranger une pièce dans un ensemble : bouton « Modifier la fiche » de la pièce.</p>
+  <div id="ens-corps"></div>
+</dialog>
 <div class="toast" id="toast" role="status" hidden></div>
 <script>/*VISIONNEUSE*/</script>
 <script>
 let D = /*DONNEES*/;
-const NOMS_ETATS = {idle:"Repos",walk:"Marche",run:"Course",sneak:"Accroupi",fly:"Vol",glide:"Élytres",fall:"En l'air",swim:"Nage",mount:"Monture",sleep:"Sommeil",attack:"Attaque",hurt:"Blessé"};
-const el = (t, p = {}, ...c) => { const e = document.createElement(t); Object.assign(e, p); e.append(...c); return e; };
+const NOMS_ETATS = {idle:"Repos",walk:"Marche",run:"Course",sneak:"Accroupi",fly:"Vol",glide:"Élytres",fall:"En l'air",swim:"Nage",mount:"Monture",sleep:"Sommeil",attack:"Attaque",hurt:"Blessé",
+  sprint:"Course",ride:"Monture",
+  // effet de téléportation (guide 15)
+  charge:"Charge",depart:"Départ",arrivee:"Arrivée","départ":"Départ","arrivée":"Arrivée",
+  // familier vivant (guide 6.6) : ses propres états, choisis par le mod d'après sa situation, pas celle du joueur
+  pet_idle:"Repos",pet_walk:"Marche",pet_run:"Course",pet_sit:"Assis",pet_sleep:"Dort",pet_swim:"Nage",pet_fly:"Vol",pet_fall:"Chute",pet_jump:"Saut",pet_land:"Atterrit"};
+const NOMS_PET = {idle:"Repos",walk:"Marche",run:"Course",sit:"Assis",sleep:"Dort",swim:"Nage",fly:"Vol",fall:"Chute",jump:"Saut",land:"Atterrit"};
+const MODES_FAMILIER = {sol:"au sol",vol:"en vol",nage:"à la nage",perche:"perché sur l'épaule"};
+const NOMS_ETAPES = {repos:"Repos",bande_1:"Bandé 1",bande_2:"Bandé 2",bande_3:"Bandé 3",chargee:"Chargée",chargee_fusee:"Chargée (fusée)",leve:"Levée",lance:"Lancée",bloque:"Bloque",lancee:"Lancée"};
+const TYPES_OBJET = {epee:"Épées",pioche:"Pioches",hache:"Haches",pelle:"Pelles",houe:"Houes",lance:"Lances",arc:"Arcs",arbalete:"Arbalètes",trident:"Tridents",bouclier:"Boucliers",masse:"Masses",canne:"Cannes à pêche"};
+const fmtBlocs = n => Number(n).toLocaleString("fr-FR") + (Number(n) > 1 ? " blocs" : " bloc");
+/* « Familier vivant : au sol, s'arrête à 3 blocs, vitesse ×1 » (bloc phynaria.familier, guide 6.6). */
+function texteFamilier(b, court) {
+  if (!b) return "";
+  const t = "Familier vivant : " + (MODES_FAMILIER[b.mode] || b.mode);
+  if (court) return t;
+  const d = [b.distance !== undefined ? "s'arrête à " + fmtBlocs(b.distance) : "s'arrête à 3 blocs", "vitesse ×" + Number(b.vitesse ?? 1).toLocaleString("fr-FR")];
+  if (b.mode === "vol" || b.mode === "perche") d.push("vole à " + fmtBlocs(b.hauteur ?? 1.8) + " du sol");
+  return t + ", " + d.join(", ");
+}
+const texteObjet = o => o ? "Skin d'objet : " + (TYPES_OBJET[o.type] || o.type) : "";
+// « loading » avant « src » : sinon l'image part tout de suite et le chargement paresseux ne sert à rien.
+const el = (t, p = {}, ...c) => { const e = document.createElement(t); if (p.loading) e.loading = p.loading; Object.assign(e, p); e.append(...c); return e; };
+const sansAccent = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 const joli = n => n.replace(/_/g, " ").replace(/^./, c => c.toUpperCase());
 const lib = c => D.labels[c] || joli(c);
+// Nom propre (fiche.json) ; à défaut, le nom interne mis en forme.
+const titreDe = f => f.titre || joli(f.nom);
+const ensDe = e => (D.ensembles || {})[e] || {};
+const nomEns = e => ensDe(e).nom || e;
+const RARETES = () => (D.vente && D.vente.raretes) || {};
+const fmtNb = n => Number(n).toLocaleString("fr-FR");
+const fmtEur = n => Number(n).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+const fmtJours = j => `≈ ${Number(j).toLocaleString("fr-FR", { maximumFractionDigits: 0 })} jour${j >= 1.5 ? "s" : ""} de vote`;
+function pastilleRarete(f) { return f.rarete ? el("span", { className: "rarete rarete--" + f.rarete, textContent: RARETES()[f.rarete] || f.rarete }) : ""; }
+function lignePrix(f) {
+  if (!f.prix) return "";
+  if (!f.en_vente) return el("p", { className: "prix-carte hors", textContent: "Hors vente" });
+  return el("p", { className: "prix-carte" }, el("b", { textContent: fmtNb(f.prix.pv) + " PV" }), " · " + fmtNb(f.prix.phynarium) + " Phynarium");
+}
+/* Bloc de prix (fiche et ensemble) : PV et jours de vote, Phynarium et euros. */
+function blocPrix(p) {
+  return el("dl", { className: "prix" },
+    el("div", {}, el("dt", { textContent: "Points de vote" }), el("dd", {}, el("b", { textContent: fmtNb(p.pv) + " PV" }), el("span", { textContent: fmtJours(p.jours) }))),
+    el("div", {}, el("dt", { textContent: "Phynarium" }), el("dd", {}, el("b", { textContent: fmtNb(p.phynarium) }), el("span", { textContent: "≈ " + fmtEur(p.euros) + " en packs" }))));
+}
 const teinte = e => D.teintes[e] || "#a9a4b8";
 const suffixe = (u, f) => u ? u + "?v=" + f.version : null;
 let visibles = [], cat = null, ens = null, th = null, tri = "ensemble", ouvert = null, neufs = new Set();
+// Filtres combinables (s'ajoutent au thème, à l'ensemble, à la catégorie et à la recherche) et ordre d'affichage.
+let statuts = new Set(), props = new Set(), ordre = "defaut";
+const STATUTS = () => D.statuts || { valide: "Validé en jeu", a_tester: "À tester", refuse: "Refusé" };
+const statutDe = f => f.statut || "a_tester";
+const PROPS = { lueur: ["Lumineux", f => !!f.lueur], particules: ["Particules", f => (f.particules || []).length > 0], anime: ["Animé", f => f.etats.length > 0] };
+const ORDRES = { defaut: "Par groupe", nom: "Nom (A → Z)", recent: "Mis à jour récemment", cubes: "Cubes (plus → moins)", poids: "Poids d'envoi (plus → moins)" };
 try { const t = localStorage.getItem("vestiaire-tri"); if (t === "ensemble" || t === "categorie") tri = t; } catch (e) {}
 const rang = (liste, v) => { const i = (liste || []).indexOf(v); return i < 0 ? 98 : i; };
 const ordreThemes = () => [...new Set(D.fiches.map(f => f.theme))].sort((a, b) => rang(D.themes, a) - rang(D.themes, b) || a.localeCompare(b));
@@ -421,36 +617,79 @@ function icone(d) {
 }
 const ICONES = { lueur: "M12 3v2M12 19v2M5 12H3M21 12h-2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   particules: "M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5zM18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8zM5 15l.6 1.4L7 17l-1.4.6L5 19l-.6-1.4L3 17l1.4-.6z",
-  anims: "M5 4l14 8-14 8z", pause: "M7 5v14M17 5v14", recadrer: "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5", telecharger: "M12 4v11M7 10l5 5 5-5M5 20h14", copier: "M9 9h11v11H9zM5 15H4V4h11v1" };
+  anims: "M5 4l14 8-14 8z", pause: "M7 5v14M17 5v14", recadrer: "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5", telecharger: "M12 4v11M7 10l5 5 5-5M5 20h14", copier: "M9 9h11v11H9zM5 15H4V4h11v1",
+  crayon: "M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4",
+  lien: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1",
+  familier: "M12 13c-3 0-5 3-5 5 0 1.5 1.5 2 2.5 2s1.5-.6 2.5-.6 1.5.6 2.5.6 2.5-.5 2.5-2c0-2-2-5-5-5zM6 9.5a1.6 2 0 1 0 0 .1M18 9.5a1.6 2 0 1 0 0 .1M9.5 5.5a1.6 2 0 1 0 0 .1M14.5 5.5a1.6 2 0 1 0 0 .1",
+  son: "M4 9h4l5-4v14l-5-4H4zM17 9a4 4 0 0 1 0 6",
+  objet: "M14 4l6 0 0 6-9 9-2-2-2 2-2-2 2-2-2-2zM14.5 9.5l-6 6",
+  evenement: "M13 3L5 14h6l-1 7 8-11h-6z" };
 function badge(cle, texte) { return el("li", { className: "badge" }, icone(ICONES[cle]), el("span", { textContent: texte })); }
+function badgeStatut(f, etiquette) {
+  const st = statutDe(f), b = el(etiquette || "li", { className: "badge st st--" + st }, el("span", { className: "pastille" }), el("span", { textContent: STATUTS()[st] || st }));
+  if (f.avis) b.title = f.avis;
+  return b;
+}
+const fmtKo = ko => ko >= 1024 ? (ko / 1024).toFixed(1).replace(".", ",") + " Mo" : ko + " Ko";
+function lienTelecharger(f, classe, contenu) {
+  const a = el("a", { className: classe, href: f.bbmodel, download: f.fichier }, ...contenu);
+  // Demande où enregistrer (Chrome, Edge) ; ailleurs, téléchargement classique selon les réglages du navigateur.
+  if (window.showSaveFilePicker) a.onclick = async ev => {
+    ev.preventDefault();
+    try {
+      const poignee = await showSaveFilePicker({ suggestedName: f.fichier, types: [{ description: "Modèle Blockbench", accept: { "application/json": [".bbmodel"] } }] });
+      const r = await fetch(f.bbmodel + "?v=" + f.version);
+      if (!r.ok) throw new Error(r.status);
+      const sortie = await poignee.createWritable();
+      await sortie.write(await r.blob()); await sortie.close();
+      annoncer("Enregistré : " + poignee.name);
+    } catch (e) { if (e.name !== "AbortError") annoncer("Échec de l'enregistrement : " + e.message); }
+  };
+  return a;
+}
+let survolEnCours = null;   // { fen, arreter } : la carte dont la vue 3D de survol est ouverte
+const survolPossible = matchMedia("(hover:hover) and (pointer:fine)");
+const mouvementReduit = matchMedia("(prefers-reduced-motion:reduce)");
 function carte(f) {
-  const art = el("article", { className: "carte" }); art.style.setProperty("--c", teinte(f.ensemble));
+  const art = el("article", { className: "carte" + (statutDe(f) === "refuse" ? " refusee" : "") }); art.style.setProperty("--c", teinte(f.ensemble));
   const vign = suffixe(f.vignette, f), gif = suffixe(f.gif, f), planche = suffixe(f.planche, f);
   let fen;
   if (vign) {
-    fen = el("div", { className: "fen" }, el("img", { src: vign, alt: "", loading: "lazy", className: "vignette" }));
-    // Survol : le modèle 3D qui joue son animation de repos (serveur local et WebGL 2), sinon la première case du GIF.
+    fen = el("div", { className: "fen" }, el("img", { src: vign, alt: "", loading: "lazy", decoding: "async", width: 480, height: 480, className: "vignette" }));
+    // Survol (souris seulement, après un court arrêt) : le modèle 3D qui joue son animation de repos (effet de téléportation :
+    // le départ en boucle, avec ses sons)
+    // (serveur local et WebGL 2), sinon la première case du GIF. Passer sur la grille ne charge rien.
     const img = fen.firstChild;
-    let jeton = null, vue = null;
-    const gifRepos = () => { if (gif) { fen.replaceChildren(cadre(gif, 4, 0, 0).firstChild); if (neufs.has(f.nom)) fen.append(etiquetteNeuf()); } };
-    art.addEventListener("pointerenter", async () => {
-      const j = jeton = {};
+    let jeton = null, vue = null, attente = 0;
+    const gifRepos = () => {};   // échec : la vignette reste (un GIF d'aperçu pèse ~10 Mo, des centaines une fois décodé)
+    const lancer = async j => {
       if (location.protocol === "file:" || !window.Visionneuse) return gifRepos();
+      if (survolEnCours && survolEnCours.fen !== fen) survolEnCours.arreter();
+      survolEnCours = { fen, arreter: () => art.dispatchEvent(new PointerEvent("pointerleave")) };
       let m; try { m = await chargerModele(f); } catch (e) { m = null; }
       if (jeton !== j) return;
       const anims = ((m && m.animations) || []).filter(a => !a.name.startsWith("particle_"));
-      const repos = anims.find(a => a.name.split(".").pop() === "idle") || anims.find(a => a.loop === "loop") || anims[0];
+      const mot = a => a.name.split(".").pop();
+      const repos = (f.effet && (anims.find(a => mot(a) === "depart") || anims.find(a => mot(a) === "arrivee")))
+        || anims.find(a => mot(a) === "idle") || anims.find(a => a.loop === "loop") || anims[0];
       const c = el("canvas", { className: "survol3d" }); c.setAttribute("aria-hidden", "true");
       fen.append(c);
       const v = m && Visionneuse.creer(c);
       if (!v) { c.remove(); return gifRepos(); }
+      vue = { v, c };   // gardée tout de suite : une sortie pendant le chargement la détruit
+      v.surPerte(() => { if (vue && vue.v === v) { v.detruire(); c.remove(); vue = null; } });
       await v.charger(m, repos ? repos.name : null);
-      if (jeton !== j) { v.detruire(); c.remove(); return; }
-      vue = { v, c };
+      if (jeton !== j && vue && vue.v === v) { v.detruire(); c.remove(); vue = null; }
+    };
+    art.addEventListener("pointerenter", ev => {
+      if (ev.pointerType !== "mouse" || !survolPossible.matches || mouvementReduit.matches) return;
+      const j = jeton = {};
+      clearTimeout(attente); attente = setTimeout(() => lancer(j), 280);
     });
     art.addEventListener("pointerleave", () => {
-      jeton = null;
+      jeton = null; clearTimeout(attente);
       if (vue) { vue.v.detruire(); vue = null; }
+      if (survolEnCours && survolEnCours.fen === fen) survolEnCours = null;
       fen.replaceChildren(img); if (neufs.has(f.nom)) fen.append(etiquetteNeuf());
     });
   } else if (planche) fen = cadre(planche, 8, 0, 0);
@@ -458,14 +697,39 @@ function carte(f) {
   else fen = el("div", { className: "fen" }, el("div", { className: "vide", textContent: "Pas encore d'aperçu" }));
   if (neufs.has(f.nom)) fen.append(etiquetteNeuf());
   const badges = el("ul", { className: "badges" });
+  const st = statutDe(f);
+  if (st !== "a_tester") badges.append(badgeStatut(f));
   const n = f.etats.length;
   if (n) badges.append(badge("anims", `${n} anim${n > 1 ? "s" : ""}`));
+  if (f.familier) badges.append(badge("familier", "Familier vivant"));
+  if (f.objet) badges.append(badge("objet", TYPES_OBJET[f.objet.type] || "Skin d'objet"));
   if (f.lueur) badges.append(badge("lueur", "Lumineux"));
   if (f.particules.length) badges.append(badge("particules", "Particules"));
+  const titre = titreDe(f);
+  const dl = lienTelecharger(f, "carte__dl", [icone(ICONES.telecharger), el("span", { className: "masque", textContent: "Télécharger " + f.fichier })]);
+  dl.title = `Télécharger ${f.fichier} (${fmtKo(f.ko)})`;
   art.append(el("div", { className: "corps-carte" },
-    el("h3", { className: "carte__titre" }, el("button", { type: "button", className: "carte__lien", textContent: joli(f.nom), onclick: () => ouvrir(f.nom) })),
-    el("p", { className: "meta" }, el("b", { textContent: tri === "ensemble" ? lib(f.categorie) : f.ensemble }), ` · ${f.cubes} cubes`), badges), fen);
+    el("h3", { className: "carte__titre" }, el("button", { type: "button", className: "carte__lien", textContent: titre, onclick: () => ouvrir(f.nom) })),
+    el("p", { className: "meta" }, el("b", { textContent: tri === "ensemble" ? lib(f.categorie) : nomEns(f.ensemble) }), ` · ${f.cubes} cubes · ${fmtKo(f.ko_compresse)}`),
+    f.rarete || f.prix ? el("div", { className: "vente-carte" }, pastilleRarete(f), lignePrix(f)) : "", badges), fen, dl);
   return art;
+}
+/* Présentation d'un ensemble : titre, lore du set, prix du lot complet. Repliable, mémorisée par ensemble. */
+function presentation(e) {
+  const i = ensDe(e); if (!i.lore && !i.lot) return "";
+  const d = el("details", { className: "presentation" });
+  let ouverts; try { ouverts = new Set(JSON.parse(localStorage.getItem("vestiaire-lore") || "[]")); } catch (x) { ouverts = new Set(); }
+  d.open = ouverts.has(e) || ens === e;
+  d.addEventListener("toggle", () => { try { d.open ? ouverts.add(e) : ouverts.delete(e); localStorage.setItem("vestiaire-lore", JSON.stringify([...ouverts])); } catch (x) {} });
+  const horsVente = D.fiches.some(f => f.ensemble === e && f.en_vente === false);
+  d.append(el("summary", {}, icone(CHEVRON), el("span", { className: "presentation__titre", textContent: i.titre || nomEns(e) }),
+      i.accroche ? el("span", { className: "presentation__accroche", textContent: i.accroche }) : ""),
+    el("div", { className: "presentation__corps" },
+      i.lore ? el("p", { className: "presentation__lore", textContent: i.lore }) : "",
+      i.lot ? el("div", { className: "presentation__lot" }, el("h4", { className: "rubrique", textContent: `Ensemble complet · ${i.lot.pieces} pièces · −${Math.round(i.lot.remise * 100)} %` }), blocPrix(i.lot),
+        el("p", { className: "note", textContent: `Au lieu de ${fmtNb(i.lot.sans_remise.pv)} PV ou ${fmtNb(i.lot.sans_remise.phynarium)} Phynarium à la pièce. Proposition à valider par le staff.` }))
+        : el("p", { className: "note", textContent: horsVente ? "Hors vente." : "Pas de prix de lot (une seule pièce en vente)." })));
+  return d;
 }
 function etiquetteNeuf() { return el("span", { className: "neuf", textContent: "Nouveau" }); }
 let plies;
@@ -506,12 +770,12 @@ function barreNav(focusCle) {
   const ensembles = ordreEns();
   if (tri === "ensemble") ordreThemes().forEach(t => {
     const items = ensembles.filter(e => D.fiches.some(f => f.ensemble === e && f.theme === t))
-      .map(e => entree("nav__lien", e, compte(f => f.ensemble === e), ens === e, filtre(t, e, null), teinte(e)));
+      .map(e => entree("nav__lien", nomEns(e), compte(f => f.ensemble === e), ens === e, filtre(t, e, null), teinte(e)));
     box.append(groupe("theme:" + t, t, compte(f => f.theme === t), th === t && !ens, filtre(t, null, null), items));
   });
   else ordreCat().forEach(c => {
     const items = ensembles.filter(e => D.fiches.some(f => f.ensemble === e && f.categorie === c))
-      .map(e => entree("nav__lien", e, compte(f => f.ensemble === e && f.categorie === c), cat === c && ens === e, filtre(null, e, c), teinte(e)));
+      .map(e => entree("nav__lien", nomEns(e), compte(f => f.ensemble === e && f.categorie === c), cat === c && ens === e, filtre(null, e, c), teinte(e)));
     box.append(groupe("categorie:" + c, lib(c), compte(f => f.categorie === c), cat === c && !ens, filtre(null, null, c), items));
   });
   if (focusCle) { const b = [...box.querySelectorAll(".nav__plier")].find(x => x.dataset.cle === focusCle); if (b) b.focus(); }
@@ -525,32 +789,100 @@ function barreTri() {
     b.setAttribute("aria-pressed", String(v === tri)); t.append(b);
   });
 }
+/* Recherche : sans accents ni casse, chaque mot doit se retrouver quelque part (nom, ensemble, thème, catégorie, statut, avis, états, particules). */
+const texteRecherche = new WeakMap();
+function botte(f) {
+  let t = texteRecherche.get(f);
+  if (t === undefined) {
+    t = sansAccent([titreDe(f), f.nom, f.description, f.lore, RARETES()[f.rarete] || "", f.en_vente === false ? "hors vente" : "", nomEns(f.ensemble), ensDe(f.ensemble).titre, lib(f.categorie), f.categorie, f.ensemble, f.theme, STATUTS()[statutDe(f)], f.avis,
+      ...f.etats, ...f.etats.map(e => NOMS_ETATS[e] || ""), ...(f.particules || []), f.lueur ? "lumineux lueur" : "", (f.particules || []).length ? "particules" : "",
+      f.familier ? "familier vivant pet " + (MODES_FAMILIER[f.familier.mode] || "") : "", f.objet ? "skin objet " + (TYPES_OBJET[f.objet.type] || "") : "",
+      ...(f.evenements || []), (f.sons || []).length ? "son sons" : ""].join(" "));
+    texteRecherche.set(f, t);
+  }
+  return t;
+}
+const motsRecherche = () => sansAccent(document.getElementById("recherche").value).split(/\s+/).filter(Boolean);
+/** Vrai si la pièce passe tous les filtres, sauf le groupe « sauf » (pour compter ce que donnerait chaque puce). */
+function passe(f, sauf, mots) {
+  if (cat && f.categorie !== cat) return false;
+  if (!garde(f)) return false;
+  if (sauf !== "statut" && statuts.size && !statuts.has(statutDe(f))) return false;
+  if (sauf !== "props") for (const p of props) if (PROPS[p] && !PROPS[p][1](f)) return false;
+  const b = botte(f);
+  return (mots || motsRecherche()).every(m => b.includes(m));
+}
+const comparer = {
+  nom: (a, b) => a.nom.localeCompare(b.nom),
+  recent: (a, b) => b.version - a.version || a.nom.localeCompare(b.nom),
+  cubes: (a, b) => b.cubes - a.cubes || a.nom.localeCompare(b.nom),
+  poids: (a, b) => b.ko_compresse - a.ko_compresse || a.nom.localeCompare(b.nom),
+};
 function liste() {
-  const q = document.getElementById("recherche").value.trim().toLowerCase();
-  const vis = D.fiches.filter(f => (!cat || f.categorie === cat) && garde(f) && (!q || [joli(f.nom), f.nom, lib(f.categorie), f.ensemble, f.theme || ""].some(s => s.toLowerCase().includes(q))));
+  const mots = motsRecherche(), q = mots.join(" ");
+  const vis = D.fiches.filter(f => passe(f, null, mots));
   const m = document.getElementById("liste"); m.replaceChildren(); visibles = [];
-  entete(vis, q);
+  entete(vis, q); affiner(mots); etatUrl();
   if (!vis.length) {
     const r = el("div", { className: "rien" }, el("p", { style: "margin:0", textContent: D.fiches.length ? "Aucun cosmétique ne correspond à ces critères." : "L'armoire est vide : les cosmétiques livrés apparaîtront ici." }));
     if (D.fiches.length) r.append(el("button", { type: "button", textContent: "Effacer la recherche et les filtres", onclick: effacerTout }));
     m.append(r); return;
   }
-  const parEns = tri === "ensemble", groupes = parEns ? ordreEns() : ordreCat(), oc = ordreCat();
+  const oc = ordreCat();
+  const section = (titre, sur, couleur, items, cleEns) => {
+    const sec = el("section", { className: "section" });
+    sec.setAttribute("aria-label", titre);
+    sec.style.setProperty("--c", couleur);
+    sec.append(el("header", { className: "section__tete" }, el("div", {}, sur ? el("p", { className: "section__theme", textContent: sur }) : "", el("h2", { textContent: titre })),
+      el("span", { className: "section__n", textContent: items.length + (items.length > 1 ? " pièces" : " pièce") })));
+    if (cleEns) sec.append(presentation(cleEns));
+    const gr = el("div", { className: "grille" });
+    items.forEach(f => { visibles.push(f.nom); gr.append(carte(f)); });
+    sec.append(gr); m.append(sec);
+  };
+  // Ordre choisi : une seule grille, toutes sections confondues.
+  if (comparer[ordre]) return section(ORDRES[ordre], "Triés", "var(--texte)", vis.slice().sort(comparer[ordre]));
+  const parEns = tri === "ensemble", groupes = parEns ? ordreEns() : ordreCat();
   groupes.forEach(g => {
     const items = vis.filter(f => (parEns ? f.ensemble : f.categorie) === g); if (!items.length) return;
     const theme = parEns && items[0].theme && items[0].theme !== g ? items[0].theme : parEns ? "" : "Catégorie";
-    const sec = el("section", { className: "section" });
-    sec.setAttribute("aria-label", parEns ? g : lib(g));
-    sec.style.setProperty("--c", parEns ? teinte(g) : "#eeebf4");
-    sec.append(el("header", { className: "section__tete" }, el("div", {}, theme ? el("p", { className: "section__theme", textContent: theme }) : "", el("h2", { textContent: parEns ? g : lib(g) })),
-      el("span", { className: "section__n", textContent: items.length + (items.length > 1 ? " pièces" : " pièce") })));
-    const gr = el("div", { className: "grille" });
-    items.sort((a, b) => oc.indexOf(a.categorie) - oc.indexOf(b.categorie) || a.nom.localeCompare(b.nom)).forEach(f => { visibles.push(f.nom); gr.append(carte(f)); });
-    sec.append(gr); m.append(sec);
+    items.sort((a, b) => oc.indexOf(a.categorie) - oc.indexOf(b.categorie) || a.nom.localeCompare(b.nom));
+    section(parEns ? nomEns(g) : lib(g), theme, parEns ? teinte(g) : "var(--texte)", items, parEns ? g : null);
   });
 }
+/* Rangée « affiner » : statut des retours en jeu, contenu, ordre. Chaque puce dit combien de pièces elle donnerait. */
+function affiner(mots) {
+  const box = document.getElementById("affiner");
+  const focus = document.activeElement && box.contains(document.activeElement) ? document.activeElement.dataset.cle : null;
+  box.replaceChildren();
+  const puce = (cle, texte, actif, n, clic, classe) => {
+    const b = el("button", { type: "button", className: "puce" + (classe ? " " + classe : ""), onclick: clic });
+    if (classe) b.append(el("span", { className: "pastille" }));
+    b.append(el("span", { textContent: texte }), el("span", { className: "n", textContent: n }));
+    b.dataset.cle = cle; b.setAttribute("aria-pressed", String(actif)); b.disabled = !n && !actif;
+    b.setAttribute("aria-label", `${texte}, ${n} pièce${n > 1 ? "s" : ""}`);
+    return b;
+  };
+  const gStatut = el("div", { className: "affiner__groupe", role: "group" }, el("span", { className: "affiner__titre", textContent: "En jeu" }));
+  gStatut.setAttribute("aria-label", "Retours en jeu");
+  Object.entries(STATUTS()).forEach(([st, texte]) => {
+    const n = D.fiches.filter(f => statutDe(f) === st && passe(f, "statut", mots)).length;
+    gStatut.append(puce("st:" + st, texte, statuts.has(st), n, () => { statuts.has(st) ? statuts.delete(st) : statuts.add(st); liste(); }, "st st--" + st));
+  });
+  const gProps = el("div", { className: "affiner__groupe", role: "group" }, el("span", { className: "affiner__titre", textContent: "Avec" }));
+  gProps.setAttribute("aria-label", "Contenu");
+  Object.entries(PROPS).forEach(([p, [texte, test]]) => {
+    const n = D.fiches.filter(f => test(f) && passe(f, "props", mots)).length;
+    gProps.append(puce("p:" + p, texte, props.has(p), n, () => { props.has(p) ? props.delete(p) : props.add(p); liste(); }));
+  });
+  const sel = el("select", { id: "ordre" });
+  Object.entries(ORDRES).forEach(([v, t]) => sel.append(el("option", { value: v, textContent: t, selected: v === ordre })));
+  sel.onchange = () => { ordre = sel.value; try { localStorage.setItem("vestiaire-ordre", ordre); } catch (e) {} liste(); };
+  box.append(gStatut, gProps, el("label", { className: "ordre", htmlFor: "ordre" }, "Ordre", sel));
+  if (focus) { const b = [...box.querySelectorAll("button")].find(x => x.dataset.cle === focus); if (b) b.focus(); }
+}
 /* En-tête : titre du filtre courant, nombre de pièces, filtre actif effaçable ; sur mobile, rangée d'accès rapide. */
-function effacerTout() { th = ens = cat = null; document.getElementById("recherche").value = ""; tout(); }
+function effacerTout() { th = ens = cat = null; statuts.clear(); props.clear(); document.getElementById("recherche").value = ""; tout(); }
 function entete(vis, q) {
   const titre = ens || (cat ? lib(cat) : th) || "Tout le vestiaire";
   const h = document.getElementById("titre-liste"); h.textContent = titre;
@@ -570,6 +902,8 @@ function entete(vis, q) {
   if (th && !ens) box.append(croix("Thème : " + th, null, () => { th = null; tout(); }, "le thème " + th));
   if (cat) box.append(croix(lib(cat), null, () => { cat = null; if (tri === "categorie") ens = null; tout(); }, "la catégorie " + lib(cat)));
   if (ens) box.append(croix(ens, teinte(ens), () => { ens = null; if (tri === "ensemble") th = null; tout(); }, "l'ensemble " + ens));
+  statuts.forEach(st => box.append(croix(STATUTS()[st] || st, null, () => { statuts.delete(st); liste(); }, "le statut " + (STATUTS()[st] || st))));
+  props.forEach(pr => box.append(croix("Avec : " + PROPS[pr][0].toLowerCase(), null, () => { props.delete(pr); liste(); }, "le filtre " + PROPS[pr][0])));
   if (q) box.append(croix(`« ${document.getElementById("recherche").value.trim()} »`, null, () => { document.getElementById("recherche").value = ""; liste(); document.getElementById("recherche").focus(); }, "la recherche"));
   const n = box.children.length;
   if (n) box.append(el("button", { type: "button", className: "effacer", id: "effacer-filtre", textContent: "Tout effacer", onclick: () => { effacerTout(); document.getElementById("recherche").focus(); } }));
@@ -591,13 +925,13 @@ function jauge(nom, val, max, unite) {
   if (val / max > 0.75) j.classList.add("haute"); return j;
 }
 let ongletCourant = null, etatCourant = null;
-const ONGLETS_SLUG = o => ["3D", "Animation", "4 vues", "États", "De nuit", "Texture", "Calque"].find(t => slug(t) === o);
+const ONGLETS_SLUG = o => ["3D", "Animation", "4 vues", "4 instants", "États", "Animations", "Étapes", "De nuit", "Comme en jeu", "Texture", "Calque"].find(t => slug(t) === o);
 function ouvrir(nom, ongletDemande, etatDemande) {
   const f = D.fiches.find(x => x.nom === nom); if (!f) return;
   ouvert = nom;
   const dlg = document.getElementById("dlg"); dlg.style.setProperty("--teinte", teinte(f.ensemble));
-  document.getElementById("titre").textContent = joli(f.nom);
-  const sous = document.getElementById("sous"); sous.replaceChildren(el("b", { textContent: f.ensemble }), ` · ${f.theme && f.theme !== f.ensemble ? f.theme + " · " : ""}${lib(f.categorie)}`);
+  document.getElementById("titre").textContent = titreDe(f);
+  const sous = document.getElementById("sous"); sous.replaceChildren(el("b", { textContent: nomEns(f.ensemble) }), ` · ${f.theme && f.theme !== f.ensemble ? f.theme + " · " : ""}${lib(f.categorie)}`);
   const i = visibles.indexOf(nom);
   document.getElementById("prec").disabled = i <= 0; document.getElementById("suiv").disabled = i < 0 || i >= visibles.length - 1;
   document.getElementById("position").textContent = i >= 0 ? `${i + 1} / ${visibles.length}` : "";
@@ -621,7 +955,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
   // Une case de la planche : 4 états par rangée, chaque case = les 4 vues d'un état.
   const decoupePlanche = k => {
     const box = el("div", { className: "decoupe" });
-    const img = el("img", { src: planche, alt: `4 vues, ${nomEtat(f.apercu_etats[k])}, de ${joli(f.nom)}` });
+    const img = el("img", { src: planche, alt: `4 vues, ${nomEtat(f.apercu_etats[k])}, de ${titreDe(f)}` });
     const rangs = Math.ceil(f.apercu_etats.length / 4) || 1;
     img.style.width = "400%"; img.style.left = -(k % 4) * 100 + "%"; img.style.top = -Math.floor(k / 4) * 100 + "%";
     img.addEventListener("load", () => { box.style.setProperty("--r", (img.naturalWidth / 4) / (img.naturalHeight / rangs)); });
@@ -635,7 +969,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
   async function panneau3D() {
     mode = "3d";
     const canvas = el("canvas", { tabIndex: 0 });
-    canvas.setAttribute("aria-label", `Vue 3D de ${joli(f.nom)}. Glisser ou flèches pour tourner, molette ou plus et moins pour zoomer, double-clic ou zéro pour recadrer.`);
+    canvas.setAttribute("aria-label", `Vue 3D de ${titreDe(f)}. Glisser ou flèches pour tourner, molette ou plus et moins pour zoomer, double-clic ou zéro pour recadrer.`);
     vue3d.lire = el("button", { type: "button", className: "icone-btn" }, icone(ICONES.pause), el("span", { className: "masque", textContent: "Pause" }));
     vue3d.curseur = el("input", { type: "range", min: 0, max: 1, step: 0.01, value: 0 }); vue3d.curseur.setAttribute("aria-label", "Instant de l'animation");
     vue3d.temps = el("span", { className: "v3d__temps", textContent: "0,00 s" });
@@ -643,6 +977,18 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     const recadrer = el("button", { type: "button", className: "icone-btn" }, icone(ICONES.recadrer), el("span", { className: "masque", textContent: "Recadrer la vue" }));
     const bascule = (texte, actif) => { const b = el("button", { type: "button", className: "v3d__bascule", textContent: texte }); b.setAttribute("aria-pressed", String(actif)); return b; };
     vue3d.nuit = bascule("Nuit", false);
+    // Son : clés de son des animations ; seuls les sons embarqués (phynaria_sounds) sont joués ici
+    vue3d.son = bascule("Son", !window.Visionneuse || Visionneuse.son()); vue3d.son.hidden = true;
+    // « Comme en jeu » (tools/visionneuse.js, .claude/references/mod/rendu-en-jeu.md) : ciel, lumière et écran de Minecraft ;
+    // « Rendu studio » : l'ancien rendu, fond sombre et cadrage serré (flatteur : à ne pas prendre pour le jeu)
+    vue3d.rendu = el("select", {});
+    vue3d.rendu.setAttribute("aria-label", "Rendu de la vue 3D");
+    [["jour", "Comme en jeu · jour"], ["gris", "Comme en jeu · jour gris"], ["nuit", "Comme en jeu · nuit"], ["shader", "Comme en jeu · nuit + shader"], ["studio", "Rendu studio"]]
+      .forEach(([v, t]) => vue3d.rendu.append(el("option", { value: v, textContent: t })));
+    vue3d.distance = el("select", {});
+    vue3d.distance.setAttribute("aria-label", "Distance du joueur, en blocs");
+    [["3", "à 3 blocs (Essayer)"], ["4", "à 4 blocs (3e personne)"], ["10", "à 10 blocs"]].forEach(([v, t]) => vue3d.distance.append(el("option", { value: v, textContent: t })));
+    vue3d.note = el("p", { className: "v3d__note", textContent: "Comme en jeu : ciel et sol, lumière des faces de Minecraft, écran de 1 369 lignes en 70° sans lissage, add_ et _e ajoutés sur le fond, particules selon leurs réglages (« Quand »). Approché : nuit avec shader, lumière du lieu, particules de Minecraft. Molette : distance." });
     vue3d.calque = bascule("Calque lumineux", true); vue3d.calque.hidden = true;
     vue3d.parts = bascule("Particules", true); vue3d.parts.hidden = true;
     vue3d.mouv = el("select", { hidden: true });
@@ -652,25 +998,36 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     vue3d.mouv.title = "Mouvement des particules : réglé par le staff en jeu (ici 2 par seconde, 6 s)";
     vue.replaceChildren(el("div", { className: "v3d" }, canvas,
       el("p", { className: "v3d__aide", textContent: "Glisser pour tourner · molette pour zoomer · double-clic pour recadrer" }),
-      el("div", { className: "v3d__options" }, vue3d.nuit, vue3d.calque, vue3d.parts, vue3d.mouv),
-      el("div", { className: "v3d__barre verre" }, vue3d.lire, vue3d.curseur, vue3d.temps, vue3d.fusee, recadrer)));
+      vue3d.note,
+      el("div", { className: "v3d__options" }, vue3d.rendu, vue3d.distance, vue3d.nuit, vue3d.calque, vue3d.parts, vue3d.mouv),
+      el("div", { className: "v3d__barre verre" }, vue3d.lire, vue3d.curseur, vue3d.temps, vue3d.fusee, vue3d.son, recadrer)));
     let modele;
     try { modele = await chargerModele(f); } catch (e) { modele = null; }
     if (ficheJeton !== jeton || mode !== "3d") return;
+    if (survolEnCours) survolEnCours.arreter();   // pas de vue de survol vivante derrière la fiche
     const v = modele && window.Visionneuse ? Visionneuse.creer(canvas) : null;
+    const reessayer = texte => {
+      const b = el("button", { type: "button", className: "secondaire", textContent: "Recharger la vue 3D", onclick: () => { if (ficheJeton === jeton) { fermerVisionneuse(); panneau3D(); } } });
+      vue.replaceChildren(el("div", { className: "rien" }, el("p", { textContent: texte }), b));
+    };
     if (!v) {
-      vue.replaceChildren(el("p", { className: "rien", textContent: location.protocol === "file:" ? "La vue 3D demande le serveur local : ouvrez ouvrir_vestiaire (.sh ou .bat)." : "Vue 3D indisponible sur ce navigateur (WebGL 2)." }));
+      if (location.protocol === "file:") vue.replaceChildren(el("p", { className: "rien", textContent: "La vue 3D demande le serveur local : ouvrez ouvrir_vestiaire (.sh ou .bat)." }));
+      else if (!modele) reessayer(`Le modèle n'a pas pu être chargé (${sourceModele(f)}).`);
+      else reessayer("Vue 3D indisponible : le navigateur refuse WebGL 2 pour l'instant. Fermez complètement le navigateur puis rouvrez le Vestiaire si cela persiste.");
       return;
     }
     visionneuse = v;
+    v.surPerte(() => { if (visionneuse === v) { fermerVisionneuse(); reessayer("Vue 3D en pause (le navigateur a repris la carte graphique)."); } });
     nomsAnim = {};
     (modele.animations || []).forEach(a => { const e = a.name.split(".").pop(); if (!/^(particle_|overlay_|event_)/.test(e) && !(e in nomsAnim)) nomsAnim[e] = a.name; });
     const dispo = f.etats.filter(e => nomsAnim[e]);
-    const dep = dispo.includes(etatCourant) ? etatCourant : dispo.includes("idle") ? "idle" : dispo[0];
+    // effet de téléportation : le départ d'abord (le vrai spectacle ; la charge est le moment le plus calme)
+    const dep = dispo.includes(etatCourant) ? etatCourant : f.effet && dispo.includes("depart") ? "depart" : dispo.includes("idle") ? "idle" : dispo[0];
     await v.charger(modele, nomsAnim[dep]);
     if (ficheJeton !== jeton || visionneuse !== v) return;
     const fmt = t => t.toFixed(2).replace(".", ",") + " s";
-    v.surTemps(t => { const L = v.duree() || 1; const tt = t % (L + 0.6); vue3d.curseur.value = Math.min(tt, L); vue3d.temps.textContent = fmt(Math.min(tt, L)); });
+    // effet de téléportation : départ et arrivée gardent leur dernière image (visionneuse.js), le curseur aussi
+    v.surTemps(t => { const L = v.duree() || 1; const tt = f.effet ? t : t % (L + 0.6); vue3d.curseur.value = Math.min(tt, L); vue3d.temps.textContent = fmt(Math.min(tt, L)); });
     const basculerLecture = on => {
       vue3d.lecture = on; v.lecture(on);
       vue3d.lire.replaceChildren(icone(on ? ICONES.pause : ICONES.anims), el("span", { className: "masque", textContent: on ? "Pause" : "Lecture" }));
@@ -681,6 +1038,22 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     recadrer.onclick = () => v.recadrer();
     const basculeur = (b, f) => { b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(on)); f(on); }; };
     basculeur(vue3d.nuit, on => v.nuit(on));
+    const nbSons = v.sons();
+    vue3d.son.hidden = !nbSons.embarques;
+    vue3d.son.title = nbSons.autres ? `Sons embarqués seulement : ${nbSons.autres} son(s) de Minecraft ou d'un pack ne sont joués qu'en jeu` : "Jouer les sons de l'animation";
+    basculeur(vue3d.son, on => Visionneuse.son(on));
+    if (Visionneuse.son()) Visionneuse.son(true);   // ouvrir la fiche est un clic : débloque l'audio du navigateur
+    const lu = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+    vue3d.rendu.value = lu("vestiaire.rendu") || "jour";
+    vue3d.distance.value = lu(f.effet ? "vestiaire.distance.effet" : "vestiaire.distance") || (f.effet ? "3" : "4");
+    const appliquerRendu = () => {
+      const r = vue3d.rendu.value, jeu = r !== "studio";
+      v.jeu(jeu ? { ciel: r, distance: Number(vue3d.distance.value) } : null);
+      vue3d.nuit.hidden = jeu; vue3d.distance.hidden = !jeu; vue3d.note.hidden = !jeu;
+      try { localStorage.setItem("vestiaire.rendu", r); localStorage.setItem(f.effet ? "vestiaire.distance.effet" : "vestiaire.distance", vue3d.distance.value); } catch (e) {}
+    };
+    vue3d.rendu.onchange = appliquerRendu; vue3d.distance.onchange = appliquerRendu;
+    appliquerRendu();
     vue3d.calque.hidden = !v.aCalque(); basculeur(vue3d.calque, on => v.calque(on));
     const avecParts = v.aParticules(); vue3d.parts.hidden = !avecParts; vue3d.mouv.hidden = !avecParts;
     basculeur(vue3d.parts, on => { v.particules(on); vue3d.mouv.disabled = !on; });
@@ -689,18 +1062,54 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     const MVT = { "légère": "legere", "normale": "normale", "lourde": "lourde", "flotte": "flotte", "monte": "monte" };
     const nombre = t => { const m = /([\d]+(?:[,.][\d]+)?)/.exec(String(t || "")); return m ? Number(m[1].replace(",", ".")) : undefined; };
     const regl = {};
-    (f.reglages || []).forEach(r => { const g = r.reglages || {}; regl[String(r.particule).split(/[\s(]/)[0]] = { mouvement: MVT[String(g.Mouvement || "").toLowerCase()], vie: nombre(g["Durée"]), nombre: nombre(g.Nombre) }; });
+    // « comme en jeu » : aussi Quand, Rendu, Au sol et Limite (guide 5 ter)
+    const QUAND = { "en vol": "vol", "en l'air": "air", "en l’air": "air", "en mouvement": "mouvement", "à l'arrêt": "arret", "à l’arrêt": "arret", "toujours": "toujours", "sous la pluie": "pluie", "à l'utilisation": "utilisation", "à l’utilisation": "utilisation", "jamais": "jamais" };
+    (f.reglages || []).forEach(r => { const g = r.reglages || {}; regl[String(r.particule).split(/[\s(]/)[0]] = { mouvement: MVT[String(g.Mouvement || "").toLowerCase()], vie: nombre(g["Durée"]), nombre: nombre(g.Nombre),
+      quand: QUAND[String(g.Quand || "").toLowerCase()], rendu: g.Rendu ? sansAccent(g.Rendu) : undefined, auSol: g["Au sol"] ? sansAccent(g["Au sol"]).replace(/^se /, "") : undefined, limite: nombre(g.Limite) }; });
     v.reglages(regl);
     if (Object.keys(regl).length) vue3d.mouv.hidden = true;     // le mouvement vient des réglages de la pièce
     // Événements (guide 6.4) : un bouton par animation event_…, jouée une fois par-dessus l'état
-    const NOMS_EVT = { equip: "Équiper", jump: "Saut", land: "Atterrissage" };
+    const NOMS_EVT = { equip: "Équiper", unequip: "Retirer", jump: "Saut", land: "Atterrissage",
+      // familier vivant (guide 6.6)
+      teleport: "Revient près du joueur", perch: "Se pose sur l'épaule", owner_hurt: "Maître touché", exit_sleep: "Se réveille", enter_sleep: "S'endort",
+      enter_sit: "S'assoit", exit_sit: "Se relève" };
     const evts = v.evenements();
-    pastilles(dispo);
+    const bloc = v.blocFamilier();
+    const nomPet = e => NOMS_ETATS[e] || NOMS_PET[e] || e;
+    pastilles(dispo, bloc ? "États du familier" : f.effet ? "Animations de l'effet" : "États du joueur");
+    if (bloc) {
+      // Familier vivant : « Vivant » (au sol à côté du joueur immobile, q.is_pet = 1, vitesse de son état) ou « Menu Apparence »
+      // (porté, q.is_pet = 0, comme le montre le mod). Le joueur ne suit pas les états du familier.
+      const boite = el("div", { className: "etats evts mode-fam", role: "group" }, el("span", { className: "evts__titre", textContent: "Vue" })); boite.setAttribute("aria-label", "Vue du familier");
+      const note = el("p", { className: "note note-fam" });
+      const modes = [["vivant", "Vivant", "Il suit le joueur tout seul (guide 6.6) : posé à côté de lui, avec la vitesse de chaque état"], ["menu", "Menu Apparence", "Porté sur le joueur, comme dans le menu Apparence (q.is_pet = 0)"]];
+      const boutons = modes.map(([m, t, aide]) => { const b = el("button", { type: "button", textContent: t, title: aide }); b.dataset.mode = m; b.onclick = () => choisirMode(m); boite.append(b); return b; });
+      const choisirMode = m => {
+        boutons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+        v.familier(m);
+        const pres = MODES_FAMILIER[bloc.mode] || bloc.mode;
+        note.textContent = m === "vivant"
+          ? `${texteFamilier(bloc)}. Montré à ${fmtBlocs(Math.min(Number(bloc.distance ?? 3), 1.5))} du joueur pour l'aperçu${bloc.mode === "perche" ? " (sur l'épaule au repos, assis et endormi)" : ""}. Ses particules ne partent pas encore en jeu (guide 6.6).`
+          : `Porté, comme dans le menu Apparence et quand un autre familier vivant est déjà sorti. En jeu, il vit ${pres}.`;
+        const avecParts = v.aParticules() && m !== "vivant"; vue3d.parts.hidden = !avecParts; vue3d.mouv.hidden = !avecParts || Object.keys(regl).length > 0;
+      };
+      etatsScene.prepend(boite, note);
+      choisirMode("vivant");
+    }
+    const etapes = v.etapes();
+    if (etapes.length > 1 || (f.objet && f.objet.etapes.length > 1)) {
+      // Skin d'objet (guide 14) : une pose figée par étape (arc bandé, arbalète chargée…), pas d'animation
+      const boite = el("div", { className: "etats", role: "group" }); boite.setAttribute("aria-label", "Étapes de l'objet");
+      const boutons = etapes.map(e => { const b = el("button", { type: "button", textContent: NOMS_ETAPES[e] || e }); b.dataset.etape = e; b.onclick = () => montrerEtape(e); boite.append(b); return b; });
+      const montrerEtape = e => { boutons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.etape === e))); v.etape(e); };
+      etatsScene.replaceChildren(boite);
+      montrerEtape("repos");
+    }
     if (evts.length) {
       const boite = el("div", { className: "etats evts", role: "group" }, el("span", { className: "evts__titre", textContent: "Événements" })); boite.setAttribute("aria-label", "Événements");
       evts.forEach(n => {
         const cle = n.split(".").pop().slice(6);
-        const lib = NOMS_EVT[cle] || (cle.startsWith("enter_") ? "Entrée : " + nomEtat(cle.slice(6)) : cle.startsWith("exit_") ? "Sortie : " + nomEtat(cle.slice(5)) : cle);
+        const lib = NOMS_EVT[cle] || (cle.startsWith("enter_") ? "Entrée : " + (bloc ? nomPet(cle.slice(6)) : nomEtat(cle.slice(6))) : cle.startsWith("exit_") ? "Sortie : " + (bloc ? nomPet(cle.slice(5)) : nomEtat(cle.slice(5))) : cle);
         const b = el("button", { type: "button", textContent: "▶ " + lib });
         b.onclick = () => { b.setAttribute("aria-pressed", "true"); v.evenement(n, () => b.setAttribute("aria-pressed", "false")); };
         boite.append(b);
@@ -710,7 +1119,7 @@ function ouvrir(nom, ongletDemande, etatDemande) {
   }
   const montrerEtat = e => {
     etatCourant = e;
-    etatsScene.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.etat === e)));
+    etatsScene.querySelectorAll("button[data-etat]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.etat === e)));   // pas les boutons de vue, d'étape ni d'événement
     const k = f.apercu_etats.indexOf(e);
     if (mode === "3d") {
       if (!visionneuse || !nomsAnim[e]) return;
@@ -720,30 +1129,34 @@ function ouvrir(nom, ongletDemande, etatDemande) {
       return;
     }
     if (mode === "anim") {
-      if (anims[e]) vue.replaceChildren(el("img", { className: "anim-etat", src: suffixe(anims[e], f), alt: `${nomEtat(e)} de ${joli(f.nom)}` }));
-      else if (k >= 0) vue.replaceChildren(cadre(gif, 4, k % 4, Math.floor(k / 4), `${nomEtat(e)} de ${joli(f.nom)}`, true));
+      if (anims[e]) vue.replaceChildren(el("img", { className: "anim-etat", src: suffixe(anims[e], f), alt: `${nomEtat(e)} de ${titreDe(f)}` }));
+      else if (k >= 0) vue.replaceChildren(cadre(gif, 4, k % 4, Math.floor(k / 4), `${nomEtat(e)} de ${titreDe(f)}`, true));
     } else if (k >= 0 && planche) vue.replaceChildren(zoomable(decoupePlanche(k), `4 vues, ${nomEtat(e)}`, planche));
   };
-  const pastilles = liste_etats => {
-    const box = el("div", { className: "etats", role: "group" }); box.setAttribute("aria-label", "États du joueur");
+  const pastilles = (liste_etats, titreGroupe) => {
+    const box = el("div", { className: "etats", role: "group" }); box.setAttribute("aria-label", titreGroupe || (f.familier ? "États du familier" : f.effet ? "Animations de l'effet" : "États du joueur"));
     f.etats.forEach(e => {
       const b = el("button", { type: "button", textContent: nomEtat(e), disabled: !liste_etats.includes(e), onclick: () => montrerEtat(e) });
       b.dataset.etat = e; b.setAttribute("aria-pressed", "false"); box.append(b);
     });
     etatsScene.replaceChildren(box); etatsScene.scrollLeft = 0;
-    montrerEtat(liste_etats.includes(etatCourant) ? etatCourant : liste_etats.includes("idle") ? "idle" : liste_etats[0]);
+    montrerEtat(liste_etats.includes(etatCourant) ? etatCourant : f.effet && liste_etats.includes("depart") ? "depart" : liste_etats.includes("idle") ? "idle" : liste_etats[0]);
   };
   const panneaux = [];
-  if (f.etats.length && location.protocol !== "file:" && window.Visionneuse) panneaux.push(["3D", () => { etatsScene.replaceChildren(); panneau3D(); }]);
+  if (location.protocol !== "file:" && window.Visionneuse) panneaux.push(["3D", () => { etatsScene.replaceChildren(); panneau3D(); }]);   // pièces statiques comprises
   if (etatsDispo.length && !panneaux.length) panneaux.push(["Animation", () => { mode = "anim"; pastilles(etatsDispo); }]);   // repli sans vue 3D
   const etatsPlanche = f.apercu_etats.filter(e => f.etats.includes(e));
-  if (planche && etatsPlanche.length) panneaux.push(["4 vues", () => { mode = "vues"; pastilles(etatsPlanche); }]);
+  // effet de téléportation : la planche montre 4 instants de chaque animation (tools/livrer.py)
+  if (planche && etatsPlanche.length) panneaux.push([f.effet ? "4 instants" : "4 vues", () => { mode = "vues"; pastilles(etatsPlanche); }]);
   const image = (url, tex, titre) => () => {
     etatsScene.replaceChildren();
-    vue.replaceChildren(zoomable(el("img", { src: url, alt: `${titre} de ${joli(f.nom)}`, className: tex ? "tex" : "pleine" }), titre.toLowerCase(), url));
+    vue.replaceChildren(zoomable(el("img", { src: url, alt: `${titre} de ${titreDe(f)}`, className: tex ? "tex" : "pleine" }), titre.toLowerCase(), url));
   };
-  if (gif) panneaux.push(["États", image(gif, false, "Tous les états")]);
+  if (gif) panneaux.push([f.effet ? "Animations" : "États", image(gif, false, f.effet ? "Toutes les animations de l'effet" : "Tous les états")]);
+  if (f.objet && planche) panneaux.push(["Étapes", image(planche, false, "Étapes (inventaire, objet, main 3e et 1re personne)")]);
   if (f.nuit) panneaux.push(["De nuit", image(suffixe(f.nuit, f), false, "De nuit")]);
+  // planche « comme en jeu » de livrer.py (render_bbmodel.py, JEU=1) : jour, jour gris, nuit, nuit + shader, à 3 et 10 blocs
+  if (f.jeu) panneaux.push(["Comme en jeu", image(suffixe(f.jeu, f), false, "Comme en jeu")]);
   [["Texture", f.texture], ["Calque", f.calque]].forEach(([t, u]) => u && panneaux.push([t, image(suffixe(u, f), true, t === "Calque" ? "Calque lumineux" : t)]));
   vues.replaceChildren();
   const onglets = panneaux.map(([t], k) => {
@@ -772,37 +1185,46 @@ function ouvrir(nom, ongletDemande, etatDemande) {
     const v = suffixe(x.vignette, x);
     avec.append(el("li", {}, el("button", { type: "button", onclick: () => ouvrir(x.nom) },
       v ? el("img", { src: v, alt: "", loading: "lazy" }) : el("span", { className: "sans" }),
-      el("span", { className: "nom-avec", textContent: joli(x.nom) }), el("span", { className: "cat-avec", textContent: lib(x.categorie) }))));
+      el("span", { className: "nom-avec", textContent: titreDe(x) }), el("span", { className: "cat-avec", textContent: lib(x.categorie) }))));
   });
-  const dl = el("a", { className: "dl", href: f.bbmodel, download: f.fichier }, icone(ICONES.telecharger), el("span", { textContent: "Télécharger le .bbmodel" }));
-  // Demande où enregistrer (Chrome, Edge) ; ailleurs, téléchargement classique selon les réglages du navigateur.
-  if (window.showSaveFilePicker) dl.onclick = async ev => {
-    ev.preventDefault();
-    try {
-      const poignee = await showSaveFilePicker({ suggestedName: f.fichier, types: [{ description: "Modèle Blockbench", accept: { "application/json": [".bbmodel"] } }] });
-      const r = await fetch(f.bbmodel + "?v=" + f.version, { cache: "no-store" });
-      if (!r.ok) throw new Error(r.status);
-      const sortie = await poignee.createWritable();
-      await sortie.write(await r.blob()); await sortie.close();
-      annoncer("Enregistré : " + poignee.name);
-    } catch (e) { if (e.name !== "AbortError") annoncer("Échec de l'enregistrement : " + e.message); }
-  };
+  const dl = lienTelecharger(f, "dl", [icone(ICONES.telecharger), el("span", { textContent: "Télécharger le .bbmodel" })]);
+  dl.id = "telecharger"; dl.setAttribute("aria-keyshortcuts", "T");
   const chemin = decodeURIComponent(f.bbmodel);
   const copier = el("button", { type: "button", className: "secondaire" }, icone(ICONES.copier), el("span", { textContent: "Copier le chemin du fichier" }));
   copier.onclick = async () => { try { await navigator.clipboard.writeText(chemin); annoncer("Chemin copié"); } catch (e) { annoncer(chemin); } };
+  const lien = el("button", { type: "button", className: "secondaire" }, icone(ICONES.lien), el("span", { textContent: "Copier le lien de cette fiche" }));
+  lien.setAttribute("aria-keyshortcuts", "L"); lien.onclick = copierLien;
+  const st = statutDe(f), dateMaj = new Date(f.version * 1000);
   const lueur = f.lueur ? "Calque lumineux embarqué" : f.calque ? "Calque lumineux peint, non embarqué" : "Pas de calque lumineux";
-  const chiffre = (t, v) => el("div", {}, el("dt", { textContent: t }), el("dd", { textContent: v }));
+  const chiffre = (t, v, petit) => el("div", {}, el("dt", { textContent: t }), el("dd", { textContent: v, className: petit ? "petit" : "" }));
   const propriete = (cle, texte, oui) => el("li", { className: oui ? "" : "non" }, icone(ICONES[cle]), el("span", { textContent: texte }));
   const nAnims = f.etats.length;
   cote.replaceChildren(
-    el("div", { className: "actions" }, dl, copier),
+    el("div", { className: "actions" }, dl, copier, lien, EDITION ? el("button", { type: "button", className: "secondaire", onclick: () => modifierPiece(f) }, icone(ICONES.crayon), el("span", { textContent: "Modifier la fiche" })) : ""),
+    f.description || f.lore ? el("section", { className: "recit" }, el("h4", { className: "rubrique", textContent: "Description" }),
+      f.description ? el("p", { className: "description", textContent: f.description }) : "",
+      f.lore ? el("blockquote", { className: "lore" }, el("p", { textContent: f.lore }), ensDe(f.ensemble).titre ? el("footer", { textContent: ensDe(f.ensemble).titre }) : "") : "") : "",
+    f.prix ? el("section", {}, el("h4", { className: "rubrique" }, "Prix", pastilleRarete(f)),
+      f.en_vente ? blocPrix(f.prix) : el("p", { className: "note", textContent: f.note_vente || "Hors vente." }),
+      el("p", { className: "note", style: "margin-top:8px", textContent: (D.vente && D.vente.rythme ? `Base : ${fmtNb(D.vente.rythme.pv_par_jour)} PV par jour de vote (${D.vente.rythme.votes_par_jour} votes). ` : "") + "Proposition à valider par le staff." })) : "",
+    el("section", {}, el("h4", { className: "rubrique", textContent: "En jeu" }),
+      el("p", { className: "avis st st--" + st }, el("b", {}, el("span", { className: "pastille" }), STATUTS()[st] || st),
+        f.avis || (st === "a_tester" ? "Pas encore de retour en jeu : à essayer avec /cosmetique apercu." : ""))),
     el("section", {}, el("h4", { className: "rubrique", textContent: "En bref" }),
-      el("dl", { className: "chiffres" }, chiffre("Cubes", f.cubes), chiffre("Groupes", f.groupes), chiffre("Animations", nAnims), chiffre("Envoi", f.ko_compresse + " Ko"))),
+      el("dl", { className: "chiffres" }, chiffre("Cubes", f.cubes), chiffre("Groupes", f.groupes), chiffre("Animations", nAnims), chiffre("Envoi", f.ko_compresse + " Ko"),
+        chiffre("Fichier", fmtKo(f.ko)), chiffre("Mis à jour", dateMaj.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + ", " + dateMaj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }), true))),
     el("section", {}, el("h4", { className: "rubrique", textContent: "Contenu" }),
       el("ul", { className: "proprietes" },
         propriete("anims", nAnims ? `${nAnims} animation${nAnims > 1 ? "s" : ""} : ${f.etats.map(nomEtat).join(", ")}` : "Pas d'animation", nAnims > 0),
+        f.effet ? propriete("anims", "Effet de téléportation (guide 15) : joué là où le joueur part et là où il arrive, vu à 64 blocs ; "
+          + "charge pendant le compte à rebours, départ et arrivée une fois (5 s au plus) ; un seul effet par joueur, en plus des cosmétiques", true) : "",
+        f.familier ? propriete("familier", texteFamilier(f.familier) + " ; ses animations pet_ sont choisies par sa situation (le menu Apparence le montre porté)", true) : "",
+        f.objet ? propriete("objet", `${texteObjet(f.objet)} (en plus des 3 cosmétiques) ; étapes : ${f.objet.etapes.map(e => NOMS_ETAPES[e] || e).join(", ") || "repos"}`, true) : "",
+        (f.evenements || []).length ? propriete("evenement", "Événements : " + f.evenements.map(n => { const c = n.slice(6); return ({ equip: "apparition", unequip: "retrait", jump: "saut", land: "atterrissage", teleport: "retour près du joueur", owner_hurt: "maître touché", perch: "se pose sur l'épaule", exit_sleep: "réveil", enter_sleep: "endormissement", enter_sit: "s'assoit", exit_sit: "se relève" })[c] || c.replace(/_/g, " "); }).join(", "), true) : "",
+        (f.couches || []).length ? propriete("anims", `Couche permanente : ${f.couches.map(n => n.slice(8).replace(/_/g, " ")).join(", ")}`, true) : "",
         propriete("lueur", lueur, !!f.lueur),
-        propriete("particules", f.particules.length ? `Particules : ${f.particules.join(", ")}` : "Pas de particules", f.particules.length > 0))),
+        propriete("particules", f.particules.length ? `Particules : ${f.particules.join(", ")}${f.familier ? " (pas encore lancées par un familier vivant)" : ""}` : "Pas de particules", f.particules.length > 0),
+        propriete("son", (f.sons || []).length ? `Sons : ${f.sons.length}${(f.sons_embarques || []).length ? `, dont ${f.sons_embarques.length} embarqué${f.sons_embarques.length > 1 ? "s" : ""}` : ""}` : "Pas de son", (f.sons || []).length > 0))),
     el("section", {}, el("h4", { className: "rubrique", textContent: "Limites du mod" }),
       el("div", { className: "jauges" }, jauge("Cubes", f.cubes, 8192, ""), jauge("Groupes", f.groupes, 2048, ""), jauge("Envoi compressé", f.ko_compresse, 1000, "Ko"))),
     (f.reglages || []).length ? (() => { const d = el("details", { className: "reglages-boite", open: true },
@@ -815,23 +1237,78 @@ function ouvrir(nom, ongletDemande, etatDemande) {
   if (!dlg.open) { declencheur = document.activeElement; dlg.showModal(); }
 }
 let declencheur = null, visionneuse = null, ficheJeton = null;
-const modeles = new Map();
+/* Modèles chargés à la demande (fiche ouverte ou survol), gardés en mémoire pour les 8 derniers : un modèle analysé pèse
+   plusieurs fois son fichier. L'adresse porte la version : le navigateur garde le fichier tant qu'il ne change pas. */
+const modeles = new Map(), MODELES_MAX = 8;
+function sourceModele(f) {
+  if (/^cosmetiques\//.test(f.bbmodel)) return f.bbmodel;
+  const e = encodeURIComponent;
+  return `cosmetiques/${e(f.categorie)}/${e(f.nom)}/${e(f.nom)}.bbmodel`;
+}
 async function chargerModele(f) {
-  const cle = f.bbmodel + "?v=" + f.version;
-  if (!modeles.has(cle)) modeles.set(cle, fetch(cle, { cache: "no-store" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }));
-  return modeles.get(cle);
+  const cle = sourceModele(f) + "?v=" + f.version;
+  let p = modeles.get(cle);
+  if (p) modeles.delete(cle);
+  else p = fetch(cle).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  p.catch(() => modeles.delete(cle));
+  modeles.set(cle, p);
+  while (modeles.size > MODELES_MAX) modeles.delete(modeles.keys().next().value);
+  return p;
 }
 function fermerVisionneuse() { if (visionneuse) { visionneuse.detruire(); visionneuse = null; } }
 function voisin(d) { const i = visibles.indexOf(ouvert); const n = visibles[i + d]; if (n) ouvrir(n); }
 function tout() { barreTri(); barreNav(); liste(); }
-document.getElementById("recherche").addEventListener("input", liste);
+/* État dans l'adresse : ?q=…&ens=…&statut=…&avec=…&ordre=…#fiche/onglet/état. Un lien copié rouvre la même vue. */
+let urlPrete = false;
+function etatUrl() {
+  if (!urlPrete) return;
+  const p = new URLSearchParams(), q = document.getElementById("recherche").value.trim();
+  if (q) p.set("q", q);
+  if (tri !== "ensemble") p.set("rang", tri);
+  if (th) p.set("theme", th);
+  if (ens) p.set("ens", ens);
+  if (cat) p.set("cat", cat);
+  if (statuts.size) p.set("statut", [...statuts].join(","));
+  if (props.size) p.set("avec", [...props].join(","));
+  if (ordre !== "defaut") p.set("ordre", ordre);
+  const s = p.toString() ? "?" + p.toString() : "";
+  if (s !== location.search) history.replaceState(history.state, "", location.pathname + s + location.hash);
+}
+function lireUrl() {
+  const p = new URLSearchParams(location.search);
+  if (["ensemble", "categorie"].includes(p.get("rang"))) tri = p.get("rang");
+  th = p.get("theme") || null; ens = p.get("ens") || null; cat = p.get("cat") || null;
+  statuts = new Set((p.get("statut") || "").split(",").filter(v => v in STATUTS()));
+  props = new Set((p.get("avec") || "").split(",").filter(v => v in PROPS));
+  if (p.get("ordre") in ORDRES) ordre = p.get("ordre");
+  if (p.has("q")) document.getElementById("recherche").value = p.get("q");
+}
+async function copierLien() {
+  const u = location.href;
+  try { await navigator.clipboard.writeText(u); annoncer("Lien copié"); } catch (e) { annoncer(u); }
+}
+let rechercheT = 0;
+document.getElementById("recherche").addEventListener("input", () => { clearTimeout(rechercheT); rechercheT = setTimeout(liste, 60); });
+document.getElementById("recherche").addEventListener("keydown", e => {
+  if (e.key === "Escape" && e.target.value) { e.preventDefault(); e.stopPropagation(); e.target.value = ""; liste(); }
+  else if (e.key === "Enter" && visibles.length === 1) { e.preventDefault(); ouvrir(visibles[0]); }   // un seul résultat : Entrée l'ouvre
+});
 document.getElementById("fermer").onclick = () => document.getElementById("dlg").close();
 document.getElementById("prec").onclick = () => voisin(-1);
 document.getElementById("suiv").onclick = () => voisin(1);
 document.getElementById("dlg").addEventListener("click", e => { if (e.target.id === "dlg") e.target.close(); });
 document.getElementById("dlg").addEventListener("keydown", e => {
+  if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target.tagName !== "CANVAS") {
+    // Chiffres : onglets de la fiche ; T : télécharger ; L : copier le lien ; Espace : lecture ou pause de la vue 3D ; ? : aide.
+    if (/^[1-9]$/.test(e.key)) { const o = document.querySelectorAll("#vues [role=tab]")[Number(e.key) - 1]; if (o) { e.preventDefault(); o.click(); o.focus(); } return; }
+    if (e.key === "t" || e.key === "T") { const d = document.getElementById("telecharger"); if (d) { e.preventDefault(); d.click(); } return; }
+    if (e.key === "l" || e.key === "L") { e.preventDefault(); copierLien(); return; }
+    if (e.key === " " && visionneuse && !/^(BUTTON|A|SUMMARY)$/.test(e.target.tagName) && e.target.getAttribute("role") !== "button") { e.preventDefault(); document.querySelector(".v3d__barre .icone-btn")?.click(); return; }
+    if (e.key === "?") { e.preventDefault(); aide(); return; }
+  }
   // Les flèches servent aux onglets, au curseur de temps, aux listes et à la vue 3D (qui les capte elle-même).
-  if (e.target.getAttribute("role") === "tab" || /^(INPUT|SELECT|TEXTAREA|CANVAS)$/.test(e.target.tagName) || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target.getAttribute("role") === "tab" || e.target.tagName === "CANVAS") return;
   if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); voisin(1); }
   if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); voisin(-1); }
 });
@@ -840,7 +1317,138 @@ document.getElementById("dlg").addEventListener("close", () => {
   if (declencheur && document.contains(declencheur)) declencheur.focus();
 });
 
-/* Mise à jour automatique : uniquement avec le petit serveur local (ouvrir_vestiaire.bat). */
+/* ---- Mode édition : seulement avec le serveur local (ouvrir_vestiaire.bat), jamais sur index.html ouvert en fichier. ----
+   « Enregistrer » écrit fiche.json, statuts.json ou ensembles.json (copie .bak avant), réembarque la fiche dans le .bbmodel,
+   refait l'export livrables/ et le catalogue (tools/edition.py). */
+const EDITION = location.protocol === "http:" && /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
+let enEdition = false;
+async function appelEdition(url, corps) {
+  const r = await fetch(url, corps ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corps), cache: "no-store" } : { cache: "no-store" });
+  let d = {}; try { d = await r.json(); } catch (e) {}
+  if (!r.ok) throw new Error(d.erreur || ("erreur " + r.status));
+  return d;
+}
+async function recharger() {
+  const r = await fetch("api/cosmetiques?s=", { cache: "no-store" }); if (!r.ok) return;
+  const y = scrollY; D = await r.json(); tout(); scrollTo(0, y);
+}
+/* Champ texte avec compteur « 12 / 40 » (rouge au-delà de la limite du guide). */
+function champ(libelle, valeur, max, opts = {}) {
+  const ctl = opts.lignes ? el("textarea", { rows: opts.lignes, value: valeur || "" }) : el("input", { type: "text", value: valeur || "" });
+  if (opts.liste) ctl.setAttribute("list", opts.liste);
+  const cpt = el("span", { className: "cpt" });
+  const maj = () => { const n = ctl.value.trim().length; cpt.textContent = max ? `${n} / ${max}` : ""; cpt.classList.toggle("trop", !!max && n > max); };
+  ctl.addEventListener("input", maj); maj();
+  const lab = el("label", { className: "champ" }, el("span", {}, libelle, cpt), ctl);
+  return { lab, ctl };
+}
+function choix(libelle, options, valeur) {
+  const ctl = el("select"); options.forEach(([v, t]) => ctl.append(el("option", { value: v, textContent: t, selected: v === valeur })));
+  return { lab: el("label", { className: "champ" }, el("span", {}, libelle), ctl), ctl };
+}
+function coche(libelle, valeur) { const ctl = el("input", { type: "checkbox", checked: !!valeur }); return { lab: el("label", { className: "coche" }, ctl, libelle), ctl }; }
+const nombre = (libelle, valeur) => { const ctl = el("input", { type: "number", min: 0, step: 1, value: valeur ?? 0 }); return { lab: el("label", { className: "champ" }, el("span", {}, libelle), ctl), ctl }; };
+
+/* Fiche d'une pièce : remplace la colonne d'infos par le formulaire ; Annuler remet la colonne telle quelle. */
+async function modifierPiece(f) {
+  const cote = document.getElementById("cote"), avant = [...cote.childNodes];
+  let p;
+  try { p = await appelEdition("api/edition/piece?nom=" + encodeURIComponent(f.nom)); }
+  catch (e) { annoncer("Lecture impossible : " + e.message); return; }
+  enEdition = true;
+  const L = p.limites, fi = p.fiche;
+  const nom = champ("Nom affiché en jeu", fi.nom, L.nom);
+  const ensOpts = p.ensembles.map(([k, n]) => [k, n + (k === p.ensemble_deduit ? " (déduit du nom)" : "")]).concat([["Autres", "Aucun ensemble" + (p.ensemble_deduit === "Autres" ? " (déduit du nom)" : "")]]);
+  const ens = choix("Ensemble", ensOpts, p.ensemble);
+  const manuel = coche("Prix manuel (sinon : grille de prix)", fi.prix_manuel);
+  const rar = choix("Rareté", p.raretes, fi.rarete), pv = nombre("Prix en PV", fi.prix.pv), ph = nombre("Prix en Phynarium", fi.prix.phynarium);
+  const grilleNote = el("p", { className: "note" });
+  const btnGrille = el("button", { type: "button", className: "secondaire", textContent: "Prix de la grille pour cette rareté" });
+  btnGrille.onclick = () => { const g = p.prix_par_rarete[rar.ctl.value]; if (g) { pv.ctl.value = g.pv; ph.ctl.value = g.phynarium; } };
+  const majPrix = () => {
+    const m = manuel.ctl.checked; [rar.ctl, pv.ctl, ph.ctl].forEach(c => c.disabled = !m); btnGrille.hidden = !m;
+    if (!m) { rar.ctl.value = p.grille.rarete; pv.ctl.value = p.grille.pv; ph.ctl.value = p.grille.phynarium; }
+    grilleNote.textContent = m ? "Prix choisi à la main : la grille n'y touchera plus."
+      : `Proposé par la grille (catégorie et nombre de cubes) : ${RARETES()[p.grille.rarete] || p.grille.rarete}, ${fmtNb(p.grille.pv)} PV, ${fmtNb(p.grille.phynarium)} Phynarium. Cochez « Prix manuel » pour choisir vous-même.`;
+  };
+  manuel.ctl.onchange = majPrix; majPrix();
+  const vente = coche("En vente en boutique", fi.en_vente);
+  const desc = champ("Description", fi.description, L.description, { lignes: 4 }), lore = champ("Lore", fi.lore, L.lore, { lignes: 6 });
+  const st = choix("Statut en jeu", p.statuts, p.statut), avis = champ("Note (avis en jeu)", p.avis, L.avis, { lignes: 3 });
+  const msg = el("p", { className: "message", role: "status" });
+  const ok = el("button", { type: "submit", className: "principal", textContent: "Enregistrer" });
+  const annuler = el("button", { type: "button", className: "secondaire", textContent: "Annuler" });
+  const form = el("form", { className: "form" },
+    el("h4", { className: "rubrique", textContent: "Modifier la fiche" }),
+    el("p", { className: "note", textContent: `Dossier : ${p.categorie}/${p.nom} (inchangé). Limites du guide : nom 40, description 300, lore 500 caractères.` }),
+    nom.lab, ens.lab, el("section", { className: "form" }, el("h4", { className: "rubrique", textContent: "Prix" }), manuel.lab, rar.lab, el("div", { className: "deux" }, pv.lab, ph.lab), btnGrille, grilleNote, vente.lab),
+    desc.lab, lore.lab, st.lab, avis.lab, msg, el("div", { className: "boutons" }, ok, annuler));
+  annuler.onclick = () => { enEdition = false; cote.replaceChildren(...avant); };
+  form.onsubmit = async ev => {
+    ev.preventDefault(); ok.disabled = true; ok.textContent = "Enregistrement…"; msg.className = "message"; msg.textContent = "";
+    try {
+      const r = await appelEdition("api/edition/piece", { nom: p.nom, statut: st.ctl.value, avis: avis.ctl.value, fiche: {
+        nom: nom.ctl.value, ensemble: ens.ctl.value, rarete: rar.ctl.value, prix: { pv: Number(pv.ctl.value), phynarium: Number(ph.ctl.value) },
+        prix_manuel: manuel.ctl.checked, en_vente: vente.ctl.checked, description: desc.ctl.value, lore: lore.ctl.value } });
+      enEdition = false; await recharger(); ouvrir(p.nom, ongletCourant, etatCourant);
+      annoncer("Fiche enregistrée" + (r.notes.length ? " : " + r.notes.join(" ; ") : ""));
+    } catch (e) { msg.className = "message erreur"; msg.textContent = "Rien n'a été enregistré : " + e.message; ok.disabled = false; ok.textContent = "Enregistrer"; }
+  };
+  cote.replaceChildren(form); cote.scrollTop = 0; nom.ctl.focus();
+}
+
+/* Ensembles : liste, puis formulaire de l'ensemble choisi (ou d'un nouvel ensemble). */
+const dlgEns = document.getElementById("dlg-ens");
+async function gererEnsembles(choisi) {
+  const corps = document.getElementById("ens-corps");
+  let d;
+  try { d = await appelEdition("api/edition/ensembles"); } catch (e) { annoncer("Lecture impossible : " + e.message); return; }
+  if (!dlgEns.open) dlgEns.showModal();
+  const liste = el("datalist", { id: "liste-themes" }); d.themes.forEach(t => liste.append(el("option", { value: t })));
+  const depart = choisi !== undefined ? choisi : (d.ensembles[0] || {}).cle || "";
+  const sel = choix("Ensemble à modifier", d.ensembles.map(e => [e.cle, e.nom + (e.pieces.length ? ` (${e.pieces.length})` : " (vide)")]).concat([["", "+ Nouvel ensemble"]]), depart);
+  const zone = el("div");
+  const afficher = () => {
+    const cle = sel.ctl.value, e = d.ensembles.find(x => x.cle === cle) || { nom: "", titre: "", theme: "", accroche: "", lore: "", couleur: "#b9a7e8", en_vente: true, pieces: [] };
+    const L = d.limites;
+    const nom = champ("Nom (affiché en jeu, dossier d'export)", e.nom, L.nom), titre = champ("Titre", e.titre, L.titre);
+    const theme = champ("Thème (choisir ou en écrire un nouveau)", e.theme, L.theme, { liste: "liste-themes" });
+    const accroche = champ("Accroche", e.accroche, L.accroche, { lignes: 2 }), lore = champ("Lore de l'ensemble", e.lore, L.lore, { lignes: 5 });
+    const coul = el("input", { type: "color", value: e.couleur }), coulTxt = el("input", { type: "text", value: e.couleur, maxLength: 7 });
+    coul.setAttribute("aria-label", "Couleur de l'onglet"); coulTxt.setAttribute("aria-label", "Couleur de l'onglet (#rrggbb)");
+    coul.oninput = () => { coulTxt.value = coul.value; }; coulTxt.oninput = () => { if (/^#[0-9a-f]{6}$/i.test(coulTxt.value)) coul.value = coulTxt.value; };
+    const vente = coche("Lot complet en vente", e.en_vente);
+    const msg = el("p", { className: "message", role: "status" });
+    const ok = el("button", { type: "submit", className: "principal", textContent: cle ? "Enregistrer" : "Créer l'ensemble" });
+    const suppr = el("button", { type: "button", className: "secondaire danger", textContent: "Supprimer" });
+    suppr.hidden = !cle; suppr.disabled = e.pieces.length > 0; if (suppr.disabled) suppr.title = "Seul un ensemble vide se supprime";
+    const fermer = el("button", { type: "button", className: "secondaire", textContent: "Fermer", onclick: () => dlgEns.close() });
+    const envoyer = async (action, bouton, texte) => {
+      bouton.disabled = true; const t0 = bouton.textContent; bouton.textContent = texte; msg.className = "message"; msg.textContent = "";
+      try {
+        const r = await appelEdition("api/edition/ensemble", { action, cle, ensemble: { nom: nom.ctl.value, titre: titre.ctl.value, theme: theme.ctl.value,
+          accroche: accroche.ctl.value, lore: lore.ctl.value, couleur: coulTxt.value, en_vente: vente.ctl.checked } });
+        await recharger(); await gererEnsembles(action === "supprimer" ? undefined : action === "creer" ? nom.ctl.value.trim() : cle);
+        annoncer(r.notes.join(" ; ") || "Enregistré");
+      } catch (err) { msg.className = "message erreur"; msg.textContent = "Rien n'a été enregistré : " + err.message; bouton.disabled = false; bouton.textContent = t0; }
+    };
+    suppr.onclick = () => { if (confirm(`Supprimer l'ensemble « ${e.nom} » ?`)) envoyer("supprimer", suppr, "Suppression…"); };
+    const form = el("form", { className: "form" }, nom.lab, el("div", { className: "deux" }, titre.lab, theme.lab), accroche.lab, lore.lab,
+      el("div", { className: "champ" }, el("span", {}, "Couleur de l'onglet"), el("div", { className: "ligne" }, coul, coulTxt)), vente.lab,
+      el("p", { className: "note", textContent: cle ? (e.pieces.length ? "Pièces : " + e.pieces.join(", ") + "." : "Aucune pièce : choisissez cet ensemble dans la fiche d'une pièce.") + ` Clé interne : ${cle}.` : "Nouvel ensemble, vide au départ." }),
+      msg, el("div", { className: "boutons" }, ok, suppr, fermer));
+    form.onsubmit = ev => { ev.preventDefault(); envoyer(cle ? "modifier" : "creer", ok, "Enregistrement…"); };
+    zone.replaceChildren(form);
+  };
+  sel.ctl.onchange = afficher; afficher();
+  corps.replaceChildren(liste, el("div", { className: "form", style: "margin-bottom:14px" }, sel.lab), zone);
+}
+if (EDITION) { const b = document.getElementById("gerer-ens"); b.hidden = false; b.onclick = () => gererEnsembles(); }
+dlgEns.addEventListener("click", e => { if (e.target === dlgEns) dlgEns.close(); });
+document.getElementById("dlg").addEventListener("cancel", e => { if (enEdition && !confirm("Abandonner les modifications de la fiche ?")) e.preventDefault(); });
+document.getElementById("dlg").addEventListener("close", () => { enEdition = false; });
+
+/* Mise à jour automatique : uniquement avec le petit serveur local (ouvrir_vestiaire.bat). En pause quand l'onglet est caché. */
 const direct = document.getElementById("direct"), txt = document.getElementById("direct-txt");
 function statut(actif, message) { direct.classList.toggle("actif", actif); txt.textContent = message; }
 let toastT;
@@ -848,19 +1456,25 @@ function annoncer(m) { const t = document.getElementById("toast"), dlg = documen
   // La fiche est dans la couche du dessus : le toast doit y être pour rester visible.
   (dlg.open ? dlg : document.body).append(t);
   t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 6000); }
+let enCours = false;
 async function suivre() {
+  if (enCours || document.hidden) return;
+  enCours = true;
   try {
     const r = await fetch("api/cosmetiques?s=" + encodeURIComponent(D.signature), { cache: "no-store" });
     if (r.status === 304) { statut(true, "Mise à jour automatique active"); return; }
     if (!r.ok) throw new Error(r.status);
     const n = await r.json(), avant = new Set(D.fiches.map(f => f.nom)), maj = new Map(D.fiches.map(f => [f.nom, f.version]));
     const ajouts = n.fiches.filter(f => !avant.has(f.nom)), modifs = n.fiches.filter(f => avant.has(f.nom) && maj.get(f.nom) !== f.version);
-    D = n; ajouts.forEach(f => neufs.add(f.nom)); tout();
+    // La liste est reconstruite : garder la position de lecture.
+    const y = scrollY;
+    D = n; ajouts.forEach(f => neufs.add(f.nom)); tout(); scrollTo(0, y);
     statut(true, "Mise à jour automatique active");
-    if (ajouts.length) annoncer(`Nouveau : ${ajouts.map(f => joli(f.nom)).join(", ")}`);
-    else if (modifs.length) annoncer(`Mis à jour : ${modifs.map(f => joli(f.nom)).join(", ")}`);
-    if (ouvert && modifs.some(f => f.nom === ouvert)) ouvrir(ouvert, ongletCourant, etatCourant);
+    if (ajouts.length) annoncer(`Nouveau : ${ajouts.map(f => titreDe(f)).join(", ")}`);
+    else if (modifs.length) annoncer(`Mis à jour : ${modifs.map(f => titreDe(f)).join(", ")}`);
+    if (ouvert && !enEdition && modifs.some(f => f.nom === ouvert)) ouvrir(ouvert, ongletCourant, etatCourant);
   } catch (e) { statut(false, "Serveur arrêté : relancez ouvrir_vestiaire.bat pour retrouver la mise à jour automatique."); }
+  finally { enCours = false; }
 }
 /* Tiroir des filtres (mobile) : bouton « Filtres », voile, Échap, fermeture au choix d'un filtre ; focus rendu au bouton. */
 const petit = matchMedia("(max-width:860px)"), page = document.getElementById("page"), aside = document.getElementById("panneau-filtres"), voile = document.getElementById("voile"), btnFiltres = document.getElementById("ouvrir-filtres");
@@ -878,13 +1492,41 @@ document.getElementById("fermer-filtres").onclick = () => tiroir(false);
 voile.onclick = () => tiroir(false);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && tiroirOuvert()) { e.preventDefault(); tiroir(false); } });
 petit.addEventListener("change", () => tiroir(false));
+/* Thème clair ou sombre, mémorisé ; sombre par défaut. */
+const btnTheme = document.getElementById("theme");
+function majTheme() {
+  const clair = document.documentElement.dataset.theme === "light";
+  btnTheme.setAttribute("aria-pressed", String(clair));
+  btnTheme.title = "Thème clair";
+}
+btnTheme.onclick = () => {
+  const t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t; try { localStorage.setItem("vestiaire-theme", t); } catch (e) {} majTheme();
+};
+majTheme();
+/* Aide des raccourcis : « ? » ou le bouton du panneau. */
+const dlgAide = document.getElementById("aide");
+function aide() { if (!dlgAide.open) dlgAide.showModal(); }
+document.getElementById("ouvrir-aide").onclick = aide;
+document.getElementById("ouvrir-aide").title = "Raccourcis clavier (?)";
+document.getElementById("fermer-aide").onclick = () => dlgAide.close();
+dlgAide.addEventListener("click", e => { if (e.target === dlgAide) dlgAide.close(); });
 tiroir(false);
+try { const o = localStorage.getItem("vestiaire-ordre"); if (o in ORDRES) ordre = o; } catch (e) {}
+lireUrl();
+urlPrete = true;
 tout();
-// Lien direct : #nom, #nom/onglet ou #nom/onglet/état (ex. #halo_donut/4-vues, #ailes_abyssales/3d/swim).
-const slug = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+// Lien direct : #nom, #nom/onglet ou #nom/onglet/état (ex. #halo_patisserie/4-vues, #ailes_abyssales/3d/swim).
+const slug = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, "-");
 if (location.hash.length > 1) { const [n, o, e] = decodeURIComponent(location.hash.slice(1)).split("/"); ouvrir(n, o ? ONGLETS_SLUG(o) : undefined, e); }
 addEventListener("hashchange", () => { const [n, o, e] = decodeURIComponent(location.hash.slice(1)).split("/"); if (n && n !== ouvert) ouvrir(n, o ? ONGLETS_SLUG(o) : undefined, e); });
 if (location.protocol === "file:") statut(false, "Liste figée à la dernière génération. Ouvrez ouvrir_vestiaire.bat pour la mise à jour automatique.");
-else { statut(true, "Mise à jour automatique active"); setInterval(suivre, 2500); }
-document.addEventListener("keydown", e => { if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); document.getElementById("recherche").focus(); } });
+else { statut(true, "Mise à jour automatique active"); setInterval(suivre, 2500); document.addEventListener("visibilitychange", () => { if (!document.hidden) suivre(); }); }
+document.addEventListener("keydown", e => {
+  if (document.getElementById("dlg").open || dlgAide.open || e.altKey || e.ctrlKey || e.metaKey) return;
+  const saisie = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+  if (e.key === "/" && !saisie) { e.preventDefault(); document.getElementById("recherche").focus(); }
+  else if (e.key === "?" && !saisie) { e.preventDefault(); aide(); }
+  else if ((e.key === "l" || e.key === "L") && !saisie) { e.preventDefault(); copierLien(); }
+});
 </script></body></html>

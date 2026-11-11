@@ -1,0 +1,12 @@
+{
+  "nom": "Canne à vapeur",
+  "description": "Skin de canne à pêche : toutes tes cannes deviennent un scion d'acier bagué de laiton, avec une petite chaudière de cuivre et un moulinet à engrenages au manomètre ambre. La pression monte cran par cran ; à chaque lancer, la soupape crache un jet de vapeur et la manivelle tourne.",
+  "lore": "Sur les quais de la ville basse, les pêcheurs de l'Atelier de laiton ne lancent pas à la force du bras. La petite chaudière du talon garde sa pression pendant qu'ils attendent ; au lancer, la soupape la rend d'un coup et le moulinet se dévide sans un accroc. On dit qu'un bon pêcheur sait lire la touche à l'aiguille du manomètre, avant même que le flotteur plonge.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

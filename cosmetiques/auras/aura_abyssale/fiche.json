@@ -1,0 +1,12 @@
+{
+  "nom": "Aura abyssale",
+  "description": "Une lumière violette qui épouse la silhouette, une couronne de crocs vert acide derrière la tête, des veines de lumière qui montent dans le dos et un sceau qui tourne au sol. À l'équipement, le sceau s'ouvre puis l'aura monte des pieds à la tête.",
+  "lore": "Chaque démon abattu laisse au chasseur une marque qui ne s'efface pas. À force, elles se sont liées en un sceau qui le suit à chaque pas et en une couronne de crocs qu'il n'a jamais demandée. L'Abysse le reconnaît de loin ; c'est voulu.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

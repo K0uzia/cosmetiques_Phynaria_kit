@@ -1,0 +1,32 @@
+---
+paths:
+  - "cosmetiques/auras/**"
+---
+
+# Auras — règles, avis et recettes
+
+Fiche : `.claude/references/effets/auras.md`. Une aura, c'est de la lumière : pas d'objets en orbite, pas de feu à contour sombre. Pas d'`attack` ni de `hurt` (pièce portée, `animation.md`).
+
+**Menu Apparence** (guide 4 bis, 2026-11-06 soir) : le mod tourne lui-même `cam_`/`camy_` vers la caméra de l'aperçu, même quand le joueur fait tourner le personnage ; `add_` et `_e` s'y ajoutent comme en jeu. Rien à faire dans le modèle : ne rien cacher par `q.is_in_menu`. `adapter_menu()` (`tools/menu_aura.py`, `ADAPTER_MENU = False`) ne fait plus que retirer les anciennes cachettes ; il n'ajoute plus les groupes `vm_` tournés (double rotation). Historique (contournement du mod 1.4.0) : `.claude/references/mod/rendus-avances.md`, Menu Apparence. À revoir dans le menu : l'inclinaison à la souris (non vérifiée par le développeur).
+
+## Avis de l'utilisateur
+
+| Pièce | Avis | À retenir |
+|---|---|---|
+| `aura_brasier` (vu dans le Vestiaire) | « ça fait mec en feu », « pas du tout un effet d'aura » | Des langues de feu à contour sombre se lisent comme un incendie, même en dégradé. Une aura, c'est de la lumière, pas du feu |
+| `aura_brasier` v2 (vue 3D du Vestiaire) | « horriblement moche » | Plaques croisées au cœur des membres : hors de face, elles traversent la tête et le corps (barre blanche devant le visage). Abandonné |
+| `aura_brasier` v3 (en jeu, sans shader) | « une fois équipée, ok » | Recette d'aura qui marche : disques `add_` en `cam_` reculés derrière chaque partie du corps, colonnes `add_` en `camy_` derrière le joueur, anneau au sol. Menu Apparence et shaders : bugs du mod |
+| `aura_abyssale` v3 (2026-11-08, pas encore vue en jeu) | v2 (volutes `trans_` sombres) : « les autre nul » | Refaite tout en `add_` sur la recette Bérénice : disques violets, couronne de crocs vert acide derrière la nuque, veines qui montent (`camy_`), sceau au sol. Une aura sombre en fumée `trans_` se lit grise et boueuse de jour : de la lumière, même pour le démoniaque. À voir en jeu : crocs blanchis sur le ciel de jour |
+| `aura_givre` v2 (2026-11-08, pas encore vue en jeu) | v1 (couronne de cristaux au sol, halo bleu sombre) : « les autre nul » | Refaite sur la recette Bérénice : disques `add_` bleu glacier, rosace de givre à six branches + cercle à deux parhélies derrière la nuque (doublée en `trans_` derrière l'additif), piliers de lumière fins à paillettes (`camy_`), hexagone de givre et 6 grappes de cristaux au sol. Une aura élémentaire portée au sol seul ne se voit pas : il faut de la lumière à hauteur du buste. À voir en jeu : rosace trop grande ou non, piliers lisibles de jour |
+| `aura_brasier` v4 (2026-11-08, pas encore vue en jeu) | v3 : « les autre nul » (revue du 2026-11-08) | Même construction que v3, nouvelle matière : liseré or/orange serré, filets de chaleur ondulés fins, arcs de mirage au-dessus de la tête, braises modélisées qui montent et refroidissent (`ctrl_uv`), sol fendu qui rougeoie sur une brûlure `trans_` légère (contraste de jour). À voir en jeu : arcs de mirage blanchis sur le ciel de jour, brûlure du sol sur l'herbe |
+| `aura_orage` v2 (2026-11-08, pas encore vue en jeu) | v1 : « les autre nul », « la foudre revoir tout » | v1 illisible en jeu (halo trop faible, éclairs de 2,5 px tirés au hasard, nuage `trans_` qui faisait fumée). v2 sur la recette Bérénice : couronne de foudre `add_` qui grésille derrière la nuque (film `ctrl_uv` tiré au hasard), éclairs de 5 × 10 px aux pointes du corps, filets `camy_`, tambour au sol. Un double `trans_` clair sous un anneau `add_` sature (cumul mesuré ~400) : `trans_` sombre et léger. À voir en jeu : couronne de jour, fréquence des éclairs, suivi de la vie |
+| `aura_kawaii` v3 (2026-11-08, pas encore vue en jeu) | v2 (contour de cœur additif pâle, tapis de nuage pastel) : « bof pas très beau », « revoir les aura » | Refaite sur la recette Bérénice avec un motif fort : gros cœur de sucre `trans_` rose franc (20 px) dans un `cam_` derrière la nuque, ses lobes encadrent la tête ; lumière `add_` douce **devant** lui (sans elle, l'ombre du monde le rend framboise sombre) et liseré `add_` juste derrière (caché par le sucre, visible autour) ; gloire de nuage festonnée lavande, 8 cœurs de sucre au sol cernés de lumière. Un `trans_` coloré se lit en couleur sur le ciel, là où l'additif blanchit. À voir en jeu : cœur trop sombre ou non sur ses faces de côté, gloire blanchie de jour |
+| `bulle_kawaii` v3 (2026-11-08, pas encore vue en jeu) | v2 (une boule de 72 facettes à côté de l'épaule) : « bof pas très beau », « revoir les aura » | Refaite : grappe de 7 bulles de gomme en `cam_` derrière la nuque (plaques peintes en sphère, `trans_` rose franc, reflet en fenêtre, liseré `_e`), qui gonflent et éclatent l'une après l'autre (éclair `add_`, lambeaux), lueur `add_` de silhouette devant elles, rond de bulles au sol. Fiche `effets/bulles.md`. À voir en jeu : rose du film sur le ciel (mauve ?), lisibilité du pop à 10 blocs |
+| Menu Apparence des auras (test `test_menu_aura_a`/`_b`, 2026-11-05, captures `20.36.18`, `20.36.20`) | `a` : lueur rouge derrière le corps, sans carré noir ; `b` : la lueur passe devant le visage | Sens du retournement de `tools/menu_aura.py` confirmé en jeu (`a` = livré). Dans la vue de 3/4 du menu, la lueur ne dépasse qu'en liseré au bord de la silhouette |
+
+## Recettes
+
+| Élément | À éviter (constaté en jeu) | À faire |
+|---|---|---|
+| Aura divine (`aura_berenice`, en jeu sans shader, 2026-11-04) | Disques `add_` + gloire + calque `_e` renforcé par `ambiance.py` : cumul jusqu'à ~980 en R, gros disque blanc opaque autour de la tête ; anneau et rayons blanc pur ; étoile modélisée de 1,4 px vue à 3 blocs (Élan 0) | Pièce tout en `add_` : **pas de calque `_e`** (il redouble l'additif en jeu, le renderer plafonne chaque couche et ne l'ajoute pas sur `add_`). Mesurer le cumul sans plafond (≤ 255 partout), palette arrêtée à l'or clair, particule étoile ≤ 0,6 px avec Élan 100 %. Corrigé, à revoir en jeu |
+| Aura | Objets en orbite : « pas une aura ». Feu à contour sombre et liseré en plaques croisées : voir `aura_brasier` dans la table des avis | Recette de `aura_brasier` v3 (validée en jeu sans shader, table des avis), plus `ctrl_uv` sur les colonnes et étincelles en particules. Un dégradé dans `_e` seul ne se voit pas de jour : le mettre aussi dans la texture |

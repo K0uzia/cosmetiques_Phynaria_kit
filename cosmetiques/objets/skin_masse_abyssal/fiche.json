@@ -1,0 +1,12 @@
+{
+  "nom": "Gueule de l'Abysse",
+  "description": "Skin de masse : remplace toutes tes masses par un nœud d'os noir hérissé de six crocs au fil vert acide. Les crocs sortent du nœud quand tu la prends en main, la gueule se referme sur chaque coup et s'ouvre en grand quand elle touche.",
+  "lore": "Au plus profond de l'Abysse vivent des bêtes qui n'ont ni yeux ni visage, seulement une gueule ronde bordée de crocs. Les Chasseurs en ont arraché une entière, l'ont serrée autour d'un nœud d'os et emmanchée. Elle ne frappe pas : elle mord, et la lueur verte court le long des crocs chaque fois qu'elle referme les mâchoires sur quelque chose.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

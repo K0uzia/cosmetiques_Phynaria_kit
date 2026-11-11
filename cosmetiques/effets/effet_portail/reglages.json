@@ -1,0 +1,19 @@
+{
+ "particules": [
+  {"particule": "etincelle (modélisée)", "role": "Petite étoile bleu-blanc lâchée par 8 points du bord de l'ovale : gerbe (×7) à la déchirure, filet continu tant que le portail est ouvert, bouffée au passage du joueur ; pendant la charge, quelques-unes depuis la fente.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Durée": "1 s", "Mouvement": "Flotte", "Rendu": "Lumineux", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Poussée", "Dispersion": "180°", "Élan": "0 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "128"}},
+  {"particule": "rune (modélisée)", "role": "Petite rune lumineuse qui se détache du cadre et monte en tournant : par vagues pendant la charge, plus nombreuse quand le portail est ouvert.",
+   "reglages": {"Quand": "Toujours", "Nombre": "2 par seconde", "Durée": "3 s", "Mouvement": "Monte", "Rendu": "Lumineux", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Lent", "Dispersion": "45°", "Élan": "0 %", "Variation": "Légère", "Rafale": "Aucune", "Limite": "64"}},
+  {"particule": "poussiere (modélisée)", "role": "Poussière de lumière soufflée du centre : au passage du joueur et en nuage (×9) quand le portail implose en un point ; à l'arrivée, aussi au flash d'ouverture.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Durée": "1 s", "Mouvement": "Flotte", "Rendu": "Lumineux", "Sens": "Face caméra", "Fin de vie": "Fondu", "Départ": "Rapide", "Dispersion": "180°", "Élan": "0 %", "Variation": "Forte", "Rafale": "Aucune", "Limite": "128"}},
+  {"particule": "portal (Minecraft, emit_mc_portal)", "role": "Particules de portail aspirées vers trois points du bord : pendant la charge et tant que le portail est ouvert.",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Départ": "Poussée", "Dispersion": "180°", "Rafale": "Aucune", "Limite": "128"}},
+  {"particule": "reverse_portal (Minecraft, emit_mc_reverse_portal)", "role": "Jet violet depuis le centre à la déchirure (départ), au flash (arrivée) et à l'implosion.",
+   "reglages": {"Quand": "Toujours", "Nombre": "10 par seconde", "Départ": "Moyen", "Dispersion": "180°", "Rafale": "Aucune", "Limite": "128"}},
+  {"particule": "electric_spark (Minecraft, emit_mc_electric_spark)", "role": "Crépitement de la déchirure sur trois points du bord, à l'ouverture et au passage.",
+   "reglages": {"Quand": "Toujours", "Nombre": "4 par seconde", "Départ": "Poussée", "Dispersion": "180°", "Rafale": "Aucune", "Limite": "64"}},
+  {"particule": "dust bleu (Minecraft, emit_mc_dust_7fc8ff_12)", "role": "Poussière bleue au pied du portail quand les éclats sont arrachés au sol, et aux pieds du joueur quand il se pose (arrivée).",
+   "groupe": "emit_mc_dust_7fc8ff_12",
+   "reglages": {"Quand": "Toujours", "Nombre": "6 par seconde", "Départ": "Lent", "Dispersion": "45°", "Rafale": "Aucune", "Limite": "64"}}
+ ]
+}

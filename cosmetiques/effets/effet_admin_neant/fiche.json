@@ -1,0 +1,13 @@
+{
+  "nom": "Déchirure du Néant",
+  "description": "Le ciel se fêle par à-coups au-dessus de vous, puis se brise comme une vitre : dans le noir, deux yeux rouges s'allument en trois battements. Un long bras d'os en sort, descend vous saisir et vous emporte ; à l'arrivée, il vous dépose.",
+  "lore": "Sous le ciel de Phynaria, il y a autre chose que le ciel. Les Gardiens n'en parlent jamais, mais certains d'entre eux ne voyagent pas seuls : quelque chose, de l'autre côté, fend la voûte et vient les chercher de ses propres mains. Ceux qui ont croisé ses yeux rouges disent qu'ils ne clignent pas, et qu'ils se souviennent de chaque visage.",
+  "rarete": "mythique",
+  "prix": {
+    "pv": 0,
+    "phynarium": 0
+  },
+  "prix_manuel": true,
+  "en_vente": false,
+  "ensemble": "Néant"
+}

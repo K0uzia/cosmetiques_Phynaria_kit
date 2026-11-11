@@ -1,0 +1,12 @@
+{
+  "nom": "Pelle Câline",
+  "description": "Skin de pelle : un fer de sucre lilas aux épaules douces et au bout tout rond, serti de dragées-cœurs lumineuses, qui sort d'un cœur framboise, sur un manche de guimauve torsadée à poignée en D fleurie de nuages. Le cœur bat doucement et soupire parfois une bouffée de petits cœurs.",
+  "lore": "À Nuage Guimauve, on ne creuse pas la terre : on la borde. Cette pelle a été tirée au sucre lilas autour du même cœur de framboise que les lames du village, et sa poignée garde deux petits nuages pour que la main ne s'ennuie jamais. À chaque pelletée elle se relève avec un rebond, et quand le travail dure, elle pousse un soupir sucré.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

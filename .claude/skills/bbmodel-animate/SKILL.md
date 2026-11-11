@@ -5,7 +5,7 @@ description: Ajouter ou corriger les animations d'un cosmétique .bbmodel (idle,
 
 # Animer un cosmétique
 
-Lis `.claude/rules/animation.md` et la section 6 du guide avant tout. Repars des courbes de `gen_ailes_abyssales.py` ou `gen_aurelion_wings.py`, ajustées en jeu.
+Lis `.claude/rules/animation.md` (et `.claude/rules/categories/ailes.md`, biomécanique, pour des ailes) et la section 6 du guide avant tout. Repars des courbes de `gen_ailes_abyssales.py` ou `gen_ailes_berenice.py`, ajustées en jeu.
 
 ## Procédure
 
@@ -14,6 +14,6 @@ Lis `.claude/rules/animation.md` et la section 6 du guide avant tout. Repars des
 3. Cascade : déphase elbow et wrist de −25° à −45° (phase) après shoulder. Remontée = flexion : `-k * max(0, -cos(θ))` sur Y du poignet.
 4. Éventail des primaires via `fan(t)` (positif = s'écartent). Secondaires à 50 %.
 5. Échantillonne à 6–10 kf/s avec un keyframe final identique au premier. `optimize_bbmodel.py` simplifiera.
-6. Régénère, optimise, **vérifie** (`verify_bbmodel.py` : boucles < 0,05 px, extension < 64, canaux rotation/position/scale).
+6. Régénère, optimise, **vérifie** (`verify_bbmodel.py` : boucles < 0,05 px, zone au repos selon la catégorie, clés `position` ≤ 320 et `scale` ≤ 16, canaux rotation/position/scale).
 7. Rends l'état en 4 vues avec `MODCONV=1` et regarde avant de livrer.
 

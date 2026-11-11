@@ -1,0 +1,42 @@
+{
+ "particules": [
+  {
+   "particule": "coeur (modélisée)",
+   "role": "Petit cœur rose (0,6 px) qui monte doucement près du corps, puis fond.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "0,5 par seconde",
+    "Durée": "3 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Élan": "100 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  },
+  {
+   "particule": "etincelle (modélisée)",
+   "role": "Étincelle lavande à quatre branches (0,5 px), même mouvement, un peu plus courte.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "0,5 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Monte",
+    "Rendu": "Lumineux",
+    "Sens": "Face caméra",
+    "Fin de vie": "Fondu",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Élan": "100 %",
+    "Variation": "Légère",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

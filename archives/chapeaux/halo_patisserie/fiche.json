@@ -1,0 +1,12 @@
+{
+  "nom": "Halo donut",
+  "description": "Un beignet glacé rose fraise couvert de vermicelles multicolores, qui flotte à plat au-dessus de la tête et tourne lentement sur lui-même.",
+  "lore": "Le pâtissier de la Vitrine enchantée garde ce donut pour ceux qui ont été sages, même un tout petit peu. Il ne se mange pas, il ne refroidit jamais et ses vermicelles ne tombent pas. On dit qu'il porte bonheur à qui le partage.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Tire-Bisou",
+  "description": "Skin d'arbalète : un gros cœur de sucre framboise porte deux bras de sucre lilas sertis de dragées lumineuses, sur un fût de guimauve torsadée terminé par un petit nuage. Le cœur bat plus fort pendant qu'on tend la corde, le carreau se charge d'une pointe en cœur, et au tir un nuage de sucre pailleté s'envole.",
+  "lore": "À Nuage Guimauve, on ne tire pas pour toucher, on tire pour atteindre. Le Tire-Bisou a été taillé dans un cœur de framboise trop lourd pour voler, auquel on a prêté deux bras de sucre. Il garde la corde tendue aussi longtemps qu'il le faut, puis il laisse partir, d'un coup, tout ce qu'il retenait : un bisou, et un peu de paillettes.",
+  "prix_manuel": false,
+  "en_vente": true,
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

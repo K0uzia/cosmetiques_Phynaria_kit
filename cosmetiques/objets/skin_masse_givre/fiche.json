@@ -1,0 +1,12 @@
+{
+  "nom": "Masse de givre",
+  "description": "Skin de masse : toutes tes masses deviennent une grappe de cristaux de glace hexagonaux sertis autour d'un noyau d'argent froid cerclé de lumière. La glace pousse quand tu la prends en main ; à chaque coup qui touche, le givre éclate en gerbe d'éclats et de flocons.",
+  "lore": "Au Cœur d'Hiver, quand un cristal grandit trop près d'un autre, les gardiens ne le taillent pas : ils l'enferment dans un noyau d'argent et le laissent pousser en grappe. La masse qu'ils en tirent ne frappe pas comme le fer. Elle gèle d'abord, puis elle brise, et ce qu'elle a touché garde longtemps un voile de givre.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

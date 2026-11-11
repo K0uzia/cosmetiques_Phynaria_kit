@@ -1,0 +1,12 @@
+{
+  "nom": "Rayon de téléportation",
+  "description": "Une lueur grésille autour de vous ; au départ, une colonne de lumière tombe du ciel et votre corps se défait en éclats qui montent dans le faisceau. À l'arrivée, les éclats redescendent et vous reconstruisent de bas en haut.",
+  "lore": "Les bâtisseurs des étoiles ne marchaient pas toujours jusqu'à leurs portes : ils se faisaient prendre par la lumière. Un faisceau descendu de nulle part, un froid bref, et l'on se retrouve ailleurs, recomposé grain par grain. Certains soirs, un rayon pâle traverse encore les nuages au-dessus des ruines, comme si quelqu'un, là-haut, appelait toujours.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

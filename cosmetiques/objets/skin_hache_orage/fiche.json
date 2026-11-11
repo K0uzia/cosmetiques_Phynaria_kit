@@ -1,0 +1,12 @@
+{
+  "nom": "Hache de l'orage",
+  "description": "Skin de hache : remplace toutes tes haches par une hache barbue de métal d'orage, barbe taillée en marches d'éclair, joue fendue par un éclair qui jaillit d'un tambour d'or. L'éclair grésille dans la fente ; à chaque coup qui touche, un arc saute sur le fil et le parcourt d'un bout à l'autre.",
+  "lore": "Les forgerons des Dompteurs d'orage ne trempent pas leurs haches dans l'eau : ils les tiennent levées sous l'orage jusqu'à ce que la foudre les fende. La fente ne se referme jamais, et l'éclair qu'elle garde dort contre le tambour d'or. Il ne se réveille qu'au contact, et court alors sur le fil comme sur un fil de cuivre.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "nom": "Égide de l'Abysse",
+  "description": "Skin de bouclier : une écaille d'os noir bombée, armée de deux cornes en crochet et d'une griffe à pointe verte au centre. Ses veines creusées brûlent d'un vert acide, plus fort quand tu lèves l'égide et quand un coup te touche.",
+  "lore": "L'Abysse a ses gardiens, des bêtes cuirassées que la lueur verte n'a jamais rongées. Les Chasseurs ont appris à les vaincre par le flanc, puis à porter leurs écailles. Une Égide ne se forge pas : elle se gagne, et ses veines gardent la faim de la bête. Chaque coup qu'elle encaisse les rallume, comme un cœur qui refuse de s'éteindre.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "nom": "Harnais de tête",
+  "description": "Sangles de cuir noir verni et quincaillerie chrome lourde posées sur la tête : front, sommet et menton, anneaux en O aux tempes. Le visage reste visible.",
+  "lore": "Taillé à la mesure de celui qui le porte, il n'en existe jamais deux identiques. La Maison du cuir verni le livre dans une boîte noire, sans un mot.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": false,
+  "note_vente": "Réservé au grade admin (serveur privé), hors boutique."
+}

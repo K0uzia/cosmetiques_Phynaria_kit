@@ -1,0 +1,12 @@
+{
+  "nom": "Dard de l'Abysse",
+  "description": "Skin de lance : remplace toutes tes lances par un dard d'os noir aux deux fils vert acide, armé de barbes de harpon en griffes. Le dard sort du collet quand tu la prends en main ; levée pour charger, ses barbes s'écartent et son fil brûle plus fort.",
+  "lore": "Certains démons ne remontent pas de l'Abysse : ils y attendent, accrochés aux parois. Pour les décrocher, les Chasseurs ont taillé le Dard dans l'aiguillon d'une bête qui chassait comme eux, à l'affût. Ses barbes retiennent ce qu'il a touché, et la lueur verte s'avive le long des fils chaque fois qu'il ne lâche pas sa prise.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

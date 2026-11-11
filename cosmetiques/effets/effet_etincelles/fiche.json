@@ -1,0 +1,13 @@
+{
+  "nom": "Cercle d'étincelles",
+  "description": "Des sceaux de lumière se tracent autour de vos mains ; au départ, une étincelle file en spirale et dessine une grande porte crépitante qui crache des gerbes, et vous la franchissez dans un éclair. À l'arrivée, vous en sortez sous une pluie de braises.",
+  "lore": "Les passeurs de la Forge Errante n'ont jamais construit de portes : ils les dessinent. Un geste de la main, un anneau de métal en fusion tracé dans l'air, et le monde s'y plie le temps d'un pas. On reconnaît leur passage aux petites brûlures qu'ils laissent sur le sol, en cercle.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true,
+  "ensemble": "Forge Errante"
+}

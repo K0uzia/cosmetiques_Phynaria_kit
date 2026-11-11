@@ -1,0 +1,12 @@
+{
+  "nom": "Leurre de l'Abysse",
+  "description": "Skin de canne à pêche : remplace toutes tes cannes par une épine d'os noir hérissée, au moulinet en vertèbre cerclé de crocs. Au repos pend un leurre d'os fendu de lueur verte ; la pointe sort du collet quand tu la prends en main et les épines se hérissent à chaque lancer.",
+  "lore": "Dans le noir de l'Abysse, les bêtes ne chassent pas : elles attendent, une lueur pendue devant la gueule. Les Chasseurs ont arraché l'épine qui portait cette lueur et en ont fait une canne. Le leurre brille encore d'un vert patient, et ce qui mord à cet appât ne remonte pas toujours de son plein gré.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

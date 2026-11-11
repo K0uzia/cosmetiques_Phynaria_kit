@@ -1,0 +1,12 @@
+{
+  "nom": "Aura cœur de guimauve",
+  "description": "Un gros cœur de sucre rose qui encadre la tête et bat doucement, dans une lumière rose et lavande : gloire de nuage étoilée, petits cœurs qui montent derrière le joueur, rond de cœurs de sucre au sol.",
+  "lore": "Au pays de Nuage Guimauve, on dit qu'un cœur trop heureux finit par sortir de la poitrine. Il se pose alors derrière son porteur, en sucre rose, et bat pour qu'on l'entende. Personne n'a jamais réussi à le croquer : il fond en lumière dès qu'on le touche.",
+  "rarete": "epique",
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

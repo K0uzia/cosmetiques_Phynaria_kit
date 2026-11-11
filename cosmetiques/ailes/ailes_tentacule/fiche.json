@@ -1,0 +1,12 @@
+{
+  "nom": "Ailes tentaculaires",
+  "description": "Six tentacules de chair qui sortent du dos autour d'un œil d'ambre, avec ventouses et peau humide. Une onde court de la base à la pointe, les pointes s'enroulent et se déroulent selon les états ; à l'équipement, ils sortent roulés et se déplient.",
+  "lore": "Ce ne sont pas des ailes : c'est la chose remontée de l'Abysse qui a choisi un dos où s'accrocher. Ses bras tâtent l'air comme ils tâtaient le fond, et son œil d'ambre ne dort que lorsque son porteur dort. Elle ne lâche jamais prise ; on dit qu'elle se souvient de chaque coup qu'il a reçu.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

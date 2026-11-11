@@ -1,0 +1,12 @@
+{
+  "nom": "Pelle de congère",
+  "description": "Skin de pelle : toutes tes pelles deviennent une pelle à neige de cristal, auge aux bords relevés veinée d'une plume de givre lumineuse, collet d'argent au flocon, poignée en T à pointes de glace. Au coup qui touche, des aiguilles de givre jaillissent ; à chaque bloc creusé, une gerbe de neige.",
+  "lore": "Quand la tempête ensevelit les cols du nord, les gardiens du Cœur d'Hiver ne creusent pas contre la neige : ils la prient de s'écarter. Leur pelle est née d'un collet d'argent posé sur une congère une nuit de grand froid ; au matin, la glace y avait poussé en auge claire, une plume de givre figée en son cœur. La neige qu'elle soulève retombe en poudre douce et ne gèle plus personne.",
+  "rarete": "epique",
+  "prix_manuel": false,
+  "en_vente": true,
+  "prix": {
+    "pv": 850,
+    "phynarium": 300
+  }
+}

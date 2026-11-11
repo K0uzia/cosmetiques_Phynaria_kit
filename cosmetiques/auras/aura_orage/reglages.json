@@ -1,0 +1,23 @@
+{
+ "particules": [
+  {
+   "particule": "étincelle (modélisée)",
+   "role": "Petite étoile électrique blanc bleuté (0,5 px) qui monte. 8 points aux pointes du corps (tête, épaules, mains, pieds : cadence coupée par ctrl_emit, +7 pendant chaque éclair) et 4 points sur le cercle de sol (cadence du staff, étincelles rares qui montent). Rien ne se pose.",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "4 par seconde",
+    "Durée": "1 s",
+    "Mouvement": "Monte",
+    "Rendu": "Translucide",
+    "Sens": "Face caméra",
+    "Fin de vie": "Rétrécit",
+    "Départ": "Lent",
+    "Dispersion": "45°",
+    "Élan": "100 %",
+    "Variation": "Forte",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

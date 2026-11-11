@@ -1,0 +1,12 @@
+{
+  "nom": "Lame de givre",
+  "description": "Épée longue de cristal taillé, translucide, au cœur cyan lumineux, à garde d'argent froid ornée de flocons et de cristaux en éventail. Elle suit la main du joueur et frappe à l'attaque.",
+  "lore": "On ne forge pas une lame de givre : on la laisse pousser dans un moule de silence pendant tout un hiver. Son tranchant ne coupe pas, il fige. Les gardiens la portent rarement dégainée, par respect pour ce qu'elle a coûté de temps.",
+  "rarete": "rare",
+  "prix": {
+    "pv": 450,
+    "phynarium": 200
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}

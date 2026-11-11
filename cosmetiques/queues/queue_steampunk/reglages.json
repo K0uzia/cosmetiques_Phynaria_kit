@@ -1,0 +1,16 @@
+{
+ "particules": [
+  {
+   "particule": "white_smoke (Minecraft)",
+   "role": "Vapeur de la soupape au bout de la queue, seulement aux décharges (cadence pilotée par l'animation, ctrl_emit ; coupée en nage).",
+   "reglages": {
+    "Quand": "Toujours",
+    "Nombre": "2 par seconde",
+    "Départ": "Lent",
+    "Dispersion": "15°",
+    "Rafale": "Aucune",
+    "Limite": "64"
+   }
+  }
+ ]
+}

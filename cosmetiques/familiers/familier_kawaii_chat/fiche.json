@@ -1,0 +1,12 @@
+{
+  "nom": "Chat-lanterne",
+  "description": "Lanterne de papier céleste devenue chat, qui suit son maître en flottant, portée par la chaleur de sa bougie ; elle se balance comme une lanterne, fait des gestes de chat et sa flamme flambe quand son maître est blessé.",
+  "lore": "Une lanterne lâchée dans le ciel un soir de souhaits a tant voulu être aimée qu'elle a pris la forme d'un chat. Sa bougie ne s'éteint jamais tant que quelqu'un pense à elle. Elle ronronne, mais on n'entend que le papier.",
+  "rarete": "legendaire",
+  "prix": {
+    "pv": 1600,
+    "phynarium": 500
+  },
+  "prix_manuel": false,
+  "en_vente": true
+}
